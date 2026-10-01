@@ -17,7 +17,7 @@
   --header-height: 90px;
   --utility-height: 52px;
   --radius: 8px;
-  --font: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, "DejaVu Sans", sans-serif;
   font-family: var(--font);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
