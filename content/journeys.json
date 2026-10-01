@@ -205,7 +205,11 @@
     "sources": [
       "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
       "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
-    ]
+    ],
+    "verificationTable": {
+      "cn": "<h2>示例动作与预期结果</h2><p>以下为官方Sample行为，须在P1 Pro 4K Camera真机确认。标识符以具体回调/API为准；文档同时使用V_SIGN和Vsign。</p><table><thead><tr><th>实体手势</th><th>标识符</th><th>预期结果</th></tr></thead><tbody><tr><td>V字手势</td><td><code>V_SIGN / Vsign</code></td><td>激活球体，并按此次手势位置定位一次；不是连续跟随</td></tr><tr><td>张开手掌</td><td><code>OPEN_PALM</code></td><td>放大球体</td></tr><tr><td>握拳</td><td><code>FIST</code></td><td>缩小球体</td></tr><tr><td>竖起拇指</td><td><code>THUMBS_UP</code></td><td>改变球体颜色</td></tr></tbody></table>",
+      "en": "<h2>Sample gestures and expected results</h2><p>These are the documented Sample behaviors, requiring verification on P1 Pro 4K Camera. Match the identifier to the callback/API; the sources use both V_SIGN and Vsign.</p><table><thead><tr><th>Physical gesture</th><th>Identifier</th><th>Expected result</th></tr></thead><tbody><tr><td>V-sign</td><td><code>V_SIGN / Vsign</code></td><td>Activate and position the sphere once; no continuous following</td></tr><tr><td>Open palm</td><td><code>OPEN_PALM</code></td><td>Enlarge the sphere</td></tr><tr><td>Closed fist</td><td><code>FIST</code></td><td>Shrink the sphere</td></tr><tr><td>Thumbs up</td><td><code>THUMBS_UP</code></td><td>Change the sphere color</td></tr></tbody></table>"
+    }
   },
   {
     "id": "dms-android",

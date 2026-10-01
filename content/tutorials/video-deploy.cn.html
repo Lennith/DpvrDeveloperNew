@@ -1,5 +1,5 @@
-<h1>让头显启动后播放指定视频</h1>
-<p class="lead">先在一台设备上验证普通视频的自动播放，再按需要增加授权或批量分发。这里使用系统播放器，不需要编写Unity应用。</p>
+<h1>让系统播放器启动时播放指定视频</h1>
+<p class="lead">先在一台设备上验证普通视频的自动播放，再按需要增加授权或批量分发。这里使用系统播放器，不需要编写Unity应用。配置由系统播放器启动时读取；它不会让头显开机后自动启动播放器。</p>
 <h2 id="prepare">1. 准备视频和设备</h2>
 <p>官网列明适用P1 Max、P2、P1 Ultra 4K、P1 Pro 4K、P1 Pro。先准备能由设备播放器正常播放的视频，并确认它的画面格式。以下示例用360°单目视频；普通平面2D视频应把<code>videoModel</code>改为<code>0</code>。</p>
 <p>用USB数据线连接电脑，把视频放在设备共享存储根目录，命名为<code>demo.mp4</code>，其设备绝对路径为<code>/sdcard/demo.mp4</code>。先在设备上手动打开它，确认画面与声音正常。电脑看不到磁盘时，查阅<a href="/cn/docs/troubleshooting/connection-issue.html">P1 Max的Windows MTP排障</a>；这不是ADB连接教程。</p>

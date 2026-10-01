@@ -1,6 +1,6 @@
 """Build the current DPVR resource portal. No network or publishing."""
 from pathlib import Path
-import json,html,re,shutil,sys
+import json,html,re,shutil,sys,posixpath
 from collections import defaultdict
 from urllib.parse import urlsplit
 from lxml import html as H
@@ -19,8 +19,17 @@ T=lambda cn,en,l:cn if l=='cn' else en
 L=lambda obj,l:obj.get(l,obj.get('en','')) if isinstance(obj,dict) else obj
 search=[]
 def emit(path,s):
- if BASE:s=s.replace('href="/','href="'+BASE+'/').replace('src="/','src="'+BASE+'/')
- s=s.replace('<body ', '<body data-base="'+BASE+'" ',1)
+ # Relative links travel together with the static tree: file://, root HTTP and
+ # arbitrary deployment prefixes all resolve without a server rewrite.
+ parent=posixpath.dirname(path.lstrip('/')) or '.'
+ root=posixpath.relpath('.',parent)+'/'
+ def relative(m):
+  value=m.group(2)
+  if not value.startswith('/') or value.startswith('//'):return m.group(0)
+  parts=urlsplit(html.unescape(value));target=posixpath.relpath(parts.path.lstrip('/') or '.',parent)
+  return m.group(1)+'="'+E(target+('?' + parts.query if parts.query else '')+('#'+parts.fragment if parts.fragment else ''))+'"'
+ s=re.sub(r'(href|src|poster)="([^"\n]*)"',relative,s)
+ s=s.replace('<body ', '<body data-root="'+root+'" data-base="'+E(BASE)+'" ',1)
  f=OUT/path.lstrip('/');f.parent.mkdir(parents=True,exist_ok=True);f.write_text(s,encoding='utf-8')
 def overview(pid,l):return f'/{l}/resources/{pid}.html'
 def guide(jid,l):return f'/{l}/guides/{jid}.html'
@@ -119,7 +128,7 @@ def reader(content,title,pid,l,path,source=None,notes=None,translation=None,pagi
 shutil.copytree(R/'assets',OUT/'assets',dirs_exist_ok=True)
 for l in ['cn','en']:
  groups=[('develop',T('开发头显应用','Build headset applications',l),T('在自己的应用中调用系统能力、播放媒体或接入手势。','Add system controls, media playback or gesture input to your app.',l),['dm','player','gesture']),('deploy',T('部署与播放内容','Prepare and deploy content',l),T('配置播放体验、制作授权内容，再按需要分发到设备。','Configure playback, authorize content and distribute it when needed.',l),['encryption','playback','copy']),('operate',T('连接与管理设备','Connect and manage devices',l),T('直接使用电脑工具与投屏，或开发自己的局域网群控。','Use PC tools and casting, or build your own LAN control system.',l),['go2','go','cast','rdc'])]
- body=f'<main id="main" class="hub container"><header class="page-intro"><span class="eyebrow">DPVR / {T("开发者资源","RESOURCES",l)}</span><h1>{T("找到适合你任务的工具与文档","The right resource for your next step",l)}</h1><p>{T("从设备管理到应用开发，先选资源，再按步骤开始。","From device operations to app development: choose a resource, then follow its guide.",l)}</p></header><section class="task-shortcuts">'+''.join(f'<a class="task-card" href="#{g[0]}"><h2>{g[1]}</h2><p>{g[2]}</p><span>↗</span></a>' for g in groups)+'</section>'
+ body=f'<main id="main" class="hub container"><header class="page-intro"><span class="eyebrow">DPVR / {T("开发者资源","RESOURCES",l)}</span><h1>{T("开发者资源","Developer resources",l)}</h1><p>{T("从设备管理到应用开发，先选资源，再按步骤开始。","From device operations to app development: choose a resource, then follow its guide.",l)}</p></header>'
  devices=sorted({d for p in products for d in p['devices']})
  body+=f'<section class="catalog-toolbar"><div><h2>{T("全部资源","All resources",l)}</h2><p id="filter-status" role="status">{T("10项当前资源 · 按需求选择","10 current resources · Choose by task",l)}</p></div><label>{T("你的设备","Your headset",l)} <select id="device-filter"><option value="">{T("全部型号","All models",l)}</option>'+''.join(f'<option>{E(d)}</option>' for d in devices)+'</select></label></section>'
  for key,title,desc,ids in groups:
@@ -129,7 +138,10 @@ for l in ['cn','en']:
    body+=f'<article class="resource-card" data-devices="{E(json.dumps(p["devices"]))}"><span class="resource-kind">{E(L(p["kind"],l))}</span><h3><a class="resource-title" href="{overview(pid,l)}">{E(title)}</a></h3><p>{E(L(p["summary"],l))}</p><div class="device-tags">'+''.join(f'<span>{E(d)}</span>' for d in p['devices'])+f'</div><div class="card-actions"><a class="text-link" href="{overview(pid,l)}">{T({'dm':'接入设备能力','player':'集成播放器','gesture':'运行手势示例','encryption':'制作授权视频','playback':'配置自动播放','copy':'部署文件与应用','go':'安装与管理设备','go2':'连接并操作设备','cast':'选择投屏方式','rdc':'开发局域网群控'}[pid],{'dm':'Integrate device controls','player':'Embed a player','gesture':'Run the gesture sample','encryption':'Authorize video content','playback':'Configure playback','copy':'Deploy files & apps','go':'Install & manage devices','go2':'Connect your headset','cast':'Choose a casting method','rdc':'Build LAN device control'}[pid],l)} →</a></div></article>'
   body+='</div></section>'
  body+=f'<section class="support-links"><h2>{T("设备使用帮助","Device help",l)}</h2>'+''.join(f'<a href="{p["path"]}">{E(p["title"])} →</a>' for p in pages if p['language']==l and p['product'] in ['firmware','troubleshooting'])+'</section></main>'
- emit(f'/{l}/index.html',shell(T('开发者资源','Developer resources',l),body,l,f'/{l}/index.html'))
+ hub=shell(T('开发者资源','Developer resources',l),body,l,f'/{l}/index.html')
+ emit(f'/{l}/index.html',hub)
+ if l=='cn':
+  emit('/index.html',hub);emit('/resource.html',hub)
  for pid,p in prod.items():
   path=overview(pid,l);title=L(p['title'],l);steps=L(p['steps'],l);pre=L(p['prerequisites'],l);trouble=L(p['troubleshooting'],l);caution=L(p.get('caution',''),l)
   dl_label=T({'dm':'下载设备管理SDK','rdc':'下载远程控制开发包','go':'下载Windows安装包','go2':'下载Windows便携工具','cast':'下载电视接收端APP','encryption':'下载加密工具','playback':'下载JSON示例','copy':'下载设备端APK与配置','player':'下载Unity播放器插件','gesture':'下载Unity手势集成包'}[pid],{'dm':'Download Device Manager SDK','rdc':'Download remote control kit','go':'Download Windows installer','go2':'Download portable Windows tool','cast':'Download receiver app','encryption':'Download encryption tools','playback':'Download JSON example','copy':'Download headset app & config','player':'Download Unity player plugin','gesture':'Download Unity gesture kit'}[pid],l)
@@ -155,6 +167,7 @@ for l in ['cn','en']:
   body=f'<h1>{E(title)}</h1><p class="lead">{E(L(j["summary"],l))}</p>'
   if j['id']=='dms-start':body+=f'<div class="platform-options"><a class="button primary" href="{guide("dms-android",l)}">Android / AIDL →</a><a class="button" href="{guide("dms-unity",l)}">Unity →</a></div>'
   body+=f'<h2>{T("准备条件","Prerequisites",l)}</h2><ul>'+''.join(f'<li>{E(x)}</li>' for x in L(j['prerequisites'],l))+'</ul>'+stephtml(L(j['steps'],l),l)
+  body+=L(j.get('verificationTable',''),l)
   caution=L(j.get('caution',''),l)
   if caution:body+=f'<aside class="editorial-note">{E(caution)}</aside>'
   note=T('以下为依据官方资料整理的操作顺序；各步骤链接保留完整技术原文。','This workflow is organized from official documentation. Step links retain the full technical reference.',l)
@@ -198,8 +211,5 @@ for l in ['cn','en']:
  body=f'<main id="main" class="container search-page"><h1>{T("搜索文档","Search documentation",l)}</h1><p>{T("按产品、任务或API名称搜索当前内容。","Search current content by product, task or API name.",l)}</p><form class="inline-search"><input name="q" type="search" aria-label="{T("搜索词","Search query",l)}"><button class="button primary">{T("搜索","Search",l)}</button></form><div class="inline-results"></div></main>'
  emit(f'/{l}/search.html',shell(T('搜索','Search',l),body,l,f'/{l}/search.html',f'/{"en" if l=="cn" else "cn"}/search.html'))
 # Compatibility starts in Chinese. The entry remains real content rather than a blank redirect.
-root=(OUT/'cn/index.html').read_text();(OUT/'index.html').write_text(root);(OUT/'resource.html').write_text(root)
-if BASE:
- for entry in search:entry['url']=BASE+entry['url']
 (OUT/'assets/search-index.js').write_text('window.DPVR_SEARCH='+json.dumps(search,ensure_ascii=False)+';')
 print(json.dumps({'documents':len(selected),'resources':len(products)*2,'guides':len(journeys)*2,'searchEntries':len(search),'html':len(list(OUT.rglob('*.html')))},ensure_ascii=False))
