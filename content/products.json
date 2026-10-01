@@ -124,7 +124,15 @@
       "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/introduction.html",
       "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/usage.html",
       "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/usage.html"
-    ]
+    ],
+    "audience": {
+      "cn": "Android / Unity 应用开发者",
+      "en": "Android / Unity developers"
+    },
+    "runtime": {
+      "cn": "运行于头显内应用，通过 AIDL 绑定 DeviceManagerService",
+      "en": "In a headset app, binding DeviceManagerService over AIDL"
+    }
   },
   {
     "id": "rdc",
@@ -255,7 +263,15 @@
       "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/normal_settings.html",
       "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/init.html",
       "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/content.html"
-    ]
+    ],
+    "audience": {
+      "cn": "群控软件开发者",
+      "en": "Fleet-control software developers"
+    },
+    "runtime": {
+      "cn": "电脑或局域网控制端 + 头显 RDC 服务；TCP 协议 / C# 库",
+      "en": "PC or LAN controller + headset RDC service; TCP protocol / C# library"
+    }
   },
   {
     "id": "go",
@@ -359,7 +375,15 @@
       "https://developer.dpvr.com/resource.html",
       "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf",
       "https://developer.dpvr.com/resource/img/aioscreen.png"
-    ]
+    ],
+    "audience": {
+      "cn": "设备维护与内容部署人员",
+      "en": "Device maintenance and deployment teams"
+    },
+    "runtime": {
+      "cn": "Windows 安装式 GUI + USB 连接头显",
+      "en": "Installed Windows GUI + USB-connected headset"
+    }
   },
   {
     "id": "go2",
@@ -457,7 +481,15 @@
     "sources": [
       "https://developer.dpvr.com/resource.html",
       "https://developer.dpvr.com/resource/img/aio2screen.png"
-    ]
+    ],
+    "audience": {
+      "cn": "设备操作与演示人员",
+      "en": "Device operators and demo teams"
+    },
+    "runtime": {
+      "cn": "Windows 便携工具；内含 ADB / Scrcpy，首次连接使用 USB",
+      "en": "Portable Windows tool with ADB / Scrcpy; USB for the first connection"
+    }
   },
   {
     "id": "cast",
@@ -554,7 +586,15 @@
       "https://developer.dpvr.com/resource.html",
       "https://developer.dpvr.com/resources/doc_cn.html#screen-casting",
       "https://developer.dpvr.com/resources/doc_en.html#screen-casting"
-    ]
+    ],
+    "audience": {
+      "cn": "演示与现场支持人员",
+      "en": "Demo and on-site support teams"
+    },
+    "runtime": {
+      "cn": "头显投屏发送端 + 兼容接收端",
+      "en": "Headset sender + compatible receiver"
+    }
   },
   {
     "id": "encryption",
@@ -681,7 +721,15 @@
       "https://developer.dpvr.com/resources/doc_en.html#video-encryption",
       "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html&language=en",
       "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=CLI%20Version%2FDPVR%20Video%20Encryptor%20User%20Manual.html"
-    ]
+    ],
+    "audience": {
+      "cn": "视频内容制作与授权人员",
+      "en": "Video content and licensing teams"
+    },
+    "runtime": {
+      "cn": "电脑 GUI / CLI 制作授权文件，支持解密的 DPVR 播放器负责播放",
+      "en": "PC GUI / CLI prepares licensed files; a compatible DPVR player plays them"
+    }
   },
   {
     "id": "playback",
@@ -791,7 +839,15 @@
       "https://developer.dpvr.com/resource.html",
       "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config",
       "https://developer.dpvr.com/resources/doc_en.html#videoplay-config"
-    ]
+    ],
+    "audience": {
+      "cn": "内容部署与播放体验配置人员",
+      "en": "Content deployment and playback teams"
+    },
+    "runtime": {
+      "cn": "头显共享存储内 JSON，由系统播放器启动时读取",
+      "en": "JSON in headset shared storage, read when the system player starts"
+    }
   },
   {
     "id": "copy",
@@ -912,7 +968,15 @@
       "https://developer.dpvr.com/resource.html",
       "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide",
       "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide"
-    ]
+    ],
+    "audience": {
+      "cn": "离线批量部署人员",
+      "en": "Offline deployment teams"
+    },
+    "runtime": {
+      "cn": "头显内 CopyTool.apk，读取 TF 卡根目录任务配置",
+      "en": "CopyTool.apk on the headset reads the task configuration from the TF-card root"
+    }
   },
   {
     "id": "player",
@@ -1035,7 +1099,15 @@
       "https://developer.dpvr.com/resource.html",
       "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide",
       "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide"
-    ]
+    ],
+    "audience": {
+      "cn": "Unity 应用开发者",
+      "en": "Unity application developers"
+    },
+    "runtime": {
+      "cn": "自己的 Unity 场景内播放视频",
+      "en": "Video playback inside your own Unity scene"
+    }
   },
   {
     "id": "gesture",
@@ -1156,6 +1228,14 @@
       "https://developer.dpvr.com/resource.html",
       "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
       "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
-    ]
+    ],
+    "audience": {
+      "cn": "Unity 交互开发者",
+      "en": "Unity interaction developers"
+    },
+    "runtime": {
+      "cn": "P1 Pro 4K Camera 真机内的 Unity 场景、相机与 AAR",
+      "en": "Unity scene, camera and AAR on P1 Pro 4K Camera hardware"
+    }
   }
 ]

@@ -149,6 +149,7 @@ for l in ['cn','en']:
   cta=guide(first['id'],l) if first else '#start'
   if pid=='dm':cta='#platform'
   body=f'<main id="main" class="container product-layout"><article class="product-main"><span class="eyebrow">{E(L(p["kind"],l))}</span><h1>{E(title)}</h1><p class="lead">{E(L(p["summary"],l))}</p><p class="compatibility"><strong>{T('适用设备：','Supported headsets: ',l)}</strong>{E(' · '.join(p['devices']))}</p><p class="product-limit">{E(caution)}</p><div class="actions"><a class="button primary" href="{cta}">{T("选择Android或Unity","Choose Android or Unity",l) if pid=="dm" else T("开始使用","Get started",l)} →</a><a class="button" href="{E(p["download"])}">{dl_label} ↗</a></div>'
+  body+=f'<dl class="product-context"><dt>{T("适合谁","Who it is for",l)}</dt><dd>{E(L(p["audience"],l))}</dd><dt>{T("运行在哪里","Where it runs",l)}</dt><dd>{E(L(p["runtime"],l))}</dd></dl>'
   if pid=='dm':body+=f'<section id="platform"><h2>{T("选择开发平台","Choose your platform",l)}</h2><div class="platform-options">'+''.join(f'<a class="task-card" href="{guide("dms-"+plat,l)}"><h3>{name}</h3><p>{desc}</p></a>' for plat,name,desc in [('android','Android',T('AIDL服务绑定与异步调用','AIDL binding and asynchronous calls',l)),('unity','Unity',T('导入插件，通过Java bridge调用','Import the plugin and use the Java bridge',l))])+'</div></section>'
   if pid=='rdc':body+=f'<div class="topology" aria-label="{T("一个控制端连接多台头显","One controller connects to multiple headsets",l)}"><strong>{T("你的控制端","Your controller",l)}</strong><span>⟷ TCP / LAN ⟷</span><strong>{T("多台DPVR头显","Multiple DPVR headsets",l)}</strong></div>'
   body+=f'<section><h2>{T("开始前确认","Before you begin",l)}</h2><ul>'+''.join(f'<li>{E(x)}</li>' for x in pre)+'</ul></section>'
@@ -158,9 +159,13 @@ for l in ['cn','en']:
   if refs:
    if pid=='dm':refs=[x for x in refs if not x['path'].endswith('/docs/dm/index.html') and (x['section'] in ['Overview','Introduction','ReleaseNote'] or x['path'].endswith('/Apis/index.html') or x['path'].endswith('/GettingStarted/index.html'))]
    body+=f'<section id="reference"><h2>{T("文档与参考","Documentation & reference",l)}</h2>'+doclist(refs,l)+'</section>'
-  body+='</article><aside class="product-facts"><section class="fact-card"><h3>'+T('适用设备','Supported headsets',l)+'</h3><ul>'+''.join(f'<li>{E(d)}</li>' for d in p['devices'])+'</ul><p>'+T('官网列出的适用型号；具体功能还需满足固件、服务与权限要求。','Models listed by DPVR. Individual capabilities may require specific firmware, services and permissions.',l)+'</p></section>'
-  if caution:body+=f'<section class="fact-card"><h3>{T("使用边界","Know the limits",l)}</h3><p>{E(caution)}</p></section>'
+  body+='</article><aside class="product-facts">'
   body+=f'<section class="fact-card"><h3>{T("相关资源","Related resources",l)}</h3>'+''.join(f'<a href="{overview(x,l)}">{E(L(prod[x]["title"],l))} →</a>' for x in {'dm':['rdc','player'],'rdc':['dm','cast'],'go':['go2'],'go2':['go','cast'],'cast':['go2','rdc'],'encryption':['playback','copy'],'playback':['copy','encryption'],'copy':['playback','encryption'],'player':['encryption','gesture'],'gesture':['player']}[pid])+'</section></aside></main>'
+  context=re.search(r'<dl class="product-context">.*?</dl>',body).group(0)
+  body=body.replace(context,'').replace('<div class="actions">',context+'<div class="actions">',1)
+  if pid=='dm':
+   section=re.search(r'<section><h2>'+T('开始前确认','Before you begin',l)+r'.*?</section>',body).group(0)
+   body=body.replace(section,'').replace('<section id="platform">',section+'<section id="platform">')
   emit(path,shell(title,body,l,path,overview(pid,'en' if l=='cn' else 'cn'),pid));addsearch(title,H.fromstring(body).text_content(),path,l,pid,T('资源概览','Resource overview',l))
  for j in journeys:
   pid='playback' if j['id']=='video-deploy' else j['products'][0];path=guide(j['id'],l);title=L(j['title'],l)
@@ -198,6 +203,8 @@ for p in selected:
       note=H.Element('p');note.set('data-editorial-note','true');note.text=T('无参数（jobParams可为空）。','No parameters (jobParams may be null).',l);h.addnext(note)
     content=H.tostring(tree,encoding='unicode')
    content=details+'</aside>'+content
+ if not tree.xpath('.//h1'):
+  content='<h1 data-editorial-note="navigation-title">'+E(p['title'])+'</h1>'+content
  if p.get('downloads'):
   downloads=list({x['url']:x for x in p['downloads']}.values())
   content+='<section class="source-downloads" data-editorial-note="true"><h2>'+T('本页下载','Page downloads',l)+'</h2><ul>'+''.join('<li><a href="'+E(x['url'])+'">'+E(('Download official package' if x.get('sourceMember') else x['title']) if l=='en' else x['title'])+'</a></li>' for x in downloads)+'</ul></section>'

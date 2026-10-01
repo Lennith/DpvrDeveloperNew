@@ -585,3 +585,7 @@ html[data-theme="dark"] .search-result mark { background: #724232; }
 .hub .resource-card > p { margin:0; }
 .hub .resource-card .device-tags { margin:6px 0 0; }
 .hub .card-actions { padding:0; }
+.product-context { display:grid; grid-template-columns:110px 1fr; gap:8px 16px; margin:22px 0; font-size:13px; }
+.product-context dt { color:var(--muted); }
+.product-context dd { margin:0; }
+@media(max-width:600px) { .product-context { grid-template-columns:80px 1fr; gap:10px; } }

@@ -31,4 +31,11 @@
 <h2 id="optional">5. 需要时再增加授权或批量分发</h2>
 <p><strong>限制播放设备或有效期：</strong>使用<a href="/cn/resources/encryption.html">视频加密工具</a>生成同名<code>.mp4</code>、<code>.dpve1</code>、<code>.dpvei</code>三件套，同目录部署并使用支持解密的DPVR播放器验证。普通视频不要求先加密。GUI编辑授权会重新加密；CLI有仅更新授权文件的流程。</p>
 <p><strong>离线部署到多台设备：</strong>可用<a href="/cn/resources/copy.html">TF卡部署工具</a>的FILE或ZIP_UNPACK任务，把视频与配置送到上述位置；复制完成不代表播放已通过验证，仍需检查目标头显。TF工具的OTA_PACKAGE只复制升级包，不触发升级。</p>
-<footer class="article-sources"><h2>资料与完整参数</h2><ul><li><a href="/cn/docs/playback/videoplay-config.html">官方播放配置原文与全部画面模式</a></li><li><a href="/cn/docs/playback/configuration-example.html">官网下载包内JSON示例</a></li><li><a href="https://developer.dpvr.com/resources/doc_cn.html#videoplay-config">官方在线来源</a></li></ul></footer>
+<h2 id="tf-deploy">6. 用 TF 卡把配置与视频一起部署</h2><p>TF工具不支持P1 Max。对于官网列明支持的设备，先按<a href="/cn/docs/copy/copy-tool-guide.html#section-2">完整安装与操作说明</a>安装 CopyTool.apk。TF卡根目录保存 copy_config.json，InputDir 内保存刚才已经验证的 demo.mp4 和 AutoVideoPlay 文件夹。</p><pre><code>TF card/
+├── copy_config.json
+└── InputDir/
+    ├── demo.mp4
+    └── AutoVideoPlay/
+        └── AutoPlayDisposition.json</code></pre><pre><code>[
+  { "type": "FILE", "source": "${EXT_SD}/InputDir", "dist": "/sdcard", "name": "playback-files" }
+]</code></pre><p>这是依据官方 FILE 任务格式整理的部署示例，不是工具默认配置。插卡并运行工具，查看任务结果与失败日志，再检查 /sdcard/demo.mp4 和 /sdcard/AutoVideoPlay/AutoPlayDisposition.json 是否存在。最后重新启动系统播放器，重做第4步验证；文件复制成功不能代替播放验证。</p><footer class="article-sources"><h2>资料与完整参数</h2><ul><li><a href="/cn/docs/playback/videoplay-config.html">官方播放配置原文与全部画面模式</a></li><li><a href="/cn/docs/playback/configuration-example.html">官网下载包内JSON示例</a></li><li><a href="https://developer.dpvr.com/resources/doc_cn.html#videoplay-config">官方在线来源</a></li></ul></footer>
