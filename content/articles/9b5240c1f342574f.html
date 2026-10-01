@@ -1,0 +1,138 @@
+<article role="main">
+          <section id="basic-concepts">
+<h1>Basic Concepts<a class="headerlink" href="#basic-concepts" title="Permalink to this heading">#</a></h1>
+<section id="job">
+<h2><code class="docutils literal notranslate"><span class="pre">Job</span></code><a class="headerlink" href="#job" title="Permalink to this heading">#</a></h2>
+<p>All Api calls of DeviceManagerService will generate a corresponding Job in DeviceManagerService, which is used to describe the specific interface information and call parameters of this call.</p>
+</section>
+<hr class="docutils">
+<section id="call">
+<h2><code class="docutils literal notranslate"><span class="pre">Call</span></code><a class="headerlink" href="#call" title="Permalink to this heading">#</a></h2>
+<p>The specific business implementation of DeviceManagerService is called through the interface <code class="docutils literal notranslate"><span class="pre">call</span></code> in the aar package. The parameters in <code class="docutils literal notranslate"><span class="pre">call</span></code> are used to specify the specific Api and Api parameters to be called.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">String</span><span class="w"> </span><span class="nf">call</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">jobCat</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">jobType</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">jobParams</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">callParams</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">RemoteException</span><span class="p">;</span>
+</pre></div>
+</div>
+<section id="jobcat">
+<h3><code class="docutils literal notranslate"><span class="pre">jobCat</span></code><a class="headerlink" href="#jobcat" title="Permalink to this heading">#</a></h3>
+<p><cite>The major category of the Api to be called, such as</cite> <code class="docutils literal notranslate"><span class="pre">wifiJobs</span></code> <cite>,</cite> <code class="docutils literal notranslate"><span class="pre">packageJobs</span></code> <cite>etc.</cite></p>
+</section>
+<section id="jobtype">
+<h3><code class="docutils literal notranslate"><span class="pre">jobType</span></code><a class="headerlink" href="#jobtype" title="Permalink to this heading">#</a></h3>
+<p><cite>The specific Api to be called, such as</cite> <code class="docutils literal notranslate"><span class="pre">TakeScreenShot</span></code> <cite>etc.</cite></p>
+</section>
+<section id="jobparams">
+<h3><code class="docutils literal notranslate"><span class="pre">jobParams</span></code><a class="headerlink" href="#jobparams" title="Permalink to this heading">#</a></h3>
+<p><cite>The parameters of the Api to be called</cite></p>
+</section>
+<section id="callparams">
+<h3><code class="docutils literal notranslate"><span class="pre">callParams</span></code><a class="headerlink" href="#callparams" title="Permalink to this heading">#</a></h3>
+<p><cite>The parameters of this</cite> <code class="docutils literal notranslate"><span class="pre">callParams</span></code>, different from jobParams, it acts on the attributes of this call. In the current version, its definition is as follows:`</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">CallParams</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">dependencyJobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="m">1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">delay</span></code> ：The delay of the call, in milliseconds.</p>
+<p><code class="docutils literal notranslate"><span class="pre">dependencyJobId</span></code> ：Dependent JobId, this Job will only be executed after the specified Job is successfully completed, otherwise it will be cancelled.</p>
+</section>
+<section id="callresult">
+<h3><code class="docutils literal notranslate"><span class="pre">CallResult</span></code><a class="headerlink" href="#callresult" title="Permalink to this heading">#</a></h3>
+<p>The return value of <code class="docutils literal notranslate"><span class="pre">Call</span></code> is the <strong>Json serialized string</strong> of <code class="docutils literal notranslate"><span class="pre">CallResult</span></code>, which is used to represent the result of this <code class="docutils literal notranslate"><span class="pre">Call</span></code> call. Its specific composition is as follows:</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">CallResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">errorDescription</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobID</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="jobid">
+<h3><code class="docutils literal notranslate"><span class="pre">jobID</span></code><a class="headerlink" href="#jobid" title="Permalink to this heading">#</a></h3>
+<p><cite>When a</cite> <code class="docutils literal notranslate"><span class="pre">Call</span></code> <cite>is successfully responded by DeviceManagerService, a</cite> <code class="docutils literal notranslate"><span class="pre">jobID</span></code> <cite>greater than 0 corresponding to this</cite> <code class="docutils literal notranslate"><span class="pre">Call</span></code> <cite>will be generated. When a Call fails, a</cite> <code class="docutils literal notranslate"><span class="pre">JobID</span></code> <cite>less than 0 will be generated.</cite></p>
+</section>
+<section id="errordescription">
+<h3><code class="docutils literal notranslate"><span class="pre">errorDescription</span></code><a class="headerlink" href="#errordescription" title="Permalink to this heading">#</a></h3>
+<p><cite>When the</cite> <code class="docutils literal notranslate"><span class="pre">Call</span></code> <cite>call fails, it is used to return the cause of the failure.</cite></p>
+<p><strong>Please note that,</strong> <code class="docutils literal notranslate"><span class="pre">CallResult</span></code> <strong>does not represent the completion result of this Api, it just represents the result of this</strong> <code class="docutils literal notranslate"><span class="pre">Call</span></code>, <strong>the call result is returned to the caller through</strong> <code class="docutils literal notranslate"><span class="pre">Api</span> <span class="pre">Result</span></code>.</p>
+</section>
+</section>
+<hr class="docutils">
+<section id="api-result">
+<h2><code class="docutils literal notranslate"><span class="pre">Api</span> <span class="pre">Result</span></code><a class="headerlink" href="#api-result" title="Permalink to this heading">#</a></h2>
+<p>All Apis of DeviceManagerService are processed asynchronously. Its result is returned to the caller through <code class="docutils literal notranslate"><span class="pre">DeviceManagerBindMan$OnDeviceManagerResult</span></code>:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">OnDeviceManagerResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">OnDeviceManager</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When a Job is completed, this callback will be triggered once in the caller’s process.</p>
+<p><code class="docutils literal notranslate"><span class="pre">jobID</span></code> : The <code class="docutils literal notranslate"><span class="pre">jobId</span></code> of the <code class="docutils literal notranslate"><span class="pre">Call</span></code> corresponding to this result.</p>
+<p><code class="docutils literal notranslate"><span class="pre">result</span></code>: Api call result, we call it <code class="docutils literal notranslate"><span class="pre">ApiResult</span></code>.</p>
+<p>It is set through the interface in the AAR package:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">setDeviceManagerResultListener</span><span class="p">(</span><span class="n">IDeviceManagerResultListener</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">RemoteException</span><span class="w"> </span><span class="p">{};</span>
+</pre></div>
+</div>
+<p>Each process can only set one valid ResultListener, and each call will overwrite the previous setting.</p>
+<p><strong>When a Job is completed, if no Listener is set, or the Listener is released, or the caller process is released, this callback will not be received, but the Job will still be executed normally and produce results.</strong></p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">ApiFinishedResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">returnCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">error</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The Json serialized string.</p>
+<section id="id1">
+<h3><code class="docutils literal notranslate"><span class="pre">jobId</span></code><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p><cite>The</cite> <code class="docutils literal notranslate"><span class="pre">jobId</span></code> <cite>of the</cite> <code class="docutils literal notranslate"><span class="pre">Call</span></code> <cite>corresponding to this result.</cite></p>
+</section>
+<section id="returncode">
+<h3><code class="docutils literal notranslate"><span class="pre">returnCode</span></code><a class="headerlink" href="#returncode" title="Permalink to this heading">#</a></h3>
+<p><cite>Api execution result, 0: successful execution, 1: task cancelled, 2: call error.</cite></p>
+</section>
+<section id="result">
+<h3><code class="docutils literal notranslate"><span class="pre">result</span></code><a class="headerlink" href="#result" title="Permalink to this heading">#</a></h3>
+<p><cite>The Json serialized string of the Api execution result, corresponding to the Result definition in the **Api document**.</cite></p>
+</section>
+<section id="error">
+<h3><code class="docutils literal notranslate"><span class="pre">error</span></code><a class="headerlink" href="#error" title="Permalink to this heading">#</a></h3>
+<p><cite>When the Api call fails, it is used to display the cause of the error.</cite></p>
+</section>
+</section>
+<hr class="docutils">
+<section id="event">
+<h2><code class="docutils literal notranslate"><span class="pre">Event</span></code><a class="headerlink" href="#event" title="Permalink to this heading">#</a></h2>
+<p>In addition to the standard <code class="docutils literal notranslate"><span class="pre">ApiResult</span></code>, we provide <code class="docutils literal notranslate"><span class="pre">Event</span></code> to handle some long-term or persistent callbacks. For example, when scanning Bluetooth or Wifi, because the scanning result is persistent, it will trigger multiple callbacks, and we use <code class="docutils literal notranslate"><span class="pre">Event</span></code> callback to return the result.</p>
+<p>Similarly, listening to battery change events, because battery change is a long-term continuous change event, therefore, calling the corresponding Api will activate the application’s <code class="docutils literal notranslate"><span class="pre">Event</span></code> listening, and continuously report events through <code class="docutils literal notranslate"><span class="pre">EventListener</span></code>.</p>
+<p>Similar to Result, it uses the interface in the AAR package:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">setDeviceManagerEventListener</span><span class="p">(</span><span class="n">IDeviceManagerEventListener</span><span class="w"> </span><span class="n">listener</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">RemoteException</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For setting.</p>
+<p>Among them, <code class="docutils literal notranslate"><span class="pre">IDeviceManagerEventListener</span></code> is as follows:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">IDeviceManagerEventListener</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">IInterface</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">onEvent</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">RemoteException</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="eventtype">
+<h3><code class="docutils literal notranslate"><span class="pre">eventType</span></code><a class="headerlink" href="#eventtype" title="Permalink to this heading">#</a></h3>
+<p><cite>The name of the event, the specific String value of</cite> <code class="docutils literal notranslate"><span class="pre">Event</span></code> <cite>can be viewed in the</cite> <code class="docutils literal notranslate"><span class="pre">Event</span></code> <cite>section of this document.</cite></p>
+</section>
+<section id="eventinfo">
+<h3><code class="docutils literal notranslate"><span class="pre">eventInfo</span></code><a class="headerlink" href="#eventinfo" title="Permalink to this heading">#</a></h3>
+<p><cite>The Json serialization of the specific information of the event, the specific data structure can be viewed in the Event section of this document according to the change of the Event type.</cite></p>
+<p>Similar to <code class="docutils literal notranslate"><span class="pre">ResultListener</span></code>, <code class="docutils literal notranslate"><span class="pre">EventListener</span></code> can only register one valid callback for each application.</p>
+<p>At the same time, it also has the following characteristics:</p>
+<ol class="arabic simple">
+<li><p>Most <code class="docutils literal notranslate"><span class="pre">Event</span></code> are bound to a certain Api call. In the Api document, you can see the <code class="docutils literal notranslate"><span class="pre">Event</span></code> event associated with each Api.</p></li>
+<li><p>Most <code class="docutils literal notranslate"><span class="pre">EventListener</span></code> will be released after the Api call is completed.</p></li>
+<li><p>If multiple applications listen to the listening of a certain <code class="docutils literal notranslate"><span class="pre">Event</span></code>, these applications will all receive the <code class="docutils literal notranslate"><span class="pre">Event</span></code> callback.</p></li>
+<li><p>Similar to Api, <code class="docutils literal notranslate"><span class="pre">Event</span></code> listening also has permissions. Only the DeviceManagerService caller who reaches this permission will listen to the corresponding <code class="docutils literal notranslate"><span class="pre">Event</span></code>.</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+        </article>

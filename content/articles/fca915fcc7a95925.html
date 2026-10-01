@@ -1,0 +1,81 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>开启、关闭与回调注册<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<section id="id2">
+<h2>初始化服务器<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="n">DpvrRDCServer</span><span class="w"> </span><span class="n">mServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>开启服务器<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Start</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">localIp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10086</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>启动服务器，并设置本地IP地址，端口号，最大连接数。</p>
+<p><cite>string localIp</cite>： 本机IP，默认为null，自动获取ip地址。</p>
+<p><cite>int port</cite>： 连接监听的端口号，默认为10086。</p>
+<p><cite>int maxClient</cite>：允许的最大连接数，默认为64。</p>
+</section>
+<section id="id4">
+<h2>关闭服务器<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>关闭服务器。</p>
+</section>
+<section id="id5">
+<h2>客户端连接状态变化回调<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">event</span><span class="w"> </span><span class="n">OnConnectState</span><span class="w"> </span><span class="n">OnConnectStateChangedEvent</span><span class="p">;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">delegate</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnConnectState</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>客户端连接状态改变时触发，客户端在连接成功后，需要上传了SN信息后，才会触发该回调。</p>
+<p><cite>Client client</cite>：发生状态改变的客户端。</p>
+<p><cite>int state</cite>：连接状态，1：连接成功，2：连接断开。</p>
+</section>
+<section id="id6">
+<h2>客户端透传消息回调<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">event</span><span class="w"> </span><span class="n">OnMessage</span><span class="w"> </span><span class="n">OnMessageEvent</span><span class="p">;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">delegate</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnMessage</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">ClientMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>客户端应用透传消息回调。</p>
+<p><cite>Client client</cite>：发生状态改变的客户端。</p>
+<p><cite>ClientMessage msg</cite>：客户端透传消息。</p>
+<p>其中，ClientMessage结构体定义如下：</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ClientMessage</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">fromPackage</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>string fromPackage</cite>：发送透传的应用包名。</p>
+<p><cite>string content</cite>：透传消息内容。</p>
+</section>
+<section id="id7">
+<h2>示例代码<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">InitServer</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">mServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mServer</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mServer</span><span class="p">.</span><span class="n">OnMessageEvent</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">HandleMessageFromClient</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mServer</span><span class="p">.</span><span class="n">OnConnectStateChangedEvent</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">HandleConnectState</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">HandleMessageFromClient</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">ClientMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="n">D</span><span class="p">(</span><span class="s">$"Got message from {client.IP}: {msg.fromPackage} - {msg.content}"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">HandleConnectState</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">state</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="n">D</span><span class="p">(</span><span class="s">$"Connected state changed :{client} state: {state}"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>

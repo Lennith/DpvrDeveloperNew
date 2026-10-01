@@ -1,0 +1,33 @@
+<article role="main">
+          <section id="cast-state-changed">
+<span id="event-cast-state-changed"></span><h1>CAST_STATE_CHANGED<a class="headerlink" href="#cast-state-changed" title="Permalink to this heading">#</a></h1>
+<p>投屏/录屏/截屏状态变化。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">CastStateEvent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">isCasting</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">isRecoding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">isMiracast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">isShot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="permission">
+<h2>Permission<a class="headerlink" href="#permission" title="Permalink to this heading">#</a></h2>
+<p>APP_PERMISSION_NORMAL</p>
+</section>
+<section id="type-name">
+<h2>Type name<a class="headerlink" href="#type-name" title="Permalink to this heading">#</a></h2>
+<p>dpvr_cast_state</p>
+</section>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span> <span class="pre">isCasting</span></code>: 是否正在Dpvr投屏。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span> <span class="pre">isRecording</span></code>: 是否正在录屏。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span> <span class="pre">isMiracast</span></code>: 是否正在android投屏。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span> <span class="pre">isShot</span></code>: 是否正在截屏。</p>
+</section>
+</section>
+
+        </article>

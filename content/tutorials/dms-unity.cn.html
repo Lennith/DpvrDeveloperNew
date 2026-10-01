@@ -1,0 +1,224 @@
+<article lang="zh-CN"><h1>Unity：绑定设备服务并读取第一条 SN</h1>
+<p>本页把服务检查、导入、绑定、监听、调用和结果解析串成一个场景组件。完成后，应在目标头显日志中看到 <code>[DMS] SUCCESS sn=</code> 和实际设备序列号。</p>
+<h2 id="service">1. 确认头显已有设备管理服务</h2>
+<p>准备 Unity Android Build Support、USB 数据线和已授权调试的头显。在 Windows 命令行执行：</p><pre><code>adb devices
+adb shell pm list packages | findstr com.dpvr.devicemanager</code></pre>
+<p>第一条应列出设备且状态为 <code>device</code>；第二条应包含 <code>package:com.dpvr.devicemanager</code>。没有该包时先按官方系统要求检查固件；导入 Unity 包不能安装头显系统服务。下面只有实际连接回调到达后才发起请求。</p>
+<h2 id="permission">2. 用 NORMAL 权限开始</h2>
+<p><code>systemInfoJobs/GetSerialNo</code> 要求 <code>APP_PERMISSION_NORMAL</code>，没有业务参数，不需要额外授权 Key。本例不添加虚构密钥。以后调用 LAUNCHER、SYSTEM 或 ADMIN 级接口时，再向 DPVR 获取 Key 并在 AndroidManifest 的 application 节点配置：DeviceManagerKey 绑定应用包名和版本；DeviceManagerPlatformKey 绑定包名与渠道固件。</p>
+<h2 id="import">3. 导入官方包，创建一个测试场景</h2>
+<ol><li><a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/DpvrDeviceManager2.0.unitypackage">下载当前 DpvrDeviceManager2.0.unitypackage</a>，通过 Assets → Import Package → Custom Package 全量导入。</li><li>确认项目含 <code>Assets/DpvrDeviceManager/DeviceManagerClientJar.aar</code> 和 <code>Assets/DpvrDeviceManager/LitJson</code>。本例使用包内 LitJson，不需要另装 JSON 库；若项目已有同名库，应避免重复类型。确认 AAR 导入设置适用于 Android。</li><li>在自己的 Scripts 目录创建 <code>DmsSerialNumberExample.cs</code>，粘贴下方完整代码。类名与文件名保持一致。</li><li>在空测试场景创建空对象，挂上该组件。只挂一份，并暂不运行其他会注册 DMS 监听器的组件：每个应用只有一套有效结果、事件监听。</li></ol>
+<h2 id="example">4. 完整组件：等连接，再调用，再匹配结果</h2>
+<p>结果与事件由两个 AndroidJavaProxy 接收；另外使用当前 AAR 确认存在的连接状态代理。所有代理回调进入队列，由 Update 在 Unity 主线程处理，所以即使结果很早到达，也会在调用返回、保存 jobID 后解析。10 秒提示仅便于定位未返回结果，不是接口超时规则，也不取消任务。</p>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using LitJson;
+using UnityEngine;
+using UnityEngine.Scripting;
+
+public sealed class DmsSerialNumberExample : MonoBehaviour
+{
+    private const string BridgeClass =
+        &quot;com.dpvr.devicemanagerclientjar.DeviceManagerBindMan&quot;;
+    private readonly Queue&lt;Action&gt; mainThread = new Queue&lt;Action&gt;();
+    private readonly object queueLock = new object();
+    private AndroidJavaObject bridge;
+    private ResultProxy resultProxy;
+    private EventProxy eventProxy;
+    private StateProxy stateProxy;
+    private volatile bool closing;
+    private bool bindRequested;
+    private bool connected;
+    private int? pendingJob;
+    private float pendingSince;
+
+    [Preserve]
+    public sealed class Accepted
+    {
+        public int jobID;
+        public string errorDescription;
+    }
+
+    [Preserve]
+    public sealed class Completed
+    {
+        public int jobId;
+        public int returnCode;
+        public string result;
+        public string error;
+    }
+
+    [Preserve]
+    public sealed class SerialNumberResult
+    {
+        public string sn;
+    }
+
+    private void Start()
+    {
+#if UNITY_ANDROID &amp;&amp; !UNITY_EDITOR
+        try
+        {
+            using (var player = new AndroidJavaClass(&quot;com.unity3d.player.UnityPlayer&quot;))
+            using (var activity = player.GetStatic&lt;AndroidJavaObject&gt;(&quot;currentActivity&quot;))
+                bridge = new AndroidJavaObject(BridgeClass, activity);
+
+            resultProxy = new ResultProxy((id, json) =&gt;
+                Post(() =&gt; HandleResult(id, json)));
+            eventProxy = new EventProxy((type, json) =&gt;
+                Post(() =&gt; Debug.Log(&quot;[DMS] Event &quot; + type + &quot;: &quot; + json)));
+            stateProxy = new StateProxy(state =&gt; Post(() =&gt; HandleState(state)));
+
+            bridge.Call(&quot;SetDeviceManagerResultListener&quot;, resultProxy);
+            bridge.Call(&quot;SetDeviceManagerEventListener&quot;, eventProxy);
+            bridge.Call(&quot;SetServiceStateListener&quot;, stateProxy);
+            bridge.Call(&quot;SetBind&quot;);
+            bindRequested = true;
+            Debug.Log(&quot;[DMS] Binding requested; waiting for service connection.&quot;);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(&quot;[DMS] Setup failed: &quot; + e);
+        }
+#else
+        Debug.LogWarning(&quot;[DMS] Build and run on an Android headset; Editor is not supported.&quot;);
+#endif
+    }
+
+    private void Post(Action action)
+    {
+        lock (queueLock)
+        {
+            if (!closing) mainThread.Enqueue(action);
+        }
+    }
+
+    private void Update()
+    {
+        while (true)
+        {
+            Action action;
+            lock (queueLock)
+            {
+                if (mainThread.Count == 0) break;
+                action = mainThread.Dequeue();
+            }
+            try { action(); }
+            catch (Exception e) { Debug.LogError(&quot;[DMS] Callback failed: &quot; + e); }
+        }
+        if (pendingJob.HasValue &amp;&amp; Time.realtimeSinceStartup - pendingSince &gt; 10f)
+        {
+            Debug.LogWarning(&quot;[DMS] Still waiting for job &quot; + pendingJob.Value +
+                &quot;. Check listeners and device logs; this is not a cancellation.&quot;);
+            pendingSince = float.PositiveInfinity;
+        }
+    }
+
+    private void HandleState(bool state)
+    {
+        connected = state;
+        Debug.Log(&quot;[DMS] Connected=&quot; + state);
+        if (state &amp;&amp; !pendingJob.HasValue) RequestSerialNumber();
+        if (!state)
+        {
+            pendingJob = null;
+            Debug.LogWarning(&quot;[DMS] Connection lost. An accepted job may still exist on the device.&quot;);
+        }
+    }
+
+    public void RequestSerialNumber()
+    {
+        if (!connected || bridge == null || pendingJob.HasValue) return;
+        try
+        {
+            string json = bridge.Call&lt;string&gt;(&quot;CallInterface&quot;,
+                &quot;systemInfoJobs&quot;, &quot;GetSerialNo&quot;, null, null);
+            if (string.IsNullOrEmpty(json))
+            {
+                Debug.LogError(&quot;[DMS] Empty acceptance response; check service connection.&quot;);
+                return;
+            }
+            Accepted accepted = JsonMapper.ToObject&lt;Accepted&gt;(json);
+            if (accepted.jobID &lt; 0)
+            {
+                Debug.LogError(&quot;[DMS] Rejected: &quot; + accepted.errorDescription);
+                return;
+            }
+            pendingJob = accepted.jobID;
+            pendingSince = Time.realtimeSinceStartup;
+            Debug.Log(&quot;[DMS] Accepted jobID=&quot; + accepted.jobID);
+        }
+        catch (Exception e) { Debug.LogError(&quot;[DMS] Submission failed: &quot; + e); }
+    }
+
+    private void HandleResult(int jobId, string json)
+    {
+        Debug.Log(&quot;[DMS] Result jobId=&quot; + jobId + &quot;: &quot; + json);
+        if (!pendingJob.HasValue || jobId != pendingJob.Value) return;
+        try
+        {
+            Completed completed = JsonMapper.ToObject&lt;Completed&gt;(json);
+            if (completed.returnCode != 0)
+            {
+                Debug.LogError(&quot;[DMS] Completion failed: code=&quot; +
+                    completed.returnCode + &quot; error=&quot; + completed.error);
+                return;
+            }
+            SerialNumberResult value =
+                JsonMapper.ToObject&lt;SerialNumberResult&gt;(completed.result);
+            if (value == null || string.IsNullOrEmpty(value.sn))
+                Debug.LogError(&quot;[DMS] Completed without a serial number: &quot; + json);
+            else
+                Debug.Log(&quot;[DMS] SUCCESS sn=&quot; + value.sn);
+        }
+        finally { pendingJob = null; }
+    }
+
+    private void OnDestroy()
+    {
+        closing = true;
+        lock (queueLock) mainThread.Clear();
+        if (bridge == null) return;
+        try { if (bindRequested) bridge.Call(&quot;UnBind&quot;); }
+        catch (Exception e) { Debug.LogWarning(&quot;[DMS] Unbind: &quot; + e.Message); }
+        finally { bridge.Dispose(); bridge = null; }
+    }
+
+    [Preserve]
+    private sealed class ResultProxy : AndroidJavaProxy
+    {
+        private readonly Action&lt;int, string&gt; handler;
+        public ResultProxy(Action&lt;int, string&gt; handler)
+            : base(BridgeClass + &quot;$OnDeviceManagerResult&quot;) { this.handler = handler; }
+        [Preserve]
+        public void OnDeviceManager(int jobId, string json) { handler(jobId, json); }
+    }
+
+    [Preserve]
+    private sealed class EventProxy : AndroidJavaProxy
+    {
+        private readonly Action&lt;string, string&gt; handler;
+        public EventProxy(Action&lt;string, string&gt; handler)
+            : base(BridgeClass + &quot;$OnDeviceManagerEventResult&quot;) { this.handler = handler; }
+        [Preserve]
+        public void OnDeviceManagerEvent(string type, string json) { handler(type, json); }
+    }
+
+    [Preserve]
+    private sealed class StateProxy : AndroidJavaProxy
+    {
+        private readonly Action&lt;bool&gt; handler;
+        public StateProxy(Action&lt;bool&gt; handler)
+            : base(BridgeClass + &quot;$ServiceConnectState&quot;) { this.handler = handler; }
+        [Preserve]
+        public void onStateChange(bool connected) { handler(connected); }
+    }
+}</code></pre>
+<h2 id="run">5. 构建到 Android，核对三个阶段</h2>
+<ol><li>把当前测试场景加入构建列表，目标平台选择 Android，使用适合目标设备的项目配置，执行 Build And Run。本例不能在 Unity 编辑器中调用 Android 服务。</li><li>在电脑观察头显日志：</li></ol><pre><code>adb logcat -s Unity</code></pre>
+<p>依次应看到 <code>Connected=True</code>、<code>Accepted jobID=...</code>，以及同一任务完成后的 <code>SUCCESS sn=...</code>。只有最后一条表示业务完成；收到 jobID 本身只是受理。返回 JSON 中外层 result 是业务 JSON 字符串，代码会再解析一次以取得 sn。</p>
+<h2 id="troubleshoot">6. 按停留阶段排查</h2>
+<ul><li><strong>编译时找不到 LitJson：</strong>检查包是否完整导入，以及自建 asmdef 是否能引用包含 LitJson 的程序集。示例放普通 Scripts 目录时不要遗漏包内代码。</li><li><strong>找不到 Java 桥接类：</strong>检查 AAR 的 Android 导入设置、构建产物及是否在真机运行。</li><li><strong>一直没有 Connected=True：</strong>核对系统服务和绑定日志；不要靠固定延迟假装已连接。</li><li><strong>Rejected：</strong>读取 errorDescription；本例是 NORMAL，先核对目标 API、设备服务和请求，不要盲目添加高权限 Key。</li><li><strong>Accepted 后没有结果：</strong>检查监听器是否被其他组件覆盖、测试对象是否被销毁，以及日志里的 jobID 是否一致。10 秒日志不等于任务取消。</li><li><strong>Completion failed：</strong>保留实际 returnCode 和 error。原文对非零码的表述不完全一致，本例只把 0 作为成功，不硬编码其他含义。</li><li><strong>断线或离开场景：</strong>组件释放本地绑定，不承诺撤销已被设备受理的任务。本例只做单项读取，不作为并行任务管理框架。</li></ul>
+<h2 id="sources">来源与组合示例说明</h2><ul><li><a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/index.html">服务检查与平台入口</a></li><li><a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/usage.html">Unity 接入流程与回调</a></li><li><a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/introduction.html">任务与结果概念</a></li><li><a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Apis/systemInfoJobs/GetSerialNo.html">GetSerialNo 的权限、参数与结果</a></li><li><a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/DpvrDeviceManager2.0.unitypackage">当前官方 Unity 包</a></li></ul>
+<p>接口名、两个结果/事件代理、CallInterface 参数和 JSON 字段来自当前 Unity 使用流程；读取业务改为权限明确的 GetSerialNo。当前官方包实际包含 LitJson 及 DeviceManagerClientJar.aar；对其 classes.jar 静态检查确认 SetServiceStateListener、ServiceConnectState.onStateChange(boolean)、UnBind，以及连接/断开分别通知 true/false。连接状态代理不来自网页片段的猜测。</p>
+<p>为得到一个完整组件，本页补齐 currentActivity、所有字段、代理类和 JSON 类型，修正原片段的未定义变量与拼写；加入主线程队列、jobID 匹配、错误日志与解绑，未原样拼接含错误的片段。示例已做来源和结构审读，未使用 Unity 编译、未打包运行或做头显实测；包内桥接版本变化时应重新核对。</p></article>

@@ -1,0 +1,123 @@
+<div id="content-display" style="opacity: 1;">
+                <header class="header">
+                    <h1>视频播放配置</h1>
+                    <p>本指南介绍了如何配置 <span class="highlight">AutoPlayDisposition.json</span> 文件以控制视频播放行为。</p>
+                </header>
+                
+            
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">01</span>
+                                <h2 class="step-title">配置参数</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <div class="settings-table-container">
+                                <table class="settings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>键 (Key)</th>
+                                            <th>类型</th>
+                                            <th>取值 / 说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="feature-name">isAutoPlay</td>
+                                            <td>Integer</td>
+                                            <td><b>1</b>: 启用自动播放。<br><b>0</b>: 禁用。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">videoPath</td>
+                                            <td>String</td>
+                                            <td>视频的绝对路径 (例如：<b>"/sdcard/demo.mp4"</b>)。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">videoModel</td>
+                                            <td>Integer</td>
+                                            <td>播放模式：<br><b>0</b>: 平面 2D  <b>1</b>: 平面 3D 左右 (SBS)  <b>4</b>: 平面 3D 上下 (TAB)。<br> <b>16</b>: 全景 360 2D  <b>17</b>: 全景 360 左右  <b>20</b>: 全景 360 上下。<br> <b>32</b>: 半球 180 2D  <b>33</b>: 半球 180 左右  <b>36</b>: 半球 180 上下。<br> <b>64</b>: 鱼眼 2D  <b>65</b>: 鱼眼 3D 左右  <b>68</b>: 鱼眼 3D 上下。<br> <b>128</b>: EAC 2D  <b>129</b>: EAC 左右  <b>1024</b>: 立方体贴图 (Cubemap)。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">isSteadyOn</td>
+                                            <td>Integer</td>
+                                            <td><b>1</b>: 屏幕常亮。<br><b>0</b>: 摘下头显时关闭屏幕。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">sleepTimes</td>
+                                            <td>Integer</td>
+                                            <td>熄屏后触发“从头开始播放”所需的秒数。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">lockView</td>
+                                            <td>Boolean</td>
+                                            <td><b>true</b>: 画面跟随头部运动。<br><b>false</b>: 画面固定在空间中。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">distance</td>
+                                            <td>Integer</td>
+                                            <td>屏幕距离 (<b>-120</b> 到 <b>200</b>)。仅对播放模式 (<b>0</b>, <b>1</b>, <b>4</b>) 生效。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">isStartBeginning</td>
+                                            <td>Integer</td>
+                                            <td><b>1</b>: 总是从头开始播放。<br><b>0</b>: 从上次停止的位置续播。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">showUI</td>
+                                            <td>Integer</td>
+                                            <td><b>1</b>: 显示播放菜单/界面。<br><b>0</b>: 隐藏界面。</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">02</span>
+                                <h2 class="step-title">JSON 示例</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>以下是 <span class="highlight">AutoPlayDisposition.json</span> 的标准配置示例：</p>
+                            <div class="note-container">
+                                <pre style="color: #a0aec0; font-family: monospace;">{
+    "isAutoPlay": 1,
+    "videoPath": "/sdcard/demo.mp4",
+    "videoModel": 16,
+    "isSteadyOn": 0,
+    "sleepTimes": 10,
+    "lockView": false,
+    "distance": 0,
+    "isStartBeginning": 1,
+    "showUI": 0
+}</pre>
+                            </div>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">03</span>
+                                <h2 class="step-title">导入包含 JSON 文件的 AutoVideoPlay 文件夹</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>将 <span class="highlight">AutoPlayDisposition.json</span> 文件放置在设备根目录下的 <span class="highlight">AutoVideoPlay 文件夹</span>中（如果不存在则手动创建）。播放器将在启动时读取此配置。</p>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/19ef1a1baf09f5977ca6.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    </div>

@@ -1,0 +1,32 @@
+<article role="main">
+          <section id="v10011">
+<h1>2024-04-30 V10011<a class="headerlink" href="#v10011" title="Permalink to this heading">#</a></h1>
+<ol class="arabic simple">
+<li><p>新增了WifiDisplay相关接口和事件，用于控制系统的WifiDisplay功能。</p></li>
+<li><p>新增了Sensor相关接口和事件。</p></li>
+<li><p>文档增加了一些接口支持版本的说明。</p></li>
+<li><p>修复了一些文档错误。</p></li>
+<li><p>文档中新增了一些模块功能的Demo。</p></li>
+<li><p>变更了CheckDpvrMirraCast接口名为CheckDpvrMiraCast，已经使用的旧接口依然兼容。</p></li>
+<li><p>修复了RestoreDpnLauncher传入空参数时接口报错的问题。</p></li>
+<li><p>增加了CheckApplicationAuthority接口的参数autoKillDelay，延迟进行应用终止。</p></li>
+<li><p>ConnectBluetoothDevice如果连接一个已连接设备时，接口不再会去断开已有连接重新进行连接。</p></li>
+<li><p>GetAppInfoByPackageName检测一个未安装应用时，不再通过参数错误返回结果，使用了一个新的error返回。</p></li>
+<li><p>修复了ConnectWifi接口在连接Wifi时使用了一个少于8位的密码时，会返回SSID无法找到的问题，使用了一个新的error进行返回。</p></li>
+<li><p>修复了CopyFiles接口在源路径不存在时，无法正确返回的问题。</p></li>
+<li><p>修复了remotecontrolJobs/IsServerConnected没有初始化时，始终返回服务器未连接的问题。</p></li>
+</ol>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/ReleaseNote.html">Release Note</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/GettingStarted/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/Apis/index.html">Apis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/Events/index.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/Types/index.html">Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/Examples/index.html">Examples</a></li>
+</ul>
+</div>
+</section>
+
+        </article>

@@ -1,0 +1,158 @@
+<h1>Android：完成第一次 GetSerialNo 调用</h1>
+<h2 id="step-1">1. 准备项目与设备</h2>
+<p>目标是在支持 DeviceManagerService 的 DPVR Android 设备上读取设备 SN，并在 Logcat 看到 <code>SN=...</code>。DMS 是设备内的系统服务；本任务不需要 RDC 服务端或局域网控制端。准备一个 Java Android 应用，使用包名 <code>com.example.dmsdemo</code>，并确保目标固件已提供 DMS；普通手机或没有该服务的模拟器不能用来确认此任务成功。</p>
+<p>在Windows电脑确认服务包：</p><pre><code>adb shell pm list packages | findstr com.dpvr.devicemanager</code></pre><p>应看到包含com.dpvr.devicemanager的包名；没有输出时先核对系统服务和固件。</p><h2 id="step-2">2. 导入 AIDL 接口</h2>
+<p>下载<a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/devicemanager.zip">现行 Android 文档提供的 devicemanager.zip</a>，将其中 <code>com/dpvr/devicemanager</code> 目录及 AIDL 文件复制到应用模块的 <code>src/main/aidl/</code> 下，保留包目录层级。构建后应能导入 <code>IDeviceManager</code>、<code>IDeviceManagerResultListener</code> 和 <code>IDeviceManagerEventListener</code>。这是跨进程接口定义，不是需要在应用中启动的 DMS 服务实现。若项目尚未启用 AIDL，在应用模块 Gradle 的 android 配置内启用它，然后同步并构建。</p>
+<pre><code class="language-gradle">android {
+    buildFeatures {
+        aidl = true
+    }
+}</code></pre>
+<h2 id="step-3">3. 声明 Activity，确认 NORMAL 权限</h2>
+<p><code>GetSerialNo</code> 的权限是 <code>APP_PERMISSION_NORMAL</code>。原文权限表明确 NORMAL 无需授权，因此此最小示例不填写 DeviceManagerKey。将下面的 Activity 声明合并到现有 Manifest，或用于这个独立示例。若以后换成 LAUNCHER、SYSTEM 或 ADMIN 接口，需要先向 DPVR 获取对应授权；<code>DeviceManagerKey</code>（应用包名和版本）与 <code>DeviceManagerPlatformKey</code>（指定渠道固件）放在 application 内，不能拿占位字符串当有效 Key。</p>
+<pre><code class="language-xml">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+    &lt;application android:label=&quot;DMS SN demo&quot;&gt;
+        &lt;activity android:name=&quot;com.example.dmsdemo.MainActivity&quot;
+                  android:exported=&quot;true&quot;&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+    &lt;/application&gt;
+&lt;/manifest&gt;</code></pre>
+<h2 id="step-4">4. 绑定服务并先注册 listener，再发起调用</h2>
+<p>将下列完整类保存为 <code>app/src/main/java/com/example/dmsdemo/MainActivity.java</code>。代码采用原文的服务组件与 AIDL 方法，把业务调用换为已核实的 <code>systemInfoJobs / GetSerialNo</code>。仅在 <code>onServiceConnected</code> 内取得接口后注册两个 listener，再发起调用；不要在 bindService 返回后立即当成已连接。此任务没有业务参数，Params 原表为空，因此传入 null；callParams 也为 null，表示不添加延迟或依赖。JSON 解析使用 Android 的 JSONObject，不需要另加 Gson。</p>
+<pre><code class="language-java">package com.example.dmsdemo;
+
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.RemoteException;
+import android.util.Log;
+import com.dpvr.devicemanager.IDeviceManager;
+import com.dpvr.devicemanager.IDeviceManagerEventListener;
+import com.dpvr.devicemanager.IDeviceManagerResultListener;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public final class MainActivity extends Activity {
+    private static final String TAG = &quot;DMS-SN&quot;;
+    private final Handler main = new Handler(Looper.getMainLooper());
+    private IDeviceManager service;
+    private boolean bound;
+    private boolean closed;
+    private int serialJobId = -1;
+
+    private final IDeviceManagerResultListener resultListener =
+        new IDeviceManagerResultListener.Stub() {
+            @Override public void onResult(int jobId, String result) {
+                // Serialise callback handling with the call/jobID assignment.
+                main.post(() -&gt; handleResult(jobId, result));
+            }
+        };
+
+    private final IDeviceManagerEventListener eventListener =
+        new IDeviceManagerEventListener.Stub() {
+            @Override public void onEvent(String eventType, String eventInfo) {
+                // GetSerialNo needs its result callback, not an event subscription.
+                main.post(() -&gt; {
+                    if (!closed) Log.d(TAG, &quot;Event: &quot; + eventType + &quot; &quot; + eventInfo);
+                });
+            }
+        };
+
+    private final ServiceConnection connection = new ServiceConnection() {
+        @Override public void onServiceConnected(ComponentName name, IBinder binder) {
+            if (closed) return;
+            service = IDeviceManager.Stub.asInterface(binder);
+            try {
+                service.setDeviceManagerResultListener(resultListener);
+                service.setDeviceManagerEventListener(eventListener);
+                readSerialNumber();
+            } catch (RemoteException | JSONException e) {
+                Log.e(TAG, &quot;Register listeners or submit job failed&quot;, e);
+            }
+        }
+        @Override public void onServiceDisconnected(ComponentName name) {
+            service = null;
+            serialJobId = -1;
+            Log.e(TAG, &quot;DMS disconnected; do not call until connected again&quot;);
+        }
+    };
+
+    @Override public void onCreate(Bundle state) {
+        super.onCreate(state);
+        Intent intent = new Intent(&quot;com.dpvr.devicemanager&quot;);
+        intent.setComponent(new ComponentName(&quot;com.dpvr.devicemanager&quot;,
+            &quot;com.dpvr.devicemanager.DeviceManagerService&quot;));
+        try {
+            bound = bindService(intent, connection, Context.BIND_AUTO_CREATE);
+            if (!bound) Log.e(TAG, &quot;DMS bind request was not accepted&quot;);
+        } catch (SecurityException e) {
+            Log.e(TAG, &quot;DMS binding denied&quot;, e);
+        }
+    }
+
+    private void readSerialNumber() throws RemoteException, JSONException {
+        // No business parameters or delayed/dependent call options for this task.
+        String raw = service.call(&quot;systemInfoJobs&quot;, &quot;GetSerialNo&quot;, null, null);
+        JSONObject callResult = new JSONObject(raw);
+        int jobId = callResult.getInt(&quot;jobID&quot;);
+        if (jobId &lt; 0) {
+            Log.e(TAG, &quot;Call rejected: &quot; + callResult.optString(&quot;errorDescription&quot;));
+            return;
+        }
+        serialJobId = jobId;
+        Log.i(TAG, &quot;Call accepted; awaiting result for jobID=&quot; + jobId);
+    }
+
+    private void handleResult(int jobId, String raw) {
+        if (closed || jobId != serialJobId) return;
+        serialJobId = -1;
+        try {
+            JSONObject finished = new JSONObject(raw);
+            int code = finished.getInt(&quot;returnCode&quot;);
+            if (code != 0) {
+                Log.e(TAG, &quot;Job failed: returnCode=&quot; + code
+                    + &quot;, error=&quot; + finished.optString(&quot;error&quot;));
+                return;
+            }
+            // ApiFinishedResult.result is itself a JSON-serialised string.
+            JSONObject payload = new JSONObject(finished.getString(&quot;result&quot;));
+            String sn = payload.getString(&quot;sn&quot;);
+            Log.i(TAG, &quot;SN=&quot; + sn);
+        } catch (JSONException e) {
+            Log.e(TAG, &quot;Unexpected result JSON: &quot; + raw, e);
+        }
+    }
+
+    @Override public void onDestroy() {
+        closed = true;
+        serialJobId = -1;
+        if (bound) {
+            unbindService(connection);
+            bound = false;
+        }
+        service = null;
+        main.removeCallbacksAndMessages(null);
+        super.onDestroy();
+    }
+}
+</code></pre>
+<h2 id="step-5">5. 关联 jobID，读取返回的 sn</h2>
+<p><code>call()</code> 返回的是 CallResult，不是 SN。先解析区分大小写的 <code>jobID</code>；负数表示提交失败，应读取 <code>errorDescription</code>。提交成功后，等待 result listener 的 <code>onResult(jobId, result)</code>，只处理与刚保存 ID 一致的结果。本示例把回调投递到主线程，与 ID 赋值顺序串行，避免很快返回的结果抢在 ID 保存前被丢弃。外层 JSON 的 <code>returnCode == 0</code> 才表示执行成功，再将其 <code>result</code> 字符串解析一次并读取 <code>sn</code>。安装并启动应用后，在 Logcat 按 <code>DMS-SN</code> 过滤，先看到 Call accepted，再看到真实 SN；实际序列号由设备返回，本文不伪造预期值。</p>
+<h2 id="step-6">6. 退出时释放，按失败阶段排查</h2>
+<p>每个进程只能设置一个有效 result listener 和 event listener；重复设置会覆盖之前的监听。示例 Activity 独占这两个 listener，在 onDestroy 中解绑并丢弃本地待处理回调；若集成到已有应用，应由统一的 DMS 管理器管理监听生命周期，不能清掉其他模块的监听。退出或监听释放后，已提交任务仍可能在服务中完成，但本页不再等待其结果。</p>
+<p>若 AIDL 类无法导入，检查目录与包名并重新构建；若绑定失败，确认设备固件提供 DMS 和组件名称无误；若 jobID 为负，记录 errorDescription；若没有结果，确认先注册 listener、ID 一致且页面未销毁；若 returnCode 非零，记录原始数值和 error。原文概念页与使用流程对取消/失败码的正负号表述不同，此示例仅把 0 判为成功，不擅自统一其他代码。GetSerialNo 不依赖事件回调，不要把没有 Event 当成读取失败。</p>
+<h2 id="sources">来源与示例边界</h2><p>本教程将现行接口文档和 Java 封装中的连接、监听、调用模式整理为一个最小示例，新增了本地生命周期与回调顺序处理；它不是官方原样示例，尚未在真机上编译运行验证。原始文章与代码仍完整保留。</p>
+<p><a href="/cn/docs/dm/GettingStarted/android/usage.html">Android usage</a> · <a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html">官方来源</a></p>
+<p><a href="/cn/docs/dm/GettingStarted/android/javaExample.html">Java example</a> · <a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/javaExample.html">官方来源</a></p>
+<p><a href="/cn/docs/dm/GettingStarted/android/introduction.html">Job / Call / API Result</a> · <a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/introduction.html">官方来源</a></p>
+<p><a href="/cn/docs/dm/Apis/systemInfoJobs/GetSerialNo.html">GetSerialNo</a> · <a href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Apis/systemInfoJobs/GetSerialNo.html">官方来源</a></p>

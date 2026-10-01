@@ -1,0 +1,78 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>设备管理<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<section id="id2">
+<h2>按键屏蔽状态数据结构：<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">InputState</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">HomeKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">PowerKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">TouchPadBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">VolumeKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">BackKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>bool HomeKeyBlock</cite>：屏蔽Home键，含手柄Home键短按。</p>
+<p><cite>bool PowerKeyBlock</cite>：屏蔽Power键短按，长按10秒关机无法通过该项屏蔽。</p>
+<p><cite>bool TouchPadBlock</cite>：屏蔽机身触摸板。</p>
+<p><cite>bool VolumeKeyBlock</cite>：屏蔽音量键。</p>
+<p><cite>bool BackKeyBlock</cite>：屏蔽Back键，含手柄Back键。</p>
+</section>
+<section id="id3">
+<h2>按键屏蔽与解除屏蔽<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceSetInputState</span><span class="p">(</span><span class="n">InputState</span><span class="w"> </span><span class="n">states</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>InputState states</cite>：需要设置的按键状态。</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: 指定要关闭的应用的客户端列表，默认为空，表示所有客户端。</p>
+</section>
+<section id="id4">
+<h2>设置音量<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceSetVolume</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>int value</cite>：音量值，范围0-100。</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: 指定要关闭的应用的客户端列表，默认为空，表示所有客户端。</p>
+</section>
+<section id="id5">
+<h2>设备关机<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceShutdown</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: 指定要关闭的应用的客户端列表，默认为空，表示所有客户端。</p>
+</section>
+<section id="id6">
+<h2>设备重启<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceReboot</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: 指定要关闭的应用的客户端列表，默认为空，表示所有客户端。</p>
+</section>
+<section id="id7">
+<h2>设备重定位<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceRecenter</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: 指定要关闭的应用的客户端列表，默认为空，表示所有客户端。</p>
+</section>
+<section id="dpvr-cast">
+<h2>开启 DPVR Cast<a class="headerlink" href="#dpvr-cast" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceStartDpvrCast</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>向指定客户端发送 1012 消息，请求设备通过 DMS 开启 DPVR Cast RTSP 流。</p>
+<p><cite>List&lt;Client&gt; clientList</cite>：指定客户端列表，默认为空，表示所有客户端。</p>
+</section>
+<section id="id8">
+<h2>关闭 DPVR Cast<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceStopDpvrCast</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>向指定客户端发送 1013 消息，请求设备通过 DMS 关闭 DPVR Cast RTSP 流。</p>
+<p><cite>List&lt;Client&gt; clientList</cite>：指定客户端列表，默认为空，表示所有客户端。</p>
+<p>实际是否已经开始 Cast，需要读取客户端后续心跳中的 <code class="docutils literal notranslate"><span class="pre">CastRtspUrl</span></code>；收到空字符串表示当前没有可用的 Cast 地址。</p>
+</section>
+</section>
+
+        </article>

@@ -1,0 +1,25 @@
+<article role="main">
+          <section id="apifinishedresult">
+<span id="type-apifinishedresult"></span><h1>ApiFinishedResult<a class="headerlink" href="#apifinishedresult" title="Permalink to this heading">#</a></h1>
+<p>The execution result of the Api.</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">ApiFinishedResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">returnCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">error</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">jobId</span></code> : The <cite>jobId</cite> of the <cite>Call</cite> corresponding to this result.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">returnCode</span></code>: The execution result of the Api, 0: successful execution, 1: task was cancelled, 2: call error.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">result</span></code> : The Json serialized string of the Api execution result, corresponding to the Result definition in the Api document.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code> : When the Api call fails, it is used to display the error reason.</p>
+</section>
+</section>
+
+        </article>

@@ -1,0 +1,32 @@
+<article role="main">
+          <section id="dpvrbluetoothdevice">
+<span id="type-dpvrbluetoothdevice"></span><h1>DpvrBluetoothDevice<a class="headerlink" href="#dpvrbluetoothdevice" title="Permalink to this heading">#</a></h1>
+<p>Bluetooth device information.</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">DpvrBluetoothDevice</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">name</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">address</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">name</span></code>:The name of the Bluetooth device.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">address</span></code>:The MAC address of the Bluetooth device.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">type</span></code>: Bluetooth type.</p>
+<p><cite>0</cite> : Unknown type (DEVICE_TYPE_UNKNOWN).</p>
+<p><cite>1</cite> : Classic - BR / EDR devices (DEVICE_TYPE_CLASSIC).</p>
+<p><cite>2</cite> : Low energy - LE-only (DEVICE_TYPE_LE).</p>
+<p><cite>3</cite> : Dual mode - BR / EDR / LE (DEVICE_TYPE_DUAL).</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">state</span></code> : Bluetooth pairing status.</p>
+<p><cite>10</cite> : Not paired.</p>
+<p><cite>11</cite> : Pairing in progress.</p>
+<p><cite>12</cite> : Paired.</p>
+</section>
+</section>
+
+        </article>

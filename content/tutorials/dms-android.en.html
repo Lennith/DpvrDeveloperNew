@@ -1,0 +1,158 @@
+<h1>Android: complete your first GetSerialNo call</h1>
+<h2 id="step-1">1. Prepare your project and device</h2>
+<p>Read the device serial number on a DPVR Android device that supports DeviceManagerService and see <code>SN=...</code> in Logcat. DMS is a system service on the device; this task does not need an RDC server or a LAN controller. Prepare a Java Android application using package <code>com.example.dmsdemo</code> and a device whose firmware provides DMS. A phone or emulator without that service cannot validate this task.</p>
+<p>Confirm the service package from a Windows host:</p><pre><code>adb shell pm list packages | findstr com.dpvr.devicemanager</code></pre><p>Expect a package name containing com.dpvr.devicemanager. If absent, check the headset service and firmware first.</p><h2 id="step-2">2. Import the AIDL interfaces</h2>
+<p>Download <a href="https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/devicemanager.zip">devicemanager.zip from the current Android documentation</a>. Copy its <code>com/dpvr/devicemanager</code> directory and AIDL files under the app module’s <code>src/main/aidl/</code>, preserving the package hierarchy. After building, the project must resolve <code>IDeviceManager</code>, <code>IDeviceManagerResultListener</code> and <code>IDeviceManagerEventListener</code>. These define the cross-process interface; they are not a DMS service implementation to start inside your app. If AIDL is not enabled in your project, enable it in the app module’s android Gradle configuration, sync and build.</p>
+<pre><code class="language-gradle">android {
+    buildFeatures {
+        aidl = true
+    }
+}</code></pre>
+<h2 id="step-3">3. Declare the Activity and check NORMAL permission</h2>
+<p><code>GetSerialNo</code> requires <code>APP_PERMISSION_NORMAL</code>. The source permission table states that NORMAL does not require authorisation, so this minimal example does not supply a DeviceManagerKey. Merge this Activity declaration into an existing manifest or use it for the standalone example. Before switching to LAUNCHER, SYSTEM or ADMIN APIs, obtain the corresponding authorisation from DPVR. <code>DeviceManagerKey</code> applies to an application package and version; <code>DeviceManagerPlatformKey</code> applies to designated channel firmware. Both belong inside application; a placeholder string is not a valid key.</p>
+<pre><code class="language-xml">&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;
+    &lt;application android:label=&quot;DMS SN demo&quot;&gt;
+        &lt;activity android:name=&quot;com.example.dmsdemo.MainActivity&quot;
+                  android:exported=&quot;true&quot;&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+    &lt;/application&gt;
+&lt;/manifest&gt;</code></pre>
+<h2 id="step-4">4. Bind the service, register listeners, then submit the call</h2>
+<p>Save this complete class as <code>app/src/main/java/com/example/dmsdemo/MainActivity.java</code>. It uses the documented service component and AIDL methods, with the business operation changed to the verified <code>systemInfoJobs / GetSerialNo</code> API. Obtain the interface in <code>onServiceConnected</code>, register both listeners, and only then submit the call. Returning from bindService does not mean the connection is ready. The API’s Params table is empty, so this task passes null for business parameters and null for callParams, without a delay or dependency. JSON parsing uses Android’s JSONObject and does not require Gson.</p>
+<pre><code class="language-java">package com.example.dmsdemo;
+
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.RemoteException;
+import android.util.Log;
+import com.dpvr.devicemanager.IDeviceManager;
+import com.dpvr.devicemanager.IDeviceManagerEventListener;
+import com.dpvr.devicemanager.IDeviceManagerResultListener;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public final class MainActivity extends Activity {
+    private static final String TAG = &quot;DMS-SN&quot;;
+    private final Handler main = new Handler(Looper.getMainLooper());
+    private IDeviceManager service;
+    private boolean bound;
+    private boolean closed;
+    private int serialJobId = -1;
+
+    private final IDeviceManagerResultListener resultListener =
+        new IDeviceManagerResultListener.Stub() {
+            @Override public void onResult(int jobId, String result) {
+                // Serialise callback handling with the call/jobID assignment.
+                main.post(() -&gt; handleResult(jobId, result));
+            }
+        };
+
+    private final IDeviceManagerEventListener eventListener =
+        new IDeviceManagerEventListener.Stub() {
+            @Override public void onEvent(String eventType, String eventInfo) {
+                // GetSerialNo needs its result callback, not an event subscription.
+                main.post(() -&gt; {
+                    if (!closed) Log.d(TAG, &quot;Event: &quot; + eventType + &quot; &quot; + eventInfo);
+                });
+            }
+        };
+
+    private final ServiceConnection connection = new ServiceConnection() {
+        @Override public void onServiceConnected(ComponentName name, IBinder binder) {
+            if (closed) return;
+            service = IDeviceManager.Stub.asInterface(binder);
+            try {
+                service.setDeviceManagerResultListener(resultListener);
+                service.setDeviceManagerEventListener(eventListener);
+                readSerialNumber();
+            } catch (RemoteException | JSONException e) {
+                Log.e(TAG, &quot;Register listeners or submit job failed&quot;, e);
+            }
+        }
+        @Override public void onServiceDisconnected(ComponentName name) {
+            service = null;
+            serialJobId = -1;
+            Log.e(TAG, &quot;DMS disconnected; do not call until connected again&quot;);
+        }
+    };
+
+    @Override public void onCreate(Bundle state) {
+        super.onCreate(state);
+        Intent intent = new Intent(&quot;com.dpvr.devicemanager&quot;);
+        intent.setComponent(new ComponentName(&quot;com.dpvr.devicemanager&quot;,
+            &quot;com.dpvr.devicemanager.DeviceManagerService&quot;));
+        try {
+            bound = bindService(intent, connection, Context.BIND_AUTO_CREATE);
+            if (!bound) Log.e(TAG, &quot;DMS bind request was not accepted&quot;);
+        } catch (SecurityException e) {
+            Log.e(TAG, &quot;DMS binding denied&quot;, e);
+        }
+    }
+
+    private void readSerialNumber() throws RemoteException, JSONException {
+        // No business parameters or delayed/dependent call options for this task.
+        String raw = service.call(&quot;systemInfoJobs&quot;, &quot;GetSerialNo&quot;, null, null);
+        JSONObject callResult = new JSONObject(raw);
+        int jobId = callResult.getInt(&quot;jobID&quot;);
+        if (jobId &lt; 0) {
+            Log.e(TAG, &quot;Call rejected: &quot; + callResult.optString(&quot;errorDescription&quot;));
+            return;
+        }
+        serialJobId = jobId;
+        Log.i(TAG, &quot;Call accepted; awaiting result for jobID=&quot; + jobId);
+    }
+
+    private void handleResult(int jobId, String raw) {
+        if (closed || jobId != serialJobId) return;
+        serialJobId = -1;
+        try {
+            JSONObject finished = new JSONObject(raw);
+            int code = finished.getInt(&quot;returnCode&quot;);
+            if (code != 0) {
+                Log.e(TAG, &quot;Job failed: returnCode=&quot; + code
+                    + &quot;, error=&quot; + finished.optString(&quot;error&quot;));
+                return;
+            }
+            // ApiFinishedResult.result is itself a JSON-serialised string.
+            JSONObject payload = new JSONObject(finished.getString(&quot;result&quot;));
+            String sn = payload.getString(&quot;sn&quot;);
+            Log.i(TAG, &quot;SN=&quot; + sn);
+        } catch (JSONException e) {
+            Log.e(TAG, &quot;Unexpected result JSON: &quot; + raw, e);
+        }
+    }
+
+    @Override public void onDestroy() {
+        closed = true;
+        serialJobId = -1;
+        if (bound) {
+            unbindService(connection);
+            bound = false;
+        }
+        service = null;
+        main.removeCallbacksAndMessages(null);
+        super.onDestroy();
+    }
+}
+</code></pre>
+<h2 id="step-5">5. Match the jobID and read sn</h2>
+<p><code>call()</code> returns a CallResult, not the serial number. Parse the case-sensitive <code>jobID</code> field first. A negative value means submission failed; read <code>errorDescription</code>. Once accepted, wait for <code>onResult(jobId, result)</code> and match its ID to the saved job ID. This example posts callbacks to the main thread so that callback processing follows the job ID assignment, even for a fast response. Only <code>returnCode == 0</code> in the outer JSON indicates completion success. Parse its <code>result</code> string as JSON again and read <code>sn</code>. Install and launch the app, filter Logcat by <code>DMS-SN</code>, and expect Call accepted followed by the actual SN returned by your device.</p>
+<h2 id="step-6">6. Release resources and diagnose the failing stage</h2>
+<p>Each process has one effective result listener and one event listener; setting them again replaces the previous listeners. This standalone Activity owns both listeners. In onDestroy it marks the screen closed, unbinds, clears its service reference and discards pending callbacks; subsequent callbacks are ignored. In an existing application, let a shared DMS manager own this lifecycle so one screen does not replace another module’s listeners. A submitted job may still finish in the service after this screen stops listening.</p>
+<p>If AIDL classes do not resolve, check the directory/package hierarchy and rebuild. If binding fails, verify that the firmware provides DMS and the component name is correct. If jobID is negative, record errorDescription. If no result arrives, check listener registration order, the saved ID and whether the Activity has already been destroyed. For a nonzero returnCode, record the raw code and error. The source concept and usage pages disagree on the sign of cancellation/failure codes; this example treats only zero as success without redefining the other codes. GetSerialNo does not depend on an event callback.</p>
+<h2 id="sources">Sources and example scope</h2><p>This tutorial combines the current interface documentation and the connection/listener/call pattern from the Java wrapper into one minimal example, with local lifecycle and callback ordering handling. It is an adapted example, not a verbatim official sample, and has not been compiled or run on hardware. The original articles and code remain available in full.</p>
+<p><a href="/en/docs/dm/GettingStarted/android/usage.html">Android usage</a> · <a href="https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html">Official source</a></p>
+<p><a href="/en/docs/dm/GettingStarted/android/javaExample.html">Java example</a> · <a href="https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/javaExample.html">Official source</a></p>
+<p><a href="/en/docs/dm/GettingStarted/android/introduction.html">Job / Call / API Result</a> · <a href="https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/introduction.html">Official source</a></p>
+<p><a href="/en/docs/dm/Apis/systemInfoJobs/GetSerialNo.html">GetSerialNo</a> · <a href="https://static.dpvr.com/apps/developer/devicemanager/V2/en/Apis/systemInfoJobs/GetSerialNo.html">Official source</a></p>

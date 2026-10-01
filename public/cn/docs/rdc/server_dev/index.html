@@ -1,0 +1,366 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>基于通信协议的服务端开发 · DPVR Developer Center</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/search-index.js"></script><script defer src="/assets/app.js"></script></head><body data-base="" data-language="cn" data-product="rdc"><a class="skip-link" href="#main">跳至正文</a><header class="site-header"><a class="brand" href="/cn/index.html"><img src="/assets/logo.png" alt="DPVR"><span>DPVR DEVELOPER CENTER</span></a><button class="global-toggle" aria-label="官网导航" aria-expanded="false" aria-controls="global-nav">☰</button><nav id="global-nav" class="global-nav"><a href="https://developer.dpvr.com/home.html">HOME</a><a href="https://developer.dpvr.com/sdk.html">SDK</a><details><summary>SOLUTIONS</summary><div><a href="https://developer.dpvr.com/solutions-DPVR-starLink.html">StarLink</a><a href="https://developer.dpvr.com/solutions-DPVR-remote-control.html">Remote Control</a></div></details><a aria-current="page" href="/cn/index.html">RESOURCES</a><details><summary>ASSISTANT</summary><div><a href="https://product.dpvr.com/assistant/download.html">Assistant</a><a href="https://product.dpvr.com/assistant4">Assistant4</a></div></details></nav></header><div class="utility-bar"><a class="breadcrumb" href="/cn/index.html">开发者资源</a><div class="utility-actions"><button class="search-open">搜索文档 <kbd>⌘ K</kbd></button><a class="language-link" hreflang="en" href="/en/docs/rdc/server_dev/index.html">English</a><select class="theme" aria-label="外观"><option value="light">浅色</option><option value="dark">深色</option><option value="auto">跟随系统</option></select></div></div><div class="reader-controls"><button class="reader-menu" aria-controls="product-nav" aria-expanded="false">☰ 文档导航</button><button class="toc-menu" aria-controls="page-toc" aria-expanded="false">本页目录 ☷</button></div><div class="reader-layout"><aside class="product-nav" id="product-nav"><h2>RDC 远程设备控制</h2><nav><a class="nav-overview" href="/cn/resources/rdc.html">用途与开始使用</a><a href="/cn/guides/rdc-csharp.html">用 C# 建立一个 RDC 控制端</a><a class="" href="/cn/docs/rdc/dev_guide.html">开发者建议</a><a class="" href="/cn/docs/rdc/index.html">简介</a><details ><summary>头显端设置</summary><ul><li><a class="" href="/cn/docs/rdc/client_usage/device_usage.html">客户端使用</a></li><li><a class="" href="/cn/docs/rdc/client_usage/normal_settings.html">通过应用配置</a></li><li><a class="" href="/cn/docs/rdc/client_usage/setting_by_config.html">配置文件设置</a></li></ul></details><details ><summary>C# 服务端开发</summary><ul><li><a class="" href="/cn/docs/rdc/lib_dev/RDCLib.html">基于RDC库的服务端开发</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/clientmanager.html">客户端管理</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/content.html">内容分发与下载</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/devicecontrol.html">设备管理</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/devicefound.html">设备发现</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/init.html">开启、关闭与回调注册</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/message.html">透传消息</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/package.html">应用控制</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/video.html">视频播放控制</a></li></ul></details><details ><summary>自定义应用透传</summary><ul><li><a class="" href="/cn/docs/rdc/client_app/index.html">客户端应用开发</a></li></ul></details><details open><summary>通信协议</summary><ul><li><a class="active" href="/cn/docs/rdc/server_dev/index.html">基于通信协议的服务端开发</a></li></ul></details></nav></aside><main id="main" class="article-main"><div class="breadcrumbs"><a href="/cn/index.html">资源</a> / <a href="/cn/resources/rdc.html">RDC 远程设备控制</a></div><header class="article-header"><span class="eyebrow">技术文档</span><a href="https://static.dpvr.com/apps/developer/rdc/v2/cn/server_dev/index.html">官方来源 ↗</a></header><article class="article-body"><article role="main" id="furo-main-content">
+          <section id="server-message">
+<span id="id1"></span><h1>基于通信协议的服务端开发<a class="headerlink" href="#server-message" title="Link to this heading">¶</a></h1>
+<p>客户端通过TCP与服务端保持长连接，所有双端间的通信使用相同的消息封装。</p>
+<section id="id2">
+<h2 id="section-0">通信数据格式<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p><cite>[2Byte Size] [2Byte Type] [2Byte Reserved] [Body]</cite></p>
+<p><code class="docutils literal notranslate"><span class="pre">Size</span></code> : 2Byte <cite>Short</cite>，表示消息内容的长度，包括消息头。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Type</span></code> : 2Byte <cite>Short</cite>，表示消息的类型，用于区分消息的类型。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Resevered</span></code> : 2Byte <cite>Short</cite>，保留位，目前为1。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Body</span></code> : Json格式的消息内容，使用UTF8-String，为下文的消息类型结构。</p>
+<p>以客户端心跳为例，它的Java封装如下：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="nf">createMessageByJson</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">jsonBody</span><span class="p">,</span><span class="kt">short</span><span class="w"> </span><span class="n">msgType</span><span class="p">){</span>
+<span class="w">    </span><span class="kt">short</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">short</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">jsonBody</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">6</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ByteBuffer</span><span class="w"> </span><span class="n">bf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ByteBuffer</span><span class="p">.</span><span class="na">allocate</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">putShort</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">putShort</span><span class="p">(</span><span class="n">msgType</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">putShort</span><span class="p">((</span><span class="kt">short</span><span class="p">)</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">jsonBody</span><span class="p">.</span><span class="na">getBytes</span><span class="p">());</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">flip</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[</span><span class="n">size</span><span class="o">]</span><span class="p">;</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="na">d</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="s">"msg size: "</span><span class="o">+</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"type"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">msgType</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">" json: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">jsonBody</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils">
+<section id="body">
+<h2 id="section-1">Body类型<a class="headerlink" href="#body" title="Link to this heading">¶</a></h2>
+<p>客户端通信消息中的Body根据Type不同，会有不同的数据结构。他们为各数据结构的Json序列化。</p>
+<section id="id3">
+<h3 id="section-2">客户端心跳<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<p>客户端向服务器发送的心跳信息，同时包含一些客户端信息。</p>
+<p><cite>Type</cite> : 1001</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Client_Heart_Beat</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">hardware</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">battery_level</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">top_apk</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">cast_rtsp_url</span><span class="p">;</span><span class="w">  </span><span class="c1">// 未 Cast 时为空字符串</span>
+<span class="w">    </span><span class="n">Player_Status</span><span class="w"> </span><span class="n">player_info</span><span class="p">;</span><span class="w"> </span><span class="c1">// 可选，见下文说明</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">hardware</span></code> : 设备SN号。</p>
+<p><code class="docutils literal notranslate"><span class="pre">battery_level</span></code> : 电池电量，0~100。</p>
+<p><code class="docutils literal notranslate"><span class="pre">top_apk</span></code> : 当前最上层显示的应用包名。</p>
+<p><code class="docutils literal notranslate"><span class="pre">cast_rtsp_url</span></code> : 当前 DPVR Cast 的 RTSP 地址。未开启 Cast、DMS 未连接或设备 IPv4 地址暂不可用时为空字符串；开启并收到 DMS 状态事件后，格式为 <code class="docutils literal notranslate"><span class="pre">rtsp://&lt;设备IPv4&gt;:8554/stream1</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">player_info</span></code> : 可选字段，播放进度信息。仅当 <code class="docutils literal notranslate"><span class="pre">top_apk</span></code> 包含 <code class="docutils literal notranslate"><span class="pre">com.dpvr.videoplayer</span></code> （即 DPVR 播放器位于前台）且客户端已收到播放器状态时携带。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Player_Status</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">time</span><span class="p">;</span><span class="w">     </span><span class="c1">// 当前播放位置</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">duration</span><span class="p">;</span><span class="w"> </span><span class="c1">// 视频总时长</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">state</span><span class="p">;</span><span class="w">   </span><span class="c1">// 播放器状态</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">    </span><span class="c1">// 视频名称</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">path</span><span class="p">;</span><span class="w">    </span><span class="c1">// 视频路径</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">player_info</span></code> 的数值由 DPVR 播放器广播（<code class="docutils literal notranslate"><span class="pre">com.dpvr.videoplayer.playerstatus</span></code>）透传，客户端缓存最新值后随心跳上报；心跳周期为 2 秒，进度内容的新鲜度取决于播放器的状态广播频率。旧版服务端库会忽略该字段（保持兼容），如需解析播放进度请使用新版 LibDpvrRDC。</p>
+</div>
+</section>
+<hr class="docutils">
+<section id="id4">
+<h3 id="section-3">内容清单<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端下发内容清单。客户端收到后，会为每个包含有效 <code class="docutils literal notranslate"><span class="pre">content_id</span></code>、<code class="docutils literal notranslate"><span class="pre">file_name</span></code> 和 <code class="docutils literal notranslate"><span class="pre">url</span></code> 的条目自动创建并启动下载任务。</p>
+<p><cite>Type</cite> : 4001</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Content_List</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">sn</span><span class="p">;</span><span class="w">                 </span><span class="c1">// 可选，服务端定向发送时可填写</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Content_Item</span><span class="o">&gt;</span><span class="w"> </span><span class="n">contents</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">Content_Item</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">content_id</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">file_name</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">hash</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">version</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">content_id</span></code> : 内容唯一标识；客户端缺少该字段时忽略该条目。</p>
+<p><code class="docutils literal notranslate"><span class="pre">file_name</span></code> : 下载后的文件名，必填；允许使用 UTF-8 文件名（包括中文），但只能填写单个文件名，不能包含 <code class="docutils literal notranslate"><span class="pre">/</span></code>、<code class="docutils literal notranslate"><span class="pre">\</span></code>、<code class="docutils literal notranslate"><span class="pre">%</span></code>、<code class="docutils literal notranslate"><span class="pre">?</span></code>、<code class="docutils literal notranslate"><span class="pre">#</span></code> 或 <code class="docutils literal notranslate"><span class="pre">..</span></code> 等路径片段。</p>
+<p><code class="docutils literal notranslate"><span class="pre">size</span></code>、<code class="docutils literal notranslate"><span class="pre">hash</span></code>、<code class="docutils literal notranslate"><span class="pre">version</span></code> : 内容元数据；当前 RDC 客户端不会额外执行 size/hash/version 校验。</p>
+<p><code class="docutils literal notranslate"><span class="pre">url</span></code> : 下载资源地址，必填且必须使用 HTTP/HTTPS。地址原样传给设备端 <code class="docutils literal notranslate"><span class="pre">DownloadService</span></code>，例如 <code class="docutils literal notranslate"><span class="pre">http://192.168.1.100/dpvr/demo.mp4</span></code>。资源可以部署在 Nginx 或 Windows 自带的 IIS/HTTP 服务上；RDC 服务端本身不提供文件下载服务。</p>
+<p>客户端将目标相对路径设置为 <code class="docutils literal notranslate"><span class="pre">contents/&lt;file_name&gt;</span></code>，设备端 DownloadService 将资源写入系统公共下载目录的 <code class="docutils literal notranslate"><span class="pre">contents</span></code> 子目录（典型路径为 <code class="docutils literal notranslate"><span class="pre">/storage/emulated/0/Download/contents/&lt;file_name&gt;</span></code>），并以 <code class="docutils literal notranslate"><span class="pre">autoStart=true</span></code> 自动开始下载。设备端依赖的服务组件为 <code class="docutils literal notranslate"><span class="pre">com.dpvr.downloadmanager/.DownloadService</span></code>。</p>
+</section>
+<section id="id5">
+<h3 id="section-4">内容状态上报<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<p>客户端通过内容状态消息上报下载进度。</p>
+<p><cite>Type</cite> : 4002</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Content_Report</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">sn</span><span class="p">;</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Content_Report_Item</span><span class="o">&gt;</span><span class="w"> </span><span class="n">contents</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">Content_Report_Item</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">content_id</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">status</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">progress</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">downloaded</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">local_path</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">error</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code> 当前由客户端映射为 <code class="docutils literal notranslate"><span class="pre">pending</span></code>、<code class="docutils literal notranslate"><span class="pre">downloading</span></code>、<code class="docutils literal notranslate"><span class="pre">waiting</span></code>、<code class="docutils literal notranslate"><span class="pre">finished</span></code>、<code class="docutils literal notranslate"><span class="pre">idle</span></code> 或 <code class="docutils literal notranslate"><span class="pre">error</span></code>；<code class="docutils literal notranslate"><span class="pre">progress</span></code> 为百分比，<code class="docutils literal notranslate"><span class="pre">local_path</span></code> 为 DownloadService 返回的本地路径。当前 <code class="docutils literal notranslate"><span class="pre">downloaded</span></code> 不主动计算，值保持为 0。创建任务前的校验或调用失败时，<code class="docutils literal notranslate"><span class="pre">error</span></code> 可能为 <code class="docutils literal notranslate"><span class="pre">invalid_file_name</span></code>、<code class="docutils literal notranslate"><span class="pre">invalid_url</span></code> 或 <code class="docutils literal notranslate"><span class="pre">download_task_create_failed</span></code>。客户端每 2 个心跳发送一次内容状态（心跳周期为 2 秒），没有内容条目时也发送 <code class="docutils literal notranslate"><span class="pre">contents=[]</span></code>。</p>
+<p>4001 是一次性执行指令；同一 <code class="docutils literal notranslate"><span class="pre">content_id</span></code> 再次下发表示重新执行，客户端会通过 DownloadService Binder 移除旧任务及文件后创建新任务。客户端不因重连自动重试，也不承诺断点续传。4002 的 <code class="docutils literal notranslate"><span class="pre">contents</span></code> 是设备端当前记录的完整快照，不是增量；空数组会清除服务端保存的旧内容记录。</p>
+</section>
+<hr class="docutils">
+<section id="id6">
+<h3 id="section-5">客户端透传<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<p>客户端应用向服务器发送的透传消息。</p>
+<p><cite>Type</cite> : 3001</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Client_Message</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">from_package</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">body</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">from_package</span></code> : 发送消息的应用包名。</p>
+<p><code class="docutils literal notranslate"><span class="pre">body</span></code> : 消息内容。</p>
+</section>
+<hr class="docutils">
+<section id="id7">
+<h3 id="section-6">播放视频<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送的进行视频播放消息。</p>
+<p><cite>Type</cite> : 1002</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Play_Video</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">VideoType</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">VideoPath</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">StereoType</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">StartOnPrepared</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">VideoType</span></code> : 视频类型，目前版本上，固定为 “*”。</p>
+<p><code class="docutils literal notranslate"><span class="pre">VideoPath</span></code> : 视频路径。</p>
+<p><code class="docutils literal notranslate"><span class="pre">StereoType</span></code> : 视频显示格式。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>0 : 普通2D视频。</p>
+<p>1 ： 3D右左。</p>
+<p>2 ： 3D上下</p>
+<p>3： 180度2d。</p>
+<p>4 ：180度右左3d。</p>
+<p>5： 180度下上3d。</p>
+<p>6： 全景2D。</p>
+<p>7： 全景左右3D。</p>
+<p>8： 全景上下3D。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">StartOnPrepared</span></code> : 是否在视频完成后自动开始播放。</p>
+</section>
+<hr class="docutils">
+<section id="id8">
+<h3 id="section-7">视频暂停<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，暂停当前视频播放。</p>
+<p><cite>Type</cite>: 1003</p>
+<p><cite>Body</cite>: null</p>
+</section>
+<hr class="docutils">
+<section id="id9">
+<h3 id="section-8">停止播放视频<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，停止当前视频播放。该指令仅停止播放，不影响 RDC 连接；是否同时退出播放器界面由播放器应用自身决定。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>客户端按 1002 最近一次消息选择的播放路由发送停止指令：使用 DPVR 播放器时发送 <code class="docutils literal notranslate"><span class="pre">com.dpvr.videoplayer.VIDEOPLAYERCONTROLLER</span></code>，回落到 DpnLauncher 时发送 <code class="docutils literal notranslate"><span class="pre">com.deepoon.dpnlauncher.PLAY_CONTROL</span></code>，并携带 <code class="docutils literal notranslate"><span class="pre">controltype=playcommand</span></code>、<code class="docutils literal notranslate"><span class="pre">operation=stop</span></code>。该指令不影响 RDC 连接；是否同时退出播放器界面由播放器应用自身决定。</p>
+</div>
+<p><cite>Type</cite> : 1004</p>
+<p><cite>Body</cite> : null</p>
+</section>
+<hr class="docutils">
+<section id="id10">
+<h3 id="section-9">恢复视频播放<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，在指定的统一时刻恢复当前视频播放。</p>
+<p><cite>Type</cite> : 1005</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Push_Resume_Video</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">PlayTime</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">PlayTime</span></code> : 统一起播时刻，格式为 <code class="docutils literal notranslate"><span class="pre">yyyy-MM-dd-HH-mm-ss</span></code> 字符串（服务端本地时间，秒级精度，不含毫秒）。服务端 <code class="docutils literal notranslate"><span class="pre">VideoResume(delay)</span></code> 接口会将 <code class="docutils literal notranslate"><span class="pre">delay``（单位：秒）加到服务端当前时间生成该值后下发，例如服务端当前时间</span> <span class="pre">``12:00:00</span></code>、<code class="docutils literal notranslate"><span class="pre">delay=10</span></code> 时，<code class="docutils literal notranslate"><span class="pre">PlayTime</span></code> 为 <code class="docutils literal notranslate"><span class="pre">2026-07-17-12-00-10</span></code>，所有设备在本机时间到达 <code class="docutils literal notranslate"><span class="pre">12:00:10</span></code> 时同时恢复播放。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果需要使用定时恢复播放功能，请确保客户端系统时间与服务端一致。客户端在进行该时间判定时，如果当前时间大于设置时间，则会在收到消息时立刻进行播放。</p>
+</div>
+</section>
+<hr class="docutils">
+<section id="id11">
+<h3 id="section-10">视频跳转<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，在视频播放中执行Seek指令。</p>
+<p><cite>Type</cite> : 1006</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Push_Seek</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">time</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">time</span></code> : 视频Seek位置，单位为秒。</p>
+</section>
+<hr class="docutils">
+<section id="id12">
+<h3 id="section-11">设置系统音量<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，设置系统音量。</p>
+<p><cite>Type</cite> : 1007</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Push_Set_Vol</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">volume_value</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">volume_value</span></code> : 音量值，取值范围为0~15。</p>
+</section>
+<hr class="docutils">
+<section id="id13">
+<h3 id="section-12">设置按键屏蔽<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，设置按键屏蔽。</p>
+<p><cite>Type</cite> : 1008</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Push_Block_Key</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block_power_key</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block_back_key</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block_home_key</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block_touch</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block_volume_key</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">block_power_key</span></code> : 屏蔽电源按键，1:屏蔽，0：不屏蔽。</p>
+<p><code class="docutils literal notranslate"><span class="pre">block_back_key</span></code> : 屏蔽返回按键，1:屏蔽，0：不屏蔽。</p>
+<p><code class="docutils literal notranslate"><span class="pre">block_home_key</span></code> : 屏蔽菜单按键，1:屏蔽，0：不屏蔽。 在不带机身Home键的设备上，该项会屏蔽手柄Home键。</p>
+<p><code class="docutils literal notranslate"><span class="pre">block_touch</span></code> : 屏蔽触摸板，1:屏蔽，0：不屏蔽。</p>
+<p><code class="docutils literal notranslate"><span class="pre">block_volume_key</span></code> : 屏蔽音量按键，1:屏蔽，0：不屏蔽。</p>
+</section>
+<hr class="docutils">
+<section id="id14">
+<h3 id="section-13">关机<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，关机。</p>
+<p><cite>Type</cite> : 1009</p>
+<p><cite>Body</cite> : null</p>
+</section>
+<hr class="docutils">
+<section id="id15">
+<h3 id="section-14">重启<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，重启。</p>
+<p><cite>Type</cite> : 1010</p>
+<p><cite>Body</cite> : null</p>
+</section>
+<hr class="docutils">
+<section id="id16">
+<h3 id="section-15">重定位<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，对头盔视角进行重定位，只对使用了DpvrSDK的VR应用有效。</p>
+<p><cite>Type</cite> : 1011</p>
+<p><cite>Body</cite> : null</p>
+</section>
+<hr class="docutils">
+<section id="dpvr-cast">
+<h3 id="section-16">开启 DPVR Cast<a class="headerlink" href="#dpvr-cast" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，调用设备端 DMS 的 DPVR Cast 接口，开启屏幕 RTSP 流。</p>
+<p><cite>Type</cite> : 1012</p>
+<p><cite>Body</cite> : 空 JSON 对象 <code class="docutils literal notranslate"><span class="pre">{}</span></code>。</p>
+<p>客户端通过已有的 DeviceManager 客户端封装调用 <code class="docutils literal notranslate"><span class="pre">mediaJobs/StartMiracast</span></code>，不在 RDC 内重复实现 DMS 服务入口。开启结果通过 DMS 的 <code class="docutils literal notranslate"><span class="pre">dpvr_cast_state</span></code> 事件异步反馈，后续心跳才会更新 <code class="docutils literal notranslate"><span class="pre">cast_rtsp_url</span></code>。</p>
+</section>
+<section id="id17">
+<h3 id="section-17">关闭 DPVR Cast<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，调用设备端 DMS 的 DPVR Cast 接口，关闭屏幕 RTSP 流。</p>
+<p><cite>Type</cite> : 1013</p>
+<p><cite>Body</cite> : 空 JSON 对象 <code class="docutils literal notranslate"><span class="pre">{}</span></code>。</p>
+<p>客户端通过同一封装调用 <code class="docutils literal notranslate"><span class="pre">mediaJobs/StopMiracast</span></code>；收到 <code class="docutils literal notranslate"><span class="pre">isCasting=false</span></code> 状态后，后续心跳的 <code class="docutils literal notranslate"><span class="pre">cast_rtsp_url</span></code> 为空字符串。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>RDC 客户端连接 DMS 后会调用 <code class="docutils literal notranslate"><span class="pre">mediaJobs/CheckDpvrMiraCastState</span></code> 初始化 Cast 状态，并监听事件 <code class="docutils literal notranslate"><span class="pre">dpvr_cast_state</span></code> 的 <code class="docutils literal notranslate"><span class="pre">isCasting</span></code> 字段。设备需要具备对应的 DMS 权限/授权；协议发送成功不等于 RTSP 流已经可用。</p>
+</div>
+</section>
+<hr class="docutils">
+<section id="id18">
+<h3 id="section-18">打开指定应用<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，打开指定应用。</p>
+<p><cite>Type</cite> : 2001</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Start_Activity</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">packagename</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">classname</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">packagename</span></code> : 应用包名。</p>
+<p><code class="docutils literal notranslate"><span class="pre">classname</span></code> : 需要打开的Activity类名。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>RDC 客户端从服务上下文启动指定组件时，会补齐 Android <code class="docutils literal notranslate"><span class="pre">NEW_TASK</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">MAIN/LAUNCHER</span></code> 启动语义，以便 Android 12 和 DPVR 的普通 2D→VD 路由正常处理。DPVR 设备可能由 <code class="docutils literal notranslate"><span class="pre">com.dpvr.VirtualDesktop</span></code> 承载普通 2D 应用，并将目标 Activity 放在 VD display（例如 display2/display4 或设备实际分配的虚拟 display）；display0/SVR 仍保持 DpnLauncher 前台是设计行为，不应据此判定 2001 失败。目标应用和 Activity 仍需已安装、可导出并可被当前用户启动。</p>
+</div>
+</section>
+<hr class="docutils">
+<section id="id19">
+<h3 id="section-19">关闭应用<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送，关闭指定应用。</p>
+<p><cite>Type</cite> : 2002</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Stop_Activity</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">packagename</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">packagename</span></code> : 应用包名。</p>
+<p>2002 由客户端对该包执行停止处理；它不要求 display0 的 DpnLauncher 或 VD 宿主退出，也不承诺恢复到某个特定前台界面。</p>
+</section>
+<hr class="docutils">
+<section id="id20">
+<h3 id="section-20">服务端透传<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h3>
+<p>服务端向客户端发送的透传消息。</p>
+<p><cite>Type</cite> : 3002</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Server_Message</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">to_package</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">body</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">to_package</span></code> : 接收消息的客户端包名。</p>
+<p><code class="docutils literal notranslate"><span class="pre">body</span></code> : 透传消息内容。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>使用该接口需要接收透传的应用Bind（AIDL）到RDC服务并且监听透传消息，或者通过DpvrDeviceManagerService的接口完成。</p>
+</div>
+</section>
+</section>
+<hr class="docutils">
+<section id="id21">
+<h2 id="section-21">服务端示例<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h2>
+<p>我们提供了一个 <a class="reference external" href="https://static.dpvr.com/apps/developer/rdc/v2/resources/serverdemo.zip">简单的服务器.net Demo</a> 。</p>
+<p>该Demo用于展示消息封装，协议封包，并提供了一个基于IOCP的Socket服务器框架，用于开发者进行快速二次开发。</p>
+<p>该Demo使用了一个控制台程序，可以通过控制台输入指令来达到控制客户端的效果。具体请参考 <code class="docutils literal notranslate"><span class="pre">Program.cs</span></code> 文件中 <code class="docutils literal notranslate"><span class="pre">HandleCmd</span></code> 方法。</p>
+</section>
+<section id="id22">
+<h2 id="section-22">常见问题<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h2>
+<p><cite>Q: 如果需要保证所有客户端同时开始进行视频播放，应该如何处理？</cite></p>
+<p>A: 我们建议采取下面两种方法进行处理：</p>
+<ol class="arabic">
+<li><p>减少服务端延迟进行不同设备间的延迟优化，请确保服务端能够将所有设备的通信延迟控制在一个相对稳定的区间，最慢收到命令的设备和最快的之间延迟不超过100ms，这样能够使得通信指令较为平稳的发送到所有设备。我们的Demo示例在由华硕AX82U提供的网络环境下，使用35台左右的设备能够保证最大的接收延迟在50ms以内。</p></li>
+<li><p>如果服务端或者网络环境限制，无法保证所有设备低延迟，可以先发送开始播放视频指令，但是禁用StartOnPrepared。 然后通过在发送恢复播放指令时，设置恢复播放时间让所有设备同时恢复播放。</p>
+<p>通常来说，播放器启动需要消耗5秒左右时间，另外需要2-3秒左右时间的加载，作为参考，我们建议的恢复播放时间设置为开始播放后的10-15秒后。</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>使用定时恢复播放功能时，请确保客户端端系统时间与服务端一致。</p>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>类似的，如果需要Seek后保持设备播放同步，也可以采取类似的措施。</p></li>
+</ol>
+</section>
+</section>
+
+        </article><section class="source-downloads" data-editorial-note="true"><h2>本页下载</h2><ul><li><a href="https://static.dpvr.com/apps/developer/rdc/v2/cn/_sources/server_dev/index.rst.txt">View this page source</a></li></ul></section></article><nav class="page-turn"><a href="/cn/docs/rdc/dev_guide.html"><small>上一篇</small><span>开发者建议</span></a><a href="/cn/docs/rdc/lib_dev/RDCLib.html"><small>下一篇</small><span>基于RDC库的服务端开发</span></a></nav></main><aside class="page-toc" id="page-toc"><h2>本页目录</h2><nav></nav></aside></div><button class="drawer-scrim" aria-label="关闭目录"></button><footer class="site-footer"><p>© Copyright DPVR. All Rights Reserved</p><p>沪ICP备2022019614号-1 Shanghai Lexiang Technology Co. Ltd</p></footer><dialog class="search-dialog" aria-label="搜索文档"><form class="search-form"><input id="search-query" name="q" type="search" placeholder="搜索产品、操作或接口…" aria-label="关键词"><button type="button" class="search-close" aria-label="关闭搜索">✕</button></form><div class="search-status" role="status"></div><div class="search-results"></div></dialog></body></html>

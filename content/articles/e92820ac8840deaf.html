@@ -1,0 +1,109 @@
+<div id="content-display" style="opacity: 1;">
+                <header class="header">
+                    <h1>拷贝工具使用指南</h1>
+                    <p>此工具用于批量执行任务，例如复制文件、安装 APK、解压 ZIP 以及复制 OBB/语言/OTA 包。</p>
+                </header>
+                
+            
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">01</span>
+                                <h2 class="step-title">功能概览</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>本工具专为应用预装、批量数据复制和资源更新等场景设计。</p>
+                            <ul class="flush-list">
+                                <li><b>任务来源：</b> 从外部 TF 卡或内部存储读取任务配置。</li>
+                                <li><b>支持的任务类型：</b></li>
+                                    <ul class="task-list-list">
+                                        <li><b>APK：</b> 安装应用程序包到设备（支持目录或文件）。</li>
+                                        <li><b>ZIP_UNPACK：</b> 解压 ZIP 文件到目标目录。</li>
+                                        <li><b>FILE：</b> 复制任意目录或文件到目标目录。</li>
+                                        <li><b>OBB：</b> 复制应用 OBB 文件到目标目录。</li>
+                                        <li><b>LANGUAGE_PACKAGE：</b> 复制语言包到目标目录。</li>
+                                        <li><b>OTA_PACKAGE：</b> 复制 OTA 升级包到目标目录（仅复制，不触发升级）。</li>
+                                    </ul>
+                                
+                                <li><b>智能处理：</b> 如果源文件位于 TF 卡上，APK/ZIP 文件会先复制到本地临时目录，然后再进行安装/解压。</li>
+                                <li><b>UI 功能：</b> 实时显示正在运行/已完成的任务、失败日志以及后续队列（待安装/解压任务）。支持一键清除缓存。</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">02</span>
+                                <h2 class="step-title">Json 配置</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <div class="settings-table-container">
+                                <table class="settings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>字段</th>
+                                            <th>描述</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="feature-name">type</td>
+                                            <td>任务类型：<b>APK</b>, <b>ZIP_UNPACK</b>, <b>FILE</b>, <b>OBB</b>, <b>LANGUAGE_PACKAGE</b>, <b>OTA_PACKAGE</b>。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">source</td>
+                                            <td>源路径。使用 <b>${EXT_SD}</b> 代表外部 TF 卡根目录。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">dist</td>
+                                            <td>目标路径（APK 任务自动忽略）。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">name</td>
+                                            <td>任务名称（可选，用于 UI 显示）。</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style="margin-top:16px;"><b>Json 示例：</b></p>
+                            <div class="note-container">
+<pre style="color: #a0aec0; font-size: 13px; font-family: monospace;">[
+  { "type":"APK", "source":"${EXT_SD}/AUTO_INSTALL_APPS", "name":"apps" },
+  { "type":"ZIP_UNPACK", "source":"${EXT_SD}/video.zip", "dist":"/sdcard/TargetDir", "name":"videounzip" },
+  { "type":"LANGUAGE_PACKAGE", "source":"${EXT_SD}/LANGUAGE", "dist":"/sdcard/Android/data", "name":"lang" },
+  { "type":"FILE", "source":"${EXT_SD}/InputDir", "dist":"/sdcard/OutputDir", "name":"assets" }
+]</pre>
+                            </div>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">03</span>
+                                <h2 class="step-title">快速开始</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>请按照以下步骤使用复制工具：</p>
+                            <ul class="manual-steps">
+                                <li><span class="step-num">1.</span> <div><b>安装应用：</b> 开启设备并通过数据线连接电脑。将 <span class="highlight">CopyTool.apk</span> 复制到设备并完成安装。</div></li>
+                                <li><span class="step-num">2.</span> <div><b>准备配置：</b> 创建名为 <span class="highlight">copy_config.json</span> 的文件，根据所需任务进行配置，然后将其放置在 <span class="highlight">TF 卡根目录</span>。</div></li>
+                                <li><span class="step-num">3.</span> <div><b>拷贝内容：</b> 根据<span class="highlight">copy_config.json</span> 文件的源路径要求，把所需拷贝或安装内容放置在 TF 卡内。
+								</div></li><li><span class="step-num">4.</span> <div><b>插入 TF 卡：</b> 将 TF 卡插入设备内。</div></li>
+								<li><span class="step-num">5.</span> <div><b>启动应用：</b> 打开工具；它会自动加载配置并开始执行任务。</div></li>
+                                <li><span class="step-num">6.</span> <div><b>检查进度：</b> 监控主屏幕上的进度条、成功/失败计数以及任何错误信息。</div></li>
+                                <li><span class="step-num">7.</span> <div><b>清除缓存：</b> 点击后续队列（Post Queue）区域中的“清除缓存”以删除临时文件。</div></li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    </div>

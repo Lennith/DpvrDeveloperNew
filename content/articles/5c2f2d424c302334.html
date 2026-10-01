@@ -1,0 +1,47 @@
+<article role="main" id="furo-main-content">
+          <section id="client-management">
+<h1>Client Management<a class="headerlink" href="#client-management" title="Link to this heading">¶</a></h1>
+<section id="client-data-structure">
+<h2>Client Data Structure<a class="headerlink" href="#client-data-structure" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Client</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">SN</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">IP</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Port</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">TopPackage</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">BatteryLevel</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">CastRtspUrl</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ConnectState</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>string SN</cite>: Client serial number.</p>
+<p><cite>string IP</cite>: Client IP address.</p>
+<p><cite>int Port</cite>: Client port number.</p>
+<p><cite>string TopPackage</cite>: The topmost application package name on the client.</p>
+<p><cite>int BatteryLevel</cite>: Client battery level.</p>
+<p><cite>string CastRtspUrl</cite>: The current DPVR Cast RTSP address. It is an empty string when Cast is inactive or the address is unavailable. This value comes from the client’s heartbeat field <code class="docutils literal notranslate"><span class="pre">cast_rtsp_url</span></code>; it is not a synchronous result returned after sending message 1012.</p>
+<p><cite>int ConnectState</cite>: Client connection state, 1: Connected, 2: Disconnected.</p>
+</section>
+<section id="retrieving-the-client-list">
+<h2>Retrieving the Client List<a class="headerlink" href="#retrieving-the-client-list" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ClientList</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This list contains clients that have established connections.</p>
+</section>
+<section id="retrieving-a-client-instance">
+<h2>Retrieving a Client Instance<a class="headerlink" href="#retrieving-a-client-instance" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="n">Client</span><span class="w"> </span><span class="nf">GetClient</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">serialNo</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Retrieve a client based on its serial number (SN) and IP address. The SN has higher priority than the IP. If a client matching the SN is found, it will not search by IP.</p>
+<p>Parameters:</p>
+<p><cite>string serialNo</cite>: The serial number of the client to be retrieved.</p>
+<p><cite>string ip</cite>: The IP address of the client to be retrieved, default is null.</p>
+<p>Return Value:</p>
+<p><cite>Client</cite>: The client object.</p>
+</section>
+</section>
+
+        </article>

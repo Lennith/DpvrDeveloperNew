@@ -1,0 +1,223 @@
+<article><h1>GestureSdk Parameters and Notes (Updated)</h1>
+<h2>1. Purpose</h2>
+<p>This document summarizes the current runtime parameters and practical integration notes under <code>Assets/GestureSdk</code>.</p>
+<h2>2. Core Scripts</h2>
+<ul>
+<li><code>Assets/GestureSdk/Scripts/CameraManager.cs</code></li>
+<li><code>Assets/GestureSdk/Scenes/GestureTest.cs</code></li>
+</ul>
+<h2>3. CameraManager Parameters</h2>
+<h3>3.1 Camera</h3>
+<ul>
+<li><code>cameraWidth</code> / <code>cameraHeight</code> / <code>cameraFps</code>
+<ul>
+<li>Controls camera preview resolution and FPS.</li>
+<li>Keep defaults first, then tune if needed.</li>
+</ul>
+</li>
+</ul>
+<h3>3.2 Gesture</h3>
+<ul>
+<li><code>gesturePreset</code>
+<ul>
+<li>Preset mode (<code>DEFAULT / PERFORMANCE / ACCURACY</code>).</li>
+</ul>
+</li>
+<li><code>tickFps</code>
+<ul>
+<li>Gesture processing tick rate.</li>
+<li>Recommended: <code>5</code>.</li>
+</ul>
+</li>
+<li><code>numHands</code>
+<ul>
+<li>Max number of tracked hands.</li>
+<li>Recommended: <code>1</code>.</li>
+</ul>
+</li>
+<li><code>modelComplexity</code>
+<ul>
+<li>Gesture model complexity level.</li>
+</ul>
+</li>
+<li><code>inputRotation</code>
+<ul>
+<li>Input rotation, recommended: <code>CCW_90</code>.</li>
+</ul>
+</li>
+<li><code>inputScaleMode</code>
+<ul>
+<li>Input scale mode, recommended: <code>LETTERBOX</code>.</li>
+</ul>
+</li>
+<li><code>stabilityFrames</code>
+<ul>
+<li>Number of stable frames before committing result.</li>
+</ul>
+</li>
+<li><code>hysteresisEnterScale</code> / <code>hysteresisExitScale</code>
+<ul>
+<li>Hysteresis thresholds for stable switching.</li>
+</ul>
+</li>
+<li><code>fenceMode</code>
+<ul>
+<li>Sync strategy, recommended: <code>AUTO</code>.</li>
+</ul>
+</li>
+<li><code>fenceShortWaitMs</code>
+<ul>
+<li>Short wait in ms, recommended: <code>0</code>.</li>
+</ul>
+</li>
+<li><code>classificationMode</code>
+<ul>
+<li>Classification mode (default <code>BUILTIN</code>).</li>
+</ul>
+</li>
+<li><code>emitLandmarks</code> / <code>includeLandmarkInJson</code>
+<ul>
+<li>Landmark emission and JSON payload options.</li>
+</ul>
+</li>
+</ul>
+<h3>3.3 Diagnostics</h3>
+<ul>
+<li><code>enableDiagnosticLogging</code>
+<ul>
+<li>Enables verbose runtime logs for debugging.</li>
+</ul>
+</li>
+</ul>
+<h2>4. GestureTest Parameters</h2>
+<ul>
+<li><code>cameraManager</code>
+<ul>
+<li>Reference to <code>CameraManager</code>.</li>
+</ul>
+</li>
+<li><code>sphereObject</code>
+<ul>
+<li>Sphere object for visual interaction.</li>
+</ul>
+</li>
+<li><code>cameraImageRect</code>
+<ul>
+<li><code>RectTransform</code> of preview image used for coordinate mapping.</li>
+</ul>
+</li>
+<li><code>sceneCamera</code>
+<ul>
+<li>Scene camera reference (<code>Camera.main</code> fallback).</li>
+</ul>
+</li>
+<li><code>scaleStepFactor</code>
+<ul>
+<li>Scale delta per gesture trigger.</li>
+</ul>
+</li>
+<li><code>maxScaleSteps</code>
+<ul>
+<li>Max scale step count.</li>
+</ul>
+</li>
+<li><code>zDistanceFromCameraImage</code>
+<ul>
+<li>Sphere depth offset from the <code>CameraImage</code> plane, computed in camera space.</li>
+</ul>
+</li>
+<li><code>gestureCooldownSeconds</code>
+<ul>
+<li>Cooldown per gesture type.</li>
+</ul>
+</li>
+</ul>
+<h2>5. Current Demo Gesture Behavior</h2>
+<ul>
+<li><code>V_SIGN</code>
+<ul>
+<li>Activates sphere.</li>
+<li>Updates sphere position once using gesture ROI center.</li>
+</ul>
+</li>
+<li><code>OPEN_PALM</code>
+<ul>
+<li>Scales sphere up one step.</li>
+</ul>
+</li>
+<li><code>FIST</code>
+<ul>
+<li>Scales sphere down one step.</li>
+</ul>
+</li>
+<li><code>THUMBS_UP</code>
+<ul>
+<li>Randomizes sphere color.</li>
+</ul>
+</li>
+</ul>
+<h2>6. Coordinate and Depth Rules</h2>
+<p>Current position mapping in <code>GestureTest</code>:</p>
+<ol>
+<li>ROI center:
+<ul>
+<li><code>centerX = (left + right) / 2</code></li>
+<li><code>centerY = (top + bottom) / 2</code></li>
+</ul>
+</li>
+<li>Horizontal compensation:
+<ul>
+<li><code>mappedX = 1 - centerX</code></li>
+</ul>
+</li>
+<li>Vertical mapping:
+<ul>
+<li><code>mappedY = centerY</code></li>
+</ul>
+</li>
+<li>Convert <code>mappedX/mappedY</code> to local coordinates on <code>cameraImageRect</code>, then to world coordinates.</li>
+<li>Depth handling:
+<ul>
+<li>Convert the world point on <code>CameraImage</code> into camera space.</li>
+<li>Move toward camera by <code>zDistanceFromCameraImage</code>.</li>
+<li>Convert back to world space.</li>
+</ul>
+</li>
+</ol>
+<p>This keeps screen alignment stable while preserving expected depth behavior.</p>
+<h2>7. Recommended Stable Defaults</h2>
+<ul>
+<li><code>tickFps = 5</code></li>
+<li><code>numHands = 1</code></li>
+<li><code>inputRotation = CCW_90</code></li>
+<li><code>inputScaleMode = LETTERBOX</code></li>
+<li><code>fenceMode = AUTO</code></li>
+<li><code>fenceShortWaitMs = 0</code></li>
+</ul>
+<h2>8. Practical Notes</h2>
+<h3>8.1 Preview works but no gesture callbacks</h3>
+<p>Check:</p>
+<ul>
+<li>Required AARs exist under <code>Assets/Plugins/Android</code>.</li>
+<li><code>CameraManager</code> is initialized and preview started.</li>
+<li>Gesture callback logs show continuous sequence updates.</li>
+</ul>
+<h3>8.2 Hand appears on right, sphere appears on left</h3>
+<p>Check:</p>
+<ul>
+<li><code>mappedX = 1 - centerX</code> is still present in <code>GestureTest</code>.</li>
+<li><code>cameraImageRect</code> points to the actual preview object in scene.</li>
+</ul>
+<h3>8.3 Vertical direction mismatch</h3>
+<p>Check:</p>
+<ul>
+<li>Current <code>mappedY</code> rule in <code>GestureTest</code>.</li>
+<li>Preview shader flip setup if it was changed.</li>
+</ul>
+<h3>8.4 Depth feels wrong</h3>
+<p>Check:</p>
+<ul>
+<li><code>sceneCamera</code> points to the rendering camera.</li>
+<li><code>zDistanceFromCameraImage</code> is tuned for the scene scale.</li>
+</ul>
+<aside class="source-note" data-editorial-note="source_difference">The sources describe zDistanceFromCameraImage depth and calculation differently. Their original descriptions are retained; no algorithm is silently changed.</aside></article>

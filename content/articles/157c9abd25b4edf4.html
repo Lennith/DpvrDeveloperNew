@@ -1,0 +1,81 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>内容分发与下载<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<p>服务端通过 RDC 内容清单消息通知设备下载资源。RDC 负责传输清单和回传状态，不负责提供资源文件；资源文件需要部署在设备可访问的 HTTP/HTTPS 服务上。</p>
+<section id="id2">
+<h2>服务端发送内容清单<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p>服务端库提供以下两个接口：</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">SendContentList</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">sn</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Message</span><span class="p">.</span><span class="n">ContentItem</span><span class="o">&gt;</span><span class="w"> </span><span class="n">contents</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">SendContentListToClients</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Message</span><span class="p">.</span><span class="n">ContentItem</span><span class="o">&gt;</span><span class="w"> </span><span class="n">contents</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">SendContentList</span></code> 根据 SN 发送给单个已连接客户端；<code class="docutils literal notranslate"><span class="pre">SendContentListToClients</span></code> 在 <code class="docutils literal notranslate"><span class="pre">clientList</span></code> 为 null 时发送给所有客户端。</p>
+<p>内容项结构：</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Message</span><span class="p">.</span><span class="n">ContentItem</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">content_id</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">file_name</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">url</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">hash</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">version</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">content_id</span></code> 是客户端建立任务和关联状态的唯一标识，缺少该字段的内容项会被客户端忽略。<code class="docutils literal notranslate"><span class="pre">file_name</span></code> 也是必填字段，允许使用 UTF-8 文件名（包括中文），但只能填写单个文件名，不能包含 <code class="docutils literal notranslate"><span class="pre">/</span></code>、<code class="docutils literal notranslate"><span class="pre">\</span></code>、<code class="docutils literal notranslate"><span class="pre">%</span></code>、<code class="docutils literal notranslate"><span class="pre">?</span></code>、<code class="docutils literal notranslate"><span class="pre">#</span></code> 或 <code class="docutils literal notranslate"><span class="pre">..</span></code> 等路径片段。</p>
+<p><code class="docutils literal notranslate"><span class="pre">url</span></code> 必填且必须使用 HTTP/HTTPS，并会原样传给设备端下载服务。请将资源部署为设备可访问的静态地址，例如：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>http://192.168.1.100/dpvr/content/demo.mp4
+</pre></div>
+</div>
+<p>可以使用 Nginx 或 Windows 自带的 IIS/HTTP 服务提供该目录。测试前应确认设备能够直接访问 URL，并且 HTTP 服务允许设备所在网络访问；RDC 服务端不会代理或托管该文件。</p>
+</section>
+<section id="id3">
+<h2>设备端下载流程<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p>客户端收到 4001 内容清单后，当前实现会：</p>
+<ol class="arabic simple">
+<li><p>为每个具有有效 <code class="docutils literal notranslate"><span class="pre">content_id</span></code>、<code class="docutils literal notranslate"><span class="pre">file_name</span></code> 和 <code class="docutils literal notranslate"><span class="pre">url</span></code> 的内容项调用 <code class="docutils literal notranslate"><span class="pre">ContentDownloadManager.addContentTask</span></code>。</p></li>
+<li><p>通过外部组件 <code class="docutils literal notranslate"><span class="pre">com.dpvr.downloadmanager/.DownloadService</span></code> 绑定 DPDownloadService。</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">IDownloadManager.addTaskSimple(url,</span> <span class="pre">PRIORITY_SYSTEM,</span> <span class="pre">"contents/&lt;file_name&gt;",</span> <span class="pre">true)</span></code> 创建任务，自动开始下载。</p></li>
+<li><p>DownloadService 通过 Android <code class="docutils literal notranslate"><span class="pre">DownloadManager</span></code> 将文件写入系统公共下载目录的 <code class="docutils literal notranslate"><span class="pre">contents</span></code> 子目录，典型路径为 <code class="docutils literal notranslate"><span class="pre">/storage/emulated/0/Download/contents/&lt;file_name&gt;</span></code>。</p></li>
+</ol>
+<p>下载服务使用 Android <code class="docutils literal notranslate"><span class="pre">DownloadManager.Request(Uri.parse(downloadUri))</span></code> 和 <code class="docutils literal notranslate"><span class="pre">setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,</span> <span class="pre">downloadFilePath)</span></code>；应用已显式允许 HTTP 明文下载，因此资源可使用设备可访问的 HTTP/HTTPS URL。RDC 客户端不添加或实现 DownloadService 入口，只使用其现有 <code class="docutils literal notranslate"><span class="pre">IDownloadManager</span></code> AIDL 封装；不需要在 RDC 工程中新增 <code class="docutils literal notranslate"><span class="pre">IDownloadService.aidl</span></code>。</p>
+<p>兼容性要求：设备固件中的 DPDownloadService 必须支持上述公共 <code class="docutils literal notranslate"><span class="pre">Download/contents</span></code> 目标目录和 HTTP/HTTPS 下载。旧 alpha 实现使用空目录类型，文件会写入外部存储根目录而不是公共 <code class="docutils literal notranslate"><span class="pre">Download</span></code> 目录，与当前 RDC 路径约定不兼容；提测文件部署前需要更新该系统服务。</p>
+<p>当前 RDC 客户端使用的下载 AIDL 方法包括：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">addTaskSimple</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">uri</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">priority</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">downloadFilePath</span><span class="p">,</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">autoStart</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">startTaskById</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">taskId</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">stopTaskById</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">taskId</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">removeTaskDownloadFileById</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">taskId</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">registDownloadStateListener</span><span class="p">(</span><span class="n">IDownloadStateListener</span><span class="w"> </span><span class="n">listener</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">unregistDownloadStateListener</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">DownloadTask</span></code> 的跨进程 Parcelable 顺序为 <code class="docutils literal notranslate"><span class="pre">taskid</span></code>、<code class="docutils literal notranslate"><span class="pre">downloadUri</span></code>、<code class="docutils literal notranslate"><span class="pre">priority</span></code>、<code class="docutils literal notranslate"><span class="pre">downloadFilePath</span></code>、<code class="docutils literal notranslate"><span class="pre">autoStart</span></code>；服务包名相同不代表可以混用不同历史 AIDL 或 Parcelable 定义。</p>
+</section>
+<section id="id4">
+<h2>一次性执行语义<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<p>4001 内容清单是一次性的执行指令，不是服务端持久化的待执行队列：服务端下发一次，设备端收到后执行一次，并通过 4002 上报当前状态。TCP/Wi-Fi 断开、设备重连或心跳超时不会触发 RDC 自动重新发送 4001；设备端也不会因为连接恢复而自动新增或重试任务。需要重新执行下载时，服务端必须显式再次下发对应的 4001 内容项。同一 <code class="docutils literal notranslate"><span class="pre">content_id</span></code> 再次下发表示重新执行，RDC 调用方会通过 Binder 移除旧任务及文件后创建新任务；不承诺自动重试或断点续传。</p>
+</section>
+<section id="id5">
+<h2>状态上报<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<p>客户端通过 4002 消息上报内容状态，每 2 个心跳发送一次；心跳周期为 2 秒。<code class="docutils literal notranslate"><span class="pre">contents</span></code> 是当前设备记录的完整快照而不是增量；即使没有内容条目也会发送空数组，服务端应使用快照替换旧记录。</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"sn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"设备序列号"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"contents"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"content_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demo-video"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"downloading"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"progress"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"downloaded"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"local_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file:///storage/emulated/0/Download/contents/demo.mp4"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code> 当前映射为 <code class="docutils literal notranslate"><span class="pre">pending</span></code>、<code class="docutils literal notranslate"><span class="pre">downloading</span></code>、<code class="docutils literal notranslate"><span class="pre">waiting</span></code>、<code class="docutils literal notranslate"><span class="pre">finished</span></code>、<code class="docutils literal notranslate"><span class="pre">idle</span></code> 或 <code class="docutils literal notranslate"><span class="pre">error</span></code>；<code class="docutils literal notranslate"><span class="pre">progress</span></code> 是百分比；<code class="docutils literal notranslate"><span class="pre">local_path</span></code> 来自 DownloadService 的本地路径。进度回调不会覆盖当前状态；DownloadService 报告错误状态且没有更具体错误时，调用方会使用 <code class="docutils literal notranslate"><span class="pre">download_failed</span></code>。当前 <code class="docutils literal notranslate"><span class="pre">ContentManager</span></code> 不主动计算 <code class="docutils literal notranslate"><span class="pre">downloaded</span></code> 或校验 hash；创建任务前的校验或调用失败时，<code class="docutils literal notranslate"><span class="pre">error</span></code> 可能为 <code class="docutils literal notranslate"><span class="pre">invalid_file_name</span></code>、<code class="docutils literal notranslate"><span class="pre">invalid_url</span></code> 或 <code class="docutils literal notranslate"><span class="pre">download_task_create_failed</span></code>。下载服务不负责上层超时、重试或续传策略，Binder 调用方应自行处理。</p>
+<p><code class="docutils literal notranslate"><span class="pre">finished</span></code> 只表示 DownloadService/Android <code class="docutils literal notranslate"><span class="pre">DownloadManager</span></code> 已报告该任务成功，也不代表已执行 hash 校验。RDC 客户端生成 4002 快照时会检查 <code class="docutils literal notranslate"><span class="pre">local_path</span></code>；如果已完成文件被外部删除，则从快照中移除该条目并由服务端清除对应记录，但不会自动重新下载。需要重新部署或补齐文件时，应由服务端显式再次下发对应的 4001 内容项。</p>
+</section>
+</section>
+
+        </article>

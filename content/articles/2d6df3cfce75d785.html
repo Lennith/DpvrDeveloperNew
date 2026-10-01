@@ -1,0 +1,25 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>设备发现<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>设备发现需要在客户端未设置指定的服务器IP和Port时才能生效，当客户端设置了服务器IP和端口信息时，客户端会根据设置的服务端信息进行连接。</p>
+<p>当开启设备发现后，客户端会自动进行服务端连接。</p>
+<p>设备发现功能需要保证服务器和客户端在同一个广播域中，并且路由器允许内网广播。</p>
+<p>混频WifiSSID或者拓扑型多路由使用同一个SSID导致的设备不在同一个广播域可能会让设备发现功能无法正常工作。</p>
+</div>
+<section id="id2">
+<h2>开启设备发现<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">StartSendServerInfo</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h2>关闭设备发现<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">StopSendServerInfo</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>

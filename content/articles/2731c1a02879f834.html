@@ -1,0 +1,19 @@
+<article role="main">
+          <section id="callresult">
+<span id="type-callresult"></span><h1>CallResult<a class="headerlink" href="#callresult" title="Permalink to this heading">#</a></h1>
+<p>Api调用结果。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">CallResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">errorDescription</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobID</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">errorDescription</span></code> : Call失败时用于返回具体失败原因。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">Int</span> <span class="pre">jobID</span></code>: Call失败时为-1，成功时按调用顺序生成一个大于0的id。</p>
+</section>
+</section>
+
+        </article>

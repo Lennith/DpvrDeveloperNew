@@ -1,0 +1,81 @@
+<article role="main">
+          <section id="checkapplicationauthority">
+<h1>CheckApplicationAuthority<a class="headerlink" href="#checkapplicationauthority" title="Permalink to this heading">#</a></h1>
+<p>Check whether the application has been authorized. The caller checks the corresponding authorization information based on the input Key (used for encryption) and KeyFilePath, and needs to use the Dpvr application authorization tool for authorization. If the caller is the same as the package being checked, the application can be automatically closed. The authorization file path can be specified, with the default value being the package name encryption information file generated under /sdcard/sdcard/applicationAuthority/.</p>
+<section id="permission">
+<h2>Permission<a class="headerlink" href="#permission" title="Permalink to this heading">#</a></h2>
+<p>APP_PERMISSION_NORMAL</p>
+</section>
+<section id="params">
+<h2>Params<a class="headerlink" href="#params" title="Permalink to this heading">#</a></h2>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default" style="width: 98%">
+<thead>
+<tr class="row-odd"><th class="head"><p>property</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>autoKill</strong></p></td>
+<td><p>Boolean</p></td>
+<td><p>false</p></td>
+<td><p>Automatically close the application when it is not authorized.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>autoKillDelay</strong></p></td>
+<td><p>Int</p></td>
+<td><p>3000</p></td>
+<td><p>Automatically kill delay in millisecond if unauthorized.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>packageName</strong></p></td>
+<td><p>String</p></td>
+<td><p>null</p></td>
+<td><p>The package name to be checked for authorization. Defaults to the caller’s package name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>key</strong></p></td>
+<td><p>String</p></td>
+<td><p>dpvr</p></td>
+<td><p>The key of the authorization file. Defaults to ‘dpvr’.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>keyFilePath</strong></p></td>
+<td><p>String</p></td>
+<td><p>null</p></td>
+<td><p>The location of the authorization file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="result">
+<h2>Result<a class="headerlink" href="#result" title="Permalink to this heading">#</a></h2>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default" style="width: 98%">
+<thead>
+<tr class="row-odd"><th class="head"><p>property</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>authorized</strong></p></td>
+<td><p>Boolean</p></td>
+<td><p>true</p></td>
+<td><p>Whether the current authorization has been obtained.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>failedReason</strong></p></td>
+<td><p>String</p></td>
+<td><p>null</p></td>
+<td><p>The reason for failure to pass the authorization. Null when authorized.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="n">TODO</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>

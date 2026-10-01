@@ -1,0 +1,45 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>通过应用配置<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<section id="ip">
+<h2>设置服务端IP和端口<a class="headerlink" href="#ip" title="Link to this heading">¶</a></h2>
+<p>通过adb指令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">adb shell am start com.deepoon.eggchair/.MainActivity</span>
+</pre></div>
+</div>
+<p>打开服务端设置应用。</p>
+<img alt="../_images/rc_set.png" class="align-center" src="/assets/media/739a112436a01c32378e.png">
+<p>通过填入服务端IP和端口并点击Confirm后生效。</p>
+<p><strong>在设置了服务器IP或者Port，RDC服务会开始自动运行。</strong></p>
+<p>如果需要开机自动运行，请勾选 <code class="docutils literal notranslate"><span class="pre">Start</span> <span class="pre">when</span> <span class="pre">boot</span></code> 选项。</p>
+<p>如果需要自动寻找服务端，可以勾选 <code class="docutils literal notranslate"><span class="pre">AUTO</span> <span class="pre">FIND</span></code>，设置的IP和PORT将会失效，服务端开启设备发现功能后，会自动进行连接。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>设备发现功能需要保证服务器和客户端在同一个广播域中，并且路由器允许内网广播。</p>
+</div>
+</section>
+<section id="rdc">
+<h2>启动RDC客户端服务<a class="headerlink" href="#rdc" title="Link to this heading">¶</a></h2>
+<p>RDC服务是一个原生Android服务，他的包名为 <code class="docutils literal notranslate"><span class="pre">com.deepoon.eggchair</span></code> ，服务类AndroidManifest声明如下：</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;service</span>
+<span class="w">    </span><span class="na">android:name=</span><span class="s">".LongchenClientService"</span>
+<span class="w">    </span><span class="na">android:enabled=</span><span class="s">"true"</span>
+<span class="w">    </span><span class="na">android:exported=</span><span class="s">"true"</span>
+<span class="w">    </span><span class="na">android:persistent=</span><span class="s">"true"</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;intent-filter</span><span class="w"> </span><span class="na">android:priority=</span><span class="s">"1000"</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;action</span><span class="w"> </span><span class="na">android:name=</span><span class="s">"com.deepoon.eggchair.LongchenClientService"</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/intent-filter&gt;</span>
+<span class="nt">&lt;/service&gt;</span>
+</pre></div>
+</div>
+<p>可以通过常规的启动Android Service的方法来启动RDC服务。</p>
+<p>在RDC服务启动后，它会自动保持和服务器的连接并接收消息。</p>
+<p>你也可以通过设置开机自动运行，保持RDC服务一直运行。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>由于RDC服务会始终尝试连接服务器，且不会因为息屏停止工作，因此，开启RDC服务后，可能会导致功耗变高。</p>
+</div>
+</section>
+</section>
+
+        </article>

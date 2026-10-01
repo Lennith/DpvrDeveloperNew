@@ -1,0 +1,366 @@
+<article role="main" id="furo-main-content">
+          <section id="server-development-based-on-communication-protocol">
+<span id="server-message"></span><h1>Server Development Based on Communication Protocol<a class="headerlink" href="#server-development-based-on-communication-protocol" title="Link to this heading">¶</a></h1>
+<p>The client maintains a long connection with the server through TCP, and all communication between the two ends uses the same message encapsulation.</p>
+<section id="communication-data-format">
+<h2>Communication Data Format<a class="headerlink" href="#communication-data-format" title="Link to this heading">¶</a></h2>
+<p><cite>[2Bytes data length] [2Bytes data type] [2Bytes reserved] [Data body]</cite></p>
+<p><code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">length</span></code> : 2Byte <cite>Short</cite>, representing the length of the message content, including the message header.</p>
+<p><code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">type</span></code> : 2Byte <cite>Short</cite>, representing the type of the message, used to distinguish the type of message.</p>
+<p><code class="docutils literal notranslate"><span class="pre">resevered</span></code> : 2Byte <cite>Short</cite>, reserved for future use, currently set to 1.</p>
+<p><code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">body</span></code> : JSON-formatted message content, using UTF8-String, which is the message type structure described below.</p>
+<p>For example, the Java encapsulation of the message packaging method is as follows:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="nf">createMessageByJson</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">jsonBody</span><span class="p">,</span><span class="kt">short</span><span class="w"> </span><span class="n">msgType</span><span class="p">){</span>
+<span class="w">    </span><span class="kt">short</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">short</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">jsonBody</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">6</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ByteBuffer</span><span class="w"> </span><span class="n">bf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ByteBuffer</span><span class="p">.</span><span class="na">allocate</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">putShort</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">putShort</span><span class="p">(</span><span class="n">msgType</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">putShort</span><span class="p">((</span><span class="kt">short</span><span class="p">)</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">jsonBody</span><span class="p">.</span><span class="na">getBytes</span><span class="p">());</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">flip</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[</span><span class="n">size</span><span class="o">]</span><span class="p">;</span>
+<span class="w">    </span><span class="n">bf</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="na">d</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="s">"msg size: "</span><span class="o">+</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"type"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">msgType</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">" json: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">jsonBody</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils">
+<section id="body-types">
+<h2>Body Types<a class="headerlink" href="#body-types" title="Link to this heading">¶</a></h2>
+<p>The body of client communication messages varies according to the type and has different data structures. They are serialized into JSON structures.</p>
+<section id="client-heartbeat">
+<h3>Client Heartbeat<a class="headerlink" href="#client-heartbeat" title="Link to this heading">¶</a></h3>
+<p>Heartbeat information sent by the client to the server, including some client information.</p>
+<p><cite>Type</cite> : 1001</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Client_Heart_Beat</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">hardware</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">battery_level</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">top_apk</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">cast_rtsp_url</span><span class="p">;</span><span class="w">  </span><span class="c1">// Empty when Cast is not active</span>
+<span class="w">    </span><span class="n">Player_Status</span><span class="w"> </span><span class="n">player_info</span><span class="p">;</span><span class="w"> </span><span class="c1">// Optional, see description below</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">hardware</span></code> : Device SN number.</p>
+<p><code class="docutils literal notranslate"><span class="pre">battery_level</span></code> : Battery level, 0~100.</p>
+<p><code class="docutils literal notranslate"><span class="pre">top_apk</span></code> : The package name of the application currently displayed at the top.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cast_rtsp_url</span></code> : The current DPVR Cast RTSP address. It is an empty string when Cast is inactive, DMS is disconnected, or the device IPv4 address is unavailable. After the client receives the DMS Cast state event, the format is <code class="docutils literal notranslate"><span class="pre">rtsp://&lt;device</span> <span class="pre">IPv4&gt;:8554/stream1</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">player_info</span></code> : Optional field, playback progress information. Included only when <code class="docutils literal notranslate"><span class="pre">top_apk</span></code> contains <code class="docutils literal notranslate"><span class="pre">com.dpvr.videoplayer</span></code> (i.e., the DPVR video player is in the foreground) and the client has received player status.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Player_Status</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">time</span><span class="p">;</span><span class="w">     </span><span class="c1">// Current playback position</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">duration</span><span class="p">;</span><span class="w"> </span><span class="c1">// Total video duration</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">state</span><span class="p">;</span><span class="w">   </span><span class="c1">// Player state</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">    </span><span class="c1">// Video name</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">path</span><span class="p">;</span><span class="w">    </span><span class="c1">// Video path</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The values of <code class="docutils literal notranslate"><span class="pre">player_info</span></code> are passed through from the DPVR player broadcast (<code class="docutils literal notranslate"><span class="pre">com.dpvr.videoplayer.playerstatus</span></code>). The client caches the latest status and attaches it to each heartbeat; the heartbeat interval is 2 seconds, and the freshness of the progress data depends on the player’s status broadcast frequency. Older server libraries ignore this field (remaining compatible); use the new LibDpvrRDC to parse playback progress.</p>
+</div>
+</section>
+<hr class="docutils">
+<section id="content-list">
+<h3>Content List<a class="headerlink" href="#content-list" title="Link to this heading">¶</a></h3>
+<p>The server sends a content list to the client. After receiving it, the client automatically creates and starts a download task for each item with valid <code class="docutils literal notranslate"><span class="pre">content_id</span></code>, <code class="docutils literal notranslate"><span class="pre">file_name</span></code>, and <code class="docutils literal notranslate"><span class="pre">url</span></code> fields.</p>
+<p><cite>Type</cite> : 4001</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Content_List</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">sn</span><span class="p">;</span><span class="w">                 </span><span class="c1">// Optional; useful for targeted delivery</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Content_Item</span><span class="o">&gt;</span><span class="w"> </span><span class="n">contents</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">Content_Item</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">content_id</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">file_name</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">hash</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">version</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">content_id</span></code> : Unique content identifier. The client ignores an item that does not contain this field.</p>
+<p><code class="docutils literal notranslate"><span class="pre">file_name</span></code> : Required destination file name. UTF-8 names, including Chinese, are allowed. It must be a single file name and must not contain <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">\</span></code>, <code class="docutils literal notranslate"><span class="pre">%</span></code>, <code class="docutils literal notranslate"><span class="pre">?</span></code>, <code class="docutils literal notranslate"><span class="pre">#</span></code>, or path fragments such as <code class="docutils literal notranslate"><span class="pre">..</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">size</span></code>, <code class="docutils literal notranslate"><span class="pre">hash</span></code>, <code class="docutils literal notranslate"><span class="pre">version</span></code> : Content metadata. The current RDC client does not perform additional size/hash/version validation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">url</span></code> : Required resource address. It must use HTTP or HTTPS and is passed unchanged to the device-side <code class="docutils literal notranslate"><span class="pre">DownloadService</span></code>, for example <code class="docutils literal notranslate"><span class="pre">http://192.168.1.100/dpvr/demo.mp4</span></code>. Resources can be hosted by Nginx or the IIS/HTTP service included with Windows; the RDC server itself does not provide file hosting.</p>
+<p>The client uses <code class="docutils literal notranslate"><span class="pre">contents/&lt;file_name&gt;</span></code> as the relative destination. DownloadService writes the resource into the <code class="docutils literal notranslate"><span class="pre">contents</span></code> subdirectory of the system public Downloads directory (typically <code class="docutils literal notranslate"><span class="pre">/storage/emulated/0/Download/contents/&lt;file_name&gt;</span></code>) and starts each task with <code class="docutils literal notranslate"><span class="pre">autoStart=true</span></code>. The device-side service component is <code class="docutils literal notranslate"><span class="pre">com.dpvr.downloadmanager/.DownloadService</span></code>.</p>
+</section>
+<section id="content-status-report">
+<h3>Content Status Report<a class="headerlink" href="#content-status-report" title="Link to this heading">¶</a></h3>
+<p>The client reports content download progress with the following message.</p>
+<p><cite>Type</cite> : 4002</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Content_Report</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">sn</span><span class="p">;</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Content_Report_Item</span><span class="o">&gt;</span><span class="w"> </span><span class="n">contents</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">Content_Report_Item</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">content_id</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">status</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">progress</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">downloaded</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">local_path</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">error</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code> is currently mapped by the client to <code class="docutils literal notranslate"><span class="pre">pending</span></code>, <code class="docutils literal notranslate"><span class="pre">downloading</span></code>, <code class="docutils literal notranslate"><span class="pre">waiting</span></code>, <code class="docutils literal notranslate"><span class="pre">finished</span></code>, <code class="docutils literal notranslate"><span class="pre">idle</span></code> or <code class="docutils literal notranslate"><span class="pre">error</span></code>. <code class="docutils literal notranslate"><span class="pre">progress</span></code> is a percentage, and <code class="docutils literal notranslate"><span class="pre">local_path</span></code> is the local path returned by DownloadService. The client does not calculate <code class="docutils literal notranslate"><span class="pre">downloaded</span></code>; its value remains 0. Validation or task-creation failures may set <code class="docutils literal notranslate"><span class="pre">error</span></code> to <code class="docutils literal notranslate"><span class="pre">invalid_file_name</span></code>, <code class="docutils literal notranslate"><span class="pre">invalid_url</span></code> or <code class="docutils literal notranslate"><span class="pre">download_task_create_failed</span></code>. The client sends a report every two heartbeats (the heartbeat interval is 2 seconds), including <code class="docutils literal notranslate"><span class="pre">contents=[]</span></code> when no content entries remain.</p>
+<p>4001 is a one-shot execution command. Sending the same <code class="docutils literal notranslate"><span class="pre">content_id</span></code> again means re-execute: the client removes the old task and file through the DownloadService Binder before creating the new task. The client does not retry merely because the connection is restored, and resumable-download behavior is not guaranteed. The <code class="docutils literal notranslate"><span class="pre">contents</span></code> array in 4002 is a complete snapshot of the device-side records, not a delta; an empty array clears the corresponding stored content records on the server.</p>
+</section>
+<hr class="docutils">
+<section id="client-passthrough">
+<h3>Client Passthrough<a class="headerlink" href="#client-passthrough" title="Link to this heading">¶</a></h3>
+<p>Passthrough message sent by the client application to the server.</p>
+<p><cite>Type</cite> : 3001</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Client_Message</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">from_package</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">body</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">from_package</span></code> : Package name of the application sending the message.</p>
+<p><code class="docutils literal notranslate"><span class="pre">body</span></code> : Message content.</p>
+</section>
+<hr class="docutils">
+<section id="play-video">
+<h3>Play Video<a class="headerlink" href="#play-video" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to play a video.</p>
+<p><cite>Type</cite> : 1002</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Play_Video</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">VideoType</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">VideoPath</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">StereoType</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">StartOnPrepared</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">VideoType</span></code> : Video type, fixed as “*”.</p>
+<p><code class="docutils literal notranslate"><span class="pre">VideoPath</span></code> : Video path.</p>
+<p><code class="docutils literal notranslate"><span class="pre">StereoType</span></code> : Video display format.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>0 : Standard 2D video.</p>
+<p>1 ： 3D left-right.</p>
+<p>2 ： 3D top-bottom.</p>
+<p>3： 180-degree 2D.</p>
+<p>4 ：180-degree left-right 3D.</p>
+<p>5： 180-degree top-bottom 3D.</p>
+<p>6： Panoramic 2D.</p>
+<p>7： Panoramic left-right 3D.</p>
+<p>8： Panoramic top-bottom 3D.</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">StartOnPrepared</span></code> : Whether to start playback automatically once the video is prepared.</p>
+</section>
+<hr class="docutils">
+<section id="pause-video">
+<h3>Pause Video<a class="headerlink" href="#pause-video" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to pause the current video playback.</p>
+<p><cite>Type</cite>: 1003</p>
+<p><cite>Body</cite>: null</p>
+</section>
+<hr class="docutils">
+<section id="stop-video-playback">
+<h3>Stop Video Playback<a class="headerlink" href="#stop-video-playback" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to stop the current video playback. This command only stops playback and does not affect the RDC connection; whether the player UI is also closed is determined by the player application itself.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The client selects the stop route used by the most recent 1002 command: it sends <code class="docutils literal notranslate"><span class="pre">com.dpvr.videoplayer.VIDEOPLAYERCONTROLLER</span></code> when the DPVR player is used, or <code class="docutils literal notranslate"><span class="pre">com.deepoon.dpnlauncher.PLAY_CONTROL</span></code> with <code class="docutils literal notranslate"><span class="pre">controltype=playcommand</span></code> and <code class="docutils literal notranslate"><span class="pre">operation=stop</span></code> when playback falls back to DpnLauncher. The command does not affect the RDC connection; whether the player UI exits is decided by the player application.</p>
+</div>
+<p><cite>Type</cite> : 1004</p>
+<p><cite>Body</cite> : null</p>
+</section>
+<hr class="docutils">
+<section id="resume-video-playback">
+<h3>Resume Video Playback<a class="headerlink" href="#resume-video-playback" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to resume the current video playback at a specified unified moment.</p>
+<p><cite>Type</cite> : 1005</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Push_Resume_Video</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">PlayTime</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">PlayTime</span></code> : The unified resume moment, as a <code class="docutils literal notranslate"><span class="pre">yyyy-MM-dd-HH-mm-ss</span></code> format string (server local time, second precision, no milliseconds). The server-side <code class="docutils literal notranslate"><span class="pre">VideoResume(delay)</span></code> API adds <code class="docutils literal notranslate"><span class="pre">delay</span></code> (in seconds) to the server’s current time to generate this value. For example, if the server time is <code class="docutils literal notranslate"><span class="pre">12:00:00</span></code> and <code class="docutils literal notranslate"><span class="pre">delay=10</span></code>, <code class="docutils literal notranslate"><span class="pre">PlayTime</span></code> will be <code class="docutils literal notranslate"><span class="pre">2026-07-17-12-00-10</span></code>, and all devices resume playback when their local time reaches <code class="docutils literal notranslate"><span class="pre">12:00:10</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To use the scheduled resume playback feature, ensure the client system time is synchronized with the server. The client will start playing the video immediately if the current time is greater than the set time.</p>
+</div>
+</section>
+<hr class="docutils">
+<section id="seek-video">
+<h3>Seek Video<a class="headerlink" href="#seek-video" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to execute the Seek command during video playback.</p>
+<p><cite>Type</cite> : 1006</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Push_Seek</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">time</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">time</span></code> : Video seek position, in seconds.</p>
+</section>
+<hr class="docutils">
+<section id="set-system-volume">
+<h3>Set System Volume<a class="headerlink" href="#set-system-volume" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to set the system volume.</p>
+<p><cite>Type</cite> : 1007</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Push_Set_Vol</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">volume_value</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">volume_value</span></code> : Volume value, ranging from 0 to 15.</p>
+</section>
+<hr class="docutils">
+<section id="block-keys">
+<h3>Block Keys<a class="headerlink" href="#block-keys" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to block specific keys.</p>
+<p><cite>Type</cite> : 1008</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Push_Block_Key</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block_power_key</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block_back_key</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block_home_key</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block_touch</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block_volume_key</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">block_power_key</span></code> : Block power key, 1: block, 0: do not block.</p>
+<p><code class="docutils literal notranslate"><span class="pre">block_back_key</span></code> : Block back key, 1: block, 0: do not block.</p>
+<p><code class="docutils literal notranslate"><span class="pre">block_home_key</span></code> : Block home key, 1: block, 0: do not block. On devices without a physical home key, this will block the home key on the controller.</p>
+<p><code class="docutils literal notranslate"><span class="pre">block_touch</span></code> : Block touchpad, 1: block, 0: do not block.</p>
+<p><code class="docutils literal notranslate"><span class="pre">block_volume_key</span></code> : Block volume keys, 1: block, 0: do not block.</p>
+</section>
+<hr class="docutils">
+<section id="shutdown">
+<h3>Shutdown<a class="headerlink" href="#shutdown" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to shut down.</p>
+<p><cite>Type</cite> : 1009</p>
+<p><cite>Body</cite> : null</p>
+</section>
+<hr class="docutils">
+<section id="restart">
+<h3>Restart<a class="headerlink" href="#restart" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to restart.</p>
+<p><cite>Type</cite> : 1010</p>
+<p><cite>Body</cite> : null</p>
+</section>
+<hr class="docutils">
+<section id="recalibrate">
+<h3>Recalibrate<a class="headerlink" href="#recalibrate" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to recalibrate the headset view, effective only for VR applications using the DpvrSDK.</p>
+<p><cite>Type</cite> : 1011</p>
+<p><cite>Body</cite> : null</p>
+</section>
+<hr class="docutils">
+<section id="start-dpvr-cast">
+<h3>Start DPVR Cast<a class="headerlink" href="#start-dpvr-cast" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to call the device-side DMS interface and start the screen RTSP stream.</p>
+<p><cite>Type</cite> : 1012</p>
+<p><cite>Body</cite> : Empty JSON object <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p>
+<p>The client calls <code class="docutils literal notranslate"><span class="pre">mediaJobs/StartMiracast</span></code> through the existing DeviceManager client wrapper. RDC does not implement a duplicate DMS service entry. The start result is reported asynchronously through the DMS <code class="docutils literal notranslate"><span class="pre">dpvr_cast_state</span></code> event; <code class="docutils literal notranslate"><span class="pre">cast_rtsp_url</span></code> is updated in a subsequent heartbeat.</p>
+</section>
+<section id="stop-dpvr-cast">
+<h3>Stop DPVR Cast<a class="headerlink" href="#stop-dpvr-cast" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to call the device-side DMS interface and stop the screen RTSP stream.</p>
+<p><cite>Type</cite> : 1013</p>
+<p><cite>Body</cite> : Empty JSON object <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p>
+<p>The client calls <code class="docutils literal notranslate"><span class="pre">mediaJobs/StopMiracast</span></code> through the same wrapper. After receiving <code class="docutils literal notranslate"><span class="pre">isCasting=false</span></code>, subsequent heartbeats report an empty <code class="docutils literal notranslate"><span class="pre">cast_rtsp_url</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When the RDC client connects to DMS, it calls <code class="docutils literal notranslate"><span class="pre">mediaJobs/CheckDpvrMiraCastState</span></code> to initialize the Cast state and listens for the <code class="docutils literal notranslate"><span class="pre">dpvr_cast_state</span></code> event’s <code class="docutils literal notranslate"><span class="pre">isCasting</span></code> field. The device must have the required DMS permission/authorization; successful protocol delivery does not mean that the RTSP stream is already available.</p>
+</div>
+</section>
+<hr class="docutils">
+<section id="open-specified-application">
+<h3>Open Specified Application<a class="headerlink" href="#open-specified-application" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to open a specified application.</p>
+<p><cite>Type</cite> : 2001</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Start_Activity</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">packagename</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">classname</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">packagename</span></code> : Application package name.</p>
+<p><code class="docutils literal notranslate"><span class="pre">classname</span></code> : Activity class name to open.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When the RDC client starts the requested component from its service context, it supplies Android <code class="docutils literal notranslate"><span class="pre">NEW_TASK</span></code> and <code class="docutils literal notranslate"><span class="pre">MAIN/LAUNCHER</span></code> launch semantics so Android 12 and the DPVR normal 2D-to-VD route can process the request. On DPVR devices, <code class="docutils literal notranslate"><span class="pre">com.dpvr.VirtualDesktop</span></code> may host a normal 2D application and place the target Activity on a VD display (for example display2/display4 or the device-assigned virtual display); keeping DpnLauncher as the display0/SVR foreground owner is by design and is not a 2001 failure. The target application and Activity must still be installed, exported, and startable for the current user.</p>
+</div>
+</section>
+<hr class="docutils">
+<section id="close-application">
+<h3>Close Application<a class="headerlink" href="#close-application" title="Link to this heading">¶</a></h3>
+<p>Message sent by the server to the client to close a specified application.</p>
+<p><cite>Type</cite> : 2002</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Stop_Activity</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">packagename</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">packagename</span></code> : Application package name.</p>
+<p>The client handles 2002 by stopping the package. It does not require the display0 DpnLauncher or the VD host to exit, and it does not promise a particular foreground UI after the stop.</p>
+</section>
+<hr class="docutils">
+<section id="server-passthrough">
+<h3>Server Passthrough<a class="headerlink" href="#server-passthrough" title="Link to this heading">¶</a></h3>
+<p>Passthrough message sent by the server to the client.</p>
+<p><cite>Type</cite> : 3002</p>
+<p><cite>Body</cite> :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">Server_Message</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">to_package</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">body</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">to_package</span></code> : Package name of the client receiving the message.</p>
+<p><code class="docutils literal notranslate"><span class="pre">body</span></code> : Passthrough message content.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To use this interface, the application receiving the passthrough message needs to bind (AIDL) to the RDC service and listen for passthrough messages, or complete this through the DpvrDeviceManagerService interface.</p>
+</div>
+</section>
+</section>
+<hr class="docutils">
+<section id="server-example">
+<h2>Server Example<a class="headerlink" href="#server-example" title="Link to this heading">¶</a></h2>
+<p>We provide a <a class="reference external" href="https://static.dpvr.com/apps/developer/rdc/v2/resources/serverdemo.zip">simple server.net Demo</a>.</p>
+<p>This demo demonstrates message encapsulation, protocol packet, and provides a socket server framework based on IOCP for developers to quickly perform secondary development.</p>
+<p>The demo uses a console program, where commands can be entered through the console to control the client. Please refer to the <code class="docutils literal notranslate"><span class="pre">Program.cs</span></code> method in the <code class="docutils literal notranslate"><span class="pre">HandleCmd</span></code> file for details.</p>
+</section>
+<section id="frequently-asked-questions">
+<h2>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading">¶</a></h2>
+<p><cite>Q: How can I ensure that all clients start playing the video simultaneously?</cite></p>
+<p>A: We recommend the following methods:</p>
+<ol class="arabic">
+<li><p>Reduce server delay for latency optimization between devices. Ensure the server can control the communication delay of all devices within a relatively stable range. The delay between the slowest and fastest devices should not exceed 100ms. This allows the communication commands to be sent to all devices more smoothly. Our demo example, using about 35 devices in a network environment provided by ASUS AX82U, can ensure the maximum reception delay within 50ms.</p></li>
+<li><p>If server or network conditions cannot guarantee low latency for all devices, send the start video playback command without enabling StartOnPrepared. Then, set the resume playback time when sending the resume playback command to ensure all devices resume playback simultaneously.</p>
+<p>Generally, the player startup takes about 5 seconds, and loading takes an additional 2-3 seconds. As a reference, we recommend setting the resume playback time to 10-15 seconds after the start playback command is issued.</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Ensure the client system time is synchronized with the server when using the timed resume playback feature.</p>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Seek Synchronization: Similarly, if you need to keep devices synchronized after seeking, use the same approach as for synchronized resume playback. Send the seek command and then a timed resume playback command to ensure all devices resume playback at the same point.</p></li>
+</ol>
+</section>
+</section>
+
+        </article>

@@ -1,0 +1,147 @@
+<article role="main">
+          <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h1>
+<p>DpvrDeviceManager2 is an SDK for DPVR VR all-in-one device management and control.
+It provides a series of operations that developers need some system permissions to perform, such as connecting to wifi, bluetooth, getting device version number, etc.
+At the same time, it also provides some function calls that come with Dpvr system services, such as quick calls to tools like DpvrVideoPlayer, DpvrDownloadService, etc.</p>
+<p>DpvrDeviceManager2 uses a call method similar to Http Post request.</p>
+<p>You can use this method to call DeviceManagerAPI:</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">Params</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">lateinit</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">apkFilePath</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span>
+<span class="p">}</span>
+
+<span class="kd">fun</span><span class="w"> </span><span class="nf">packageManagerModuleTest</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">cat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"packageJobs"</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"InstallPackage"</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Params</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">gson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gson</span><span class="p">()</span>
+<span class="w">    </span><span class="n">params</span><span class="p">.</span><span class="na">apkFilePath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/sdcard/DCIM/Viki.apk"</span>
+<span class="w">    </span><span class="n">deviceManager</span><span class="o">?.</span><span class="na">call</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">gson</span><span class="p">.</span><span class="na">toJson</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Where, call is used to call the interface, its parameters are as follows:</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default" style="width: 90%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Function</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>cat</strong></p></td>
+<td><p>The major API category to call, such as packageJobs</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>type</strong></p></td>
+<td><p>The specific API to call, such as InstallPackage</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>params</strong></p></td>
+<td><p>The input parameters of the interface after JSON serialization</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils">
+<p>After calling the API, a corresponding jobID will be generated, and we return the call result through a ResultCallback:</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span><span class="w"> </span><span class="nc">IDeviceManagerResultListener</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="n">onResult</span><span class="p">(</span><span class="n">int</span><span class="w"> </span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Similar to the API interface call, the parameters of the callback correspond to the JobID of the API call and the serialized return value of the call. All API calls in the global use a common listener callback.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default" style="width: 90%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Function</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>jobID</strong></p></td>
+<td><p>The jobID generated by the corresponding call</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>result</strong></p></td>
+<td><p>The call result after JSON serialization</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils">
+<p>For some continuously occurring events, such as when you call the wifi or bluetooth scanning interface, there will be continuous results returned. For these non-continuous callbacks, or if you want to continuously listen to some events in the system, we return through another EventCallbck.</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span><span class="w"> </span><span class="nc">IDeviceManagerEventListener</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="n">onEvent</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default" style="width: 90%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Function</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>eventType</strong></p></td>
+<td><p>Callback event type</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>result</strong></p></td>
+<td><p>Event information after JSON serialization</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr class="docutils">
+<p>Here, through a simple example, to show the initialization process and API call method of DpvrDeviceManager2 on native Android:</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="cm">/*Initialization part*/</span>
+<span class="kd">var</span><span class="w"> </span><span class="nv">deviceManager</span><span class="p">:</span><span class="w"> </span><span class="n">IDeviceManager? </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mResultListener</span><span class="p">:</span><span class="w"> </span><span class="n">IDeviceManagerResultListener</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">IDeviceManagerResultListener</span><span class="p">.</span><span class="na">Stub</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onResult</span><span class="p">(</span><span class="n">jobId</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mEventListener</span><span class="p">:</span><span class="w"> </span><span class="n">IDeviceManagerEventListener</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">IDeviceManagerEventListener</span><span class="p">.</span><span class="na">Stub</span><span class="p">(){</span>
+<span class="w">        </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onEvent</span><span class="p">(</span><span class="n">eventType</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">,</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Log</span><span class="p">.</span><span class="na">d</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="s">"On event </span><span class="si">$</span><span class="n">eventType</span><span class="s">, </span><span class="si">$</span><span class="n">eventInfo</span><span class="s">"</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">connection</span><span class="p">:</span><span class="w"> </span><span class="n">ServiceConnection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">ServiceConnection</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onServiceConnected</span><span class="p">(</span><span class="n">componentName</span><span class="p">:</span><span class="w"> </span><span class="n">ComponentName?,</span><span class="w"> </span><span class="n">binder</span><span class="p">:</span><span class="w"> </span><span class="n">IBinder?)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Log</span><span class="p">.</span><span class="na">d</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"on service connected"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">componentName</span><span class="o">?.</span><span class="na">className</span><span class="p">);</span>
+<span class="w">        </span><span class="n">deviceManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IDeviceManager</span><span class="p">.</span><span class="na">Stub</span><span class="p">.</span><span class="na">asInterface</span><span class="p">(</span><span class="n">binder</span><span class="p">)</span>
+<span class="w">        </span><span class="n">deviceManager</span><span class="o">!!</span><span class="p">.</span><span class="na">setDeviceManagerResultListener</span><span class="p">(</span><span class="n">mResultListener</span><span class="p">)</span>
+<span class="w">        </span><span class="n">deviceManager</span><span class="o">!!</span><span class="p">.</span><span class="na">setDeviceManagerEventListener</span><span class="p">(</span><span class="n">mEventListener</span><span class="p">)</span>
+<span class="w">        </span><span class="n">mOnReadyCallback</span><span class="o">?.</span><span class="na">onReady</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onServiceDisconnected</span><span class="p">(</span><span class="n">p0</span><span class="p">:</span><span class="w"> </span><span class="n">ComponentName?)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Log</span><span class="p">.</span><span class="na">d</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"on service disconnected"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">bindService</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">mContext</span><span class="p">.</span><span class="na">bindService</span><span class="p">(</span><span class="n">intent</span><span class="p">,</span><span class="w"> </span><span class="n">connection</span><span class="p">,</span><span class="w"> </span><span class="n">Service</span><span class="p">.</span><span class="na">BIND_AUTO_CREATE</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">init</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="na">d</span><span class="p">(</span><span class="s">"fxy"</span><span class="p">,</span><span class="w"> </span><span class="s">"init unittest"</span><span class="p">)</span>
+<span class="w">    </span><span class="n">bindService</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="cm">/*Call API*/</span>
+<span class="kd">fun</span><span class="w"> </span><span class="nf">callInstallApk</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">cat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"packageJobs"</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"InstallPackage"</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Params</span><span class="p">()</span>
+<span class="w">    </span><span class="n">params</span><span class="p">.</span><span class="na">apkFilePath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/sdcard/DCIM/Viki.apk"</span>
+<span class="w">    </span><span class="n">deviceManager</span><span class="o">?.</span><span class="na">call</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">GlobalInstances</span><span class="p">.</span><span class="na">gsonAll</span><span class="p">.</span><span class="na">toJson</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+        </article>

@@ -1,0 +1,63 @@
+<article role="main">
+          <section id="sensor">
+<h1>Sensor<a class="headerlink" href="#sensor" title="Permalink to this heading">#</a></h1>
+<p>这里展示了一个使用Sensor的示例,它监听了PSensor的距离，并在1分钟后结束监听。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">ApiTest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">companion</span><span class="w"> </span><span class="kd">object</span><span class="w"> </span><span class="nc">TestStatic</span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"DMST-Sensor"</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">PROXIMITY_SENSOR_DISTANCE_CHANGED</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"proximity_sensor_distance_changed"</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span><span class="w"> </span><span class="nc">PSensorDistanceChanged</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nd">@Expose</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">distance</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">Float</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.0f</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mSensorCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">TestDeviceManager</span><span class="p">.</span><span class="na">EventCallback</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onEvent</span><span class="p">(</span><span class="n">eventInfo</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kd">val</span><span class="w"> </span><span class="nv">sensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GlobalInstances</span><span class="p">.</span><span class="na">gsonOnlyExposed</span><span class="p">.</span><span class="na">fromJson</span><span class="p">(</span><span class="n">eventInfo</span><span class="p">,</span><span class="n">PSensorDistanceChanged</span><span class="o">::</span><span class="n">class</span><span class="p">.</span><span class="na">java</span><span class="p">)</span>
+<span class="w">                </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="s">"Proximity sensor distance </span><span class="si">${</span><span class="n">sensor</span><span class="p">.</span><span class="na">distance</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="n">Exception</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">()</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">setEventCallbacks</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">setEventCallbacks</span><span class="p">(</span>
+<span class="w">            </span><span class="n">PROXIMITY_SENSOR_DISTANCE_CHANGED</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mSensorCallback</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">registerCallback</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"sensorJobs"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"RegisterPSensorListener"</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">removeCallback</span><span class="p">(){</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"sensorJobs"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"UnregisterPSensorListener"</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">fun</span><span class="w"> </span><span class="nf">run</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">registerCallback</span><span class="p">()</span>
+<span class="w">        </span><span class="n">setEventCallbacks</span><span class="p">()</span>
+<span class="w">        </span><span class="n">GlobalScope</span><span class="p">.</span><span class="na">launch</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">while</span><span class="p">(</span><span class="kc">true</span><span class="p">){</span>
+<span class="w">                </span><span class="n">registerCallback</span><span class="p">()</span>
+<span class="w">                </span><span class="n">delay</span><span class="p">(</span><span class="m">60</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">1000</span><span class="p">)</span>
+<span class="w">                </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="s">"Remove sensor callback"</span><span class="p">)</span>
+<span class="w">                </span><span class="n">removeCallback</span><span class="p">()</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+        </article>

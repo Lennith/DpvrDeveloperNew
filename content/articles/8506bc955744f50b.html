@@ -1,0 +1,25 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>开发者建议<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<section id="id2">
+<h2><code class="docutils literal notranslate"><span class="pre">快速开发</span></code><a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p>如果仅需要使用RDC一体机端自带功能，并且不打算花较大精力开发服务端，我们提供了两种快速开发方式：</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="/cn/docs/rdc/server_dev/index.html#server-message"><span class="std std-ref">基于通信协议的服务端开发</span></a>: 开发者可以按照通信协议部分，进行通信协议的实现和服务器功能开发，该方法在客户端协议更新时更灵活，开发者只需要根据新增的协议增加对应的通信处理即可以使用新的RDC功能。</p></li>
+</ol>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="/cn/docs/rdc/lib_dev/RDCLib.html#server-lib"><span class="std std-ref">基于RDC库的服务端开发</span></a> : 开发者可以通过使用Dpvr提供的封装接口，通过C# Dll加载方式调用RDC的功能。相对于基于协议的开发方式，在客户端进行更新后，需要等待对应的RDC库更新才能够导入新功能。</p></li>
+</ol>
+</section>
+<section id="id3">
+<h2><code class="docutils literal notranslate"><span class="pre">服务端开发</span></code><a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p>如果开发者希望完全自研服务端，我们建议开发者按照本文中通信协议部分，进行通信协议的实现和服务器功能开发。</p>
+</section>
+<section id="id4">
+<h2><code class="docutils literal notranslate"><span class="pre">一体机端功能开发</span></code><a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<p>如果需要实现RDC中目前没有实现的控制功能，开发者可以自己开发客户端应用实现该功能，并通过RDC透传功能，经RDC通信链路直接给应用发送消息后调用该功能。
+透传功能的调用，可以通过RDC提供的AIDL接口(Native Android)，或DPVR DeviceManagerService接口进行透传功能的调用。</p>
+</section>
+</section>
+
+        </article>

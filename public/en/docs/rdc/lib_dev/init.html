@@ -1,0 +1,81 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Enabling, disabling and callback registration · DPVR Developer Center</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/search-index.js"></script><script defer src="/assets/app.js"></script></head><body data-base="" data-language="en" data-product="rdc"><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><a class="brand" href="/en/index.html"><img src="/assets/logo.png" alt="DPVR"><span>DPVR DEVELOPER CENTER</span></a><button class="global-toggle" aria-label="Website navigation" aria-expanded="false" aria-controls="global-nav">☰</button><nav id="global-nav" class="global-nav"><a href="https://developer.dpvr.com/home.html">HOME</a><a href="https://developer.dpvr.com/sdk.html">SDK</a><details><summary>SOLUTIONS</summary><div><a href="https://developer.dpvr.com/solutions-DPVR-starLink.html">StarLink</a><a href="https://developer.dpvr.com/solutions-DPVR-remote-control.html">Remote Control</a></div></details><a aria-current="page" href="/en/index.html">RESOURCES</a><details><summary>ASSISTANT</summary><div><a href="https://product.dpvr.com/assistant/download.html">Assistant</a><a href="https://product.dpvr.com/assistant4">Assistant4</a></div></details></nav></header><div class="utility-bar"><a class="breadcrumb" href="/en/index.html">Developer resources</a><div class="utility-actions"><button class="search-open">Search docs <kbd>⌘ K</kbd></button><a class="language-link" hreflang="cn" href="/cn/docs/rdc/lib_dev/init.html">简体中文</a><select class="theme" aria-label="Appearance"><option value="light">Light</option><option value="dark">Dark</option><option value="auto">System</option></select></div></div><div class="reader-controls"><button class="reader-menu" aria-controls="product-nav" aria-expanded="false">☰ Documentation</button><button class="toc-menu" aria-controls="page-toc" aria-expanded="false">On this page ☷</button></div><div class="reader-layout"><aside class="product-nav" id="product-nav"><h2>RDC Remote Device Control</h2><nav><a class="nav-overview" href="/en/resources/rdc.html">Overview & start</a><a href="/en/guides/rdc-csharp.html">Build an RDC controller in C#</a><a class="" href="/en/docs/rdc/dev_guide.html">Developer Recommendations</a><a class="" href="/en/docs/rdc/index.html">Introduction</a><details ><summary>Headset configuration</summary><ul><li><a class="" href="/en/docs/rdc/client_usage/device_usage.html">Client Usage</a></li><li><a class="" href="/en/docs/rdc/client_usage/normal_settings.html">Configure via Application</a></li><li><a class="" href="/en/docs/rdc/client_usage/setting_by_config.html">Configuration File Settings</a></li></ul></details><details open><summary>C# server development</summary><ul><li><a class="" href="/en/docs/rdc/lib_dev/RDCLib.html">Based on RDC Library for Server-side Development</a></li><li><a class="" href="/en/docs/rdc/lib_dev/clientmanager.html">Client Management</a></li><li><a class="" href="/en/docs/rdc/lib_dev/content.html">Content Distribution and Download</a></li><li><a class="" href="/en/docs/rdc/lib_dev/devicecontrol.html">Device Management</a></li><li><a class="" href="/en/docs/rdc/lib_dev/devicefound.html">Device Discovery</a></li><li><a class="active" href="/en/docs/rdc/lib_dev/init.html">Enabling, disabling and callback registration</a></li><li><a class="" href="/en/docs/rdc/lib_dev/message.html">Pass-through message</a></li><li><a class="" href="/en/docs/rdc/lib_dev/package.html">Application Control</a></li><li><a class="" href="/en/docs/rdc/lib_dev/video.html">Video Playback Control</a></li></ul></details><details ><summary>Custom app messaging</summary><ul><li><a class="" href="/en/docs/rdc/client_app/index.html">Client Application Development</a></li></ul></details><details ><summary>Communication protocol</summary><ul><li><a class="" href="/en/docs/rdc/server_dev/index.html">Server Development Based on Communication Protocol</a></li></ul></details></nav></aside><main id="main" class="article-main"><div class="breadcrumbs"><a href="/en/index.html">Resources</a> / <a href="/en/resources/rdc.html">RDC Remote Device Control</a></div><header class="article-header"><span class="eyebrow">Documentation</span><a href="https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/init.html">Official source ↗</a></header><article class="article-body"><article role="main" id="furo-main-content">
+          <section id="enabling-disabling-and-callback-registration">
+<h1>Enabling, disabling and callback registration<a class="headerlink" href="#enabling-disabling-and-callback-registration" title="Link to this heading">¶</a></h1>
+<section id="initializing-the-server">
+<h2 id="section-0">Initializing the Server<a class="headerlink" href="#initializing-the-server" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="n">DpvrRDCServer</span><span class="w"> </span><span class="n">mServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="starting-the-server">
+<h2 id="section-1">Starting the Server<a class="headerlink" href="#starting-the-server" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Start</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">localIp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10086</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Starts the server and allows you to set the following parameters.</p>
+<p><cite>string localIp</cite>: The local IP address (defaults to null, which automatically detects the IP address).</p>
+<p><cite>int port</cite>: The port number for connection listening (defaults to 10086).</p>
+<p><cite>int maxClient</cite>: The maximum allowed number of client connections (defaults to 64).</p>
+</section>
+<section id="stopping-the-server">
+<h2 id="section-2">Stopping the Server<a class="headerlink" href="#stopping-the-server" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Stops the server.</p>
+</section>
+<section id="client-connection-state-change-callback">
+<h2 id="section-3">Client Connection State Change Callback<a class="headerlink" href="#client-connection-state-change-callback" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">event</span><span class="w"> </span><span class="n">OnConnectState</span><span class="w"> </span><span class="n">OnConnectStateChangedEvent</span><span class="p">;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">delegate</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnConnectState</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This event is triggered when the client’s connection state changes.</p>
+<p><cite>Client client</cite>: parameter represents the client whose state changed.</p>
+<p><cite>int state</cite>: parameter indicates the connection state (1: connected, 2: disconnected).</p>
+</section>
+<section id="client-message-callback">
+<h2 id="section-4">Client Message Callback<a class="headerlink" href="#client-message-callback" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">event</span><span class="w"> </span><span class="n">OnMessage</span><span class="w"> </span><span class="n">OnMessageEvent</span><span class="p">;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">delegate</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnMessage</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">ClientMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This event handles application-specific messages received from clients.</p>
+<p><cite>Client client</cite>: parameter represents the client.</p>
+<p><cite>ClientMessage msg</cite>:parameter contains the client’s transmitted message.</p>
+<p>The ClientMessage struct includes,</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ClientMessage</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">fromPackage</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>string fromPackage</cite>: The package name from which the message was sent.</p>
+<p><cite>string content</cite>: The content of the transmitted message.</p>
+</section>
+<section id="example-usage">
+<h2 id="section-5">Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">InitServer</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">mServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mServer</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mServer</span><span class="p">.</span><span class="n">OnMessageEvent</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">HandleMessageFromClient</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mServer</span><span class="p">.</span><span class="n">OnConnectStateChangedEvent</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">HandleConnectState</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">HandleMessageFromClient</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">ClientMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="n">D</span><span class="p">(</span><span class="s">$"Got message from {client.IP}: {msg.fromPackage} - {msg.content}"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">HandleConnectState</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">state</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="n">D</span><span class="p">(</span><span class="s">$"Connected state changed :{client} state: {state}"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article><section class="source-downloads" data-editorial-note="true"><h2>Page downloads</h2><ul><li><a href="https://static.dpvr.com/apps/developer/rdc/v2/en/_sources/lib_dev/init.rst.txt">View this page source</a></li></ul></section></article><nav class="page-turn"><a href="/en/docs/rdc/lib_dev/RDCLib.html"><small>Previous</small><span>Based on RDC Library for Server-side Development</span></a><a href="/en/docs/rdc/lib_dev/devicefound.html"><small>Next</small><span>Device Discovery</span></a></nav></main><aside class="page-toc" id="page-toc"><h2>On this page</h2><nav></nav></aside></div><button class="drawer-scrim" aria-label="Close navigation"></button><footer class="site-footer"><p>© Copyright DPVR. All Rights Reserved</p><p>沪ICP备2022019614号-1 Shanghai Lexiang Technology Co. Ltd</p></footer><dialog class="search-dialog" aria-label="Search documentation"><form class="search-form"><input id="search-query" name="q" type="search" placeholder="Search a product, task or API…" aria-label="Search terms"><button type="button" class="search-close" aria-label="Close search">✕</button></form><div class="search-status" role="status"></div><div class="search-results"></div></dialog></body></html>

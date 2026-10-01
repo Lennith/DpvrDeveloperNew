@@ -1,0 +1,43 @@
+<article role="main">
+          <section id="bluetoothscanresult">
+<span id="type-bluetoothscanresult"></span><h1>BluetoothScanResult<a class="headerlink" href="#bluetoothscanresult" title="Permalink to this heading">#</a></h1>
+<p>蓝牙扫描结果。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">BluetoothScanResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">name</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">address</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">deviceClass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">rssi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">name</span></code>: 蓝牙设备名称。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">address</span></code>: 蓝牙设备的mac地址。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">deviceClass</span></code>: 蓝牙设备类常量。</p>
+<p><cite>0</cite>: 混合设备（MISC）。</p>
+<p><cite>1024</cite>: 音视频设备（AUDIO_VIDEO）。</p>
+<p><cite>256</cite>: 电脑设备（COMPUTER）。</p>
+<p><cite>2304</cite>: 健康监测设备（HEALTH）。</p>
+<p><cite>1536</cite>: 影像设备（IMAGING）。</p>
+<p><cite>768</cite>: 网络设备（NETWORKING）。</p>
+<p><cite>1280</cite>: 外围设备（PERIPHERAL）。</p>
+<p><cite>512</cite>: 手机设备（PHONE）。</p>
+<p><cite>2048</cite>: 玩具设备（TOY）。</p>
+<p><cite>1792</cite>: 穿戴设备（WEARABLE）。</p>
+<p><cite>7936</cite>: 未分类（UNCATEGORIZED）。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">rssi</span></code>: 蓝牙信号强度。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">type</span></code>: 蓝牙类型。</p>
+<p><cite>0</cite>: 未知类型（DEVICE_TYPE_UNKNOWN）。</p>
+<p><cite>1</cite>: 经典 - BR / EDR设备（DEVICE_TYPE_CLASSIC）。</p>
+<p><cite>2</cite>: 低能耗 - LE-only（DEVICE_TYPE_LE）。</p>
+<p><cite>3</cite>: 双模式 - BR / EDR / LE（DEVICE_TYPE_DUAL）。</p>
+</section>
+</section>
+
+        </article>

@@ -1,0 +1,57 @@
+<article role="main">
+          <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h1>
+<section id="system-requirements">
+<h2>System Requirements<a class="headerlink" href="#system-requirements" title="Permalink to this heading">#</a></h2>
+<p>DpvrDeviceManager2 needs to be on a platform that has already installed DpvrDeviceManagerSerivce to implement its API functionality.</p>
+<p>You can use the adb command</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">adb shell pm list packages| findstr com.dpvr.devicemanager</span>
+</pre></div>
+</div>
+<p>to check whether the system already contains DeviceManagerService. If the command line output contains com.dpvr.devicemanager, it already has devicemanager functionality. If the return is empty, please update the system version.</p>
+</section>
+<section id="application-permissions">
+<h2>Application Permissions<a class="headerlink" href="#application-permissions" title="Permalink to this heading">#</a></h2>
+<p>While DpvrDeviceManager2 provides system functions, it also checks the caller, and each interface has different permission requirements to prevent misuse.</p>
+<p>The caller of DeviceManager2 needs to add the following authorization information to the Application tag of their application’s AndroidManifest.xml to obtain the authorization of DeviceManangerService.</p>
+<p><em>For application version authorization</em></p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;meta-data</span><span class="w"> </span><span class="na">android:name=</span><span class="s">"DeviceManagerKey"</span><span class="w"> </span><span class="na">android:value=</span><span class="s">"YOUR_KEY_HERE"</span><span class="nt">&gt;&lt;/meta-data&gt;</span>
+</pre></div>
+</div>
+<p>Using this method of authorization will authorize the current application package name and version number, and this version of the application can run on all devices that support DeviceMananger.</p>
+<p><em>For specified channel firmware authorization</em></p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;meta-data</span><span class="w"> </span><span class="na">android:name=</span><span class="s">"DeviceManagerPlatformKey"</span><span class="w"> </span><span class="na">android:value=</span><span class="s">"YOUR_KEY_HERE"</span><span class="nt">&gt;&lt;/meta-data&gt;</span>
+</pre></div>
+</div>
+<p>Using this method of authorization will authorize the application package name on the specified custom channel firmware, without checking the version number.</p>
+<p>When both types of authorization exist at the same time, the highest permission that can be obtained on the corresponding system will be used.</p>
+<p><em>Currently, you need to contact DPVR’s project manager to obtain a DeviceManagerKey with normal or higher permissions.</em></p>
+</section>
+<section id="document-description">
+<h2>Document Description<a class="headerlink" href="#document-description" title="Permalink to this heading">#</a></h2>
+<p>The interfaces of DpvrDeviceManager2 are divided into two parts</p>
+<p>The first part is the non-specific business function interface, which is used to initialize the connection between the application and DeviceManager, and set callbacks, which can be explained in the SDK platform document below.</p>
+<p>The second part is the functional interface provided by DeviceManager. See <a class="reference internal" href="/en/docs/dm/Apis/index.html"><span class="doc">api list</span></a>.</p>
+</section>
+<section id="sdk-platform">
+<h2>SDK Platform<a class="headerlink" href="#sdk-platform" title="Permalink to this heading">#</a></h2>
+<p>DpvrDeviceManager2 provides two sets of SDKs for Unity and Android native applications, where UnitySDK is a Unity encapsulation of Android native SDK. Their usage is similar.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/dm/GettingStarted/android.html">Android Developer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="/en/docs/dm/GettingStarted/android/introduction.html">Basic Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="/en/docs/dm/GettingStarted/android/usage.html">Usage Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="/en/docs/dm/GettingStarted/android/javaExample.html">Java Example Encapsulation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/dm/GettingStarted/unity.html">Unity Developer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="/en/docs/dm/GettingStarted/unity/introduction.html">Basic Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="/en/docs/dm/GettingStarted/unity/usage.html">Usage Process</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+        </article>

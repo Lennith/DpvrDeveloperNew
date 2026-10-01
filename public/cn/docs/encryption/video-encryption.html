@@ -1,0 +1,62 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>视频加密指南 · DPVR Developer Center</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/search-index.js"></script><script defer src="/assets/app.js"></script></head><body data-base="" data-language="cn" data-product="encryption"><a class="skip-link" href="#main">跳至正文</a><header class="site-header"><a class="brand" href="/cn/index.html"><img src="/assets/logo.png" alt="DPVR"><span>DPVR DEVELOPER CENTER</span></a><button class="global-toggle" aria-label="官网导航" aria-expanded="false" aria-controls="global-nav">☰</button><nav id="global-nav" class="global-nav"><a href="https://developer.dpvr.com/home.html">HOME</a><a href="https://developer.dpvr.com/sdk.html">SDK</a><details><summary>SOLUTIONS</summary><div><a href="https://developer.dpvr.com/solutions-DPVR-starLink.html">StarLink</a><a href="https://developer.dpvr.com/solutions-DPVR-remote-control.html">Remote Control</a></div></details><a aria-current="page" href="/cn/index.html">RESOURCES</a><details><summary>ASSISTANT</summary><div><a href="https://product.dpvr.com/assistant/download.html">Assistant</a><a href="https://product.dpvr.com/assistant4">Assistant4</a></div></details></nav></header><div class="utility-bar"><a class="breadcrumb" href="/cn/index.html">开发者资源</a><div class="utility-actions"><button class="search-open">搜索文档 <kbd>⌘ K</kbd></button><a class="language-link" hreflang="en" href="/en/docs/encryption/video-encryption.html">English</a><select class="theme" aria-label="外观"><option value="light">浅色</option><option value="dark">深色</option><option value="auto">跟随系统</option></select></div></div><div class="reader-controls"><button class="reader-menu" aria-controls="product-nav" aria-expanded="false">☰ 文档导航</button><button class="toc-menu" aria-controls="page-toc" aria-expanded="false">本页目录 ☷</button></div><div class="reader-layout"><aside class="product-nav" id="product-nav"><h2>视频加密与授权</h2><nav><a class="nav-overview" href="/cn/resources/encryption.html">用途与开始使用</a><details ><summary>命令行与开发参考</summary><ul><li><a class="" href="/cn/docs/encryption/cli-user-manual.html">DPVR Video Encryptor 使用说明</a></li><li><a class="" href="/cn/docs/encryption/runtime/ApkEncryptor.html">ApkEncryptor</a></li><li><a class="" href="/cn/docs/encryption/runtime/ReleaseNote.html">更新日志</a></li><li><a class="" href="/cn/docs/encryption/runtime/VideoEncryptor.html">VideoEncryptor</a></li><li><a class="" href="/cn/docs/encryption/runtime/index.html">DPVR Encryptor documentation</a></li></ul></details><details ><summary>图形界面操作</summary><ul><li><a class="" href="/cn/docs/encryption/gui-user-manual.html">DPVR 视频加密工具 · 使用说明</a></li></ul></details><details open><summary>操作指南</summary><ul><li><a class="active" href="/cn/docs/encryption/video-encryption.html">视频加密指南</a></li></ul></details></nav></aside><main id="main" class="article-main"><div class="breadcrumbs"><a href="/cn/index.html">资源</a> / <a href="/cn/resources/encryption.html">视频加密与授权</a></div><header class="article-header"><span class="eyebrow">技术文档</span><a href="https://developer.dpvr.com/resources/doc_cn.html#video-encryption">官方来源 ↗</a></header><article class="article-body"><div id="content-display" style="opacity: 1;">
+                <header class="header">
+                    <h1>视频加密指南</h1>
+                    <p>本指南介绍了 DPVR Video Encryption Tool V3 的两种版本（GUI图形界面版 与 CLI命令行版）的功能特点与使用说明。</p>
+                </header>
+                
+            
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">01</span>
+                                <h2 class="step-title" id="section-0">概述</h2>
+                            </div>
+                            <div class="step-description">
+                                <p>DPVR Video Encryption Tool V3 是一款专为 VR 头显打造的本地视频加密与授权管理工具。</p><p>用户只需导入未加密的原始视频、授权播放的 VR 头显序列号（SN），并设置有效播放日期，工具即可在本地快速生成逐帧加密的视频文件及加密授权文件。将生成的加密视频与授权文件导入指定 SN 的 VR 头显后，即可实现安全解密播放。未授权设备（如非指定 SN 的头显、电脑、手机等）均无法读取或播放该内容。</p>
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">02</span>
+                                <h2 class="step-title" id="section-1">GUI 版本（图形界面版 - 推荐使用）</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p><b>特点：</b>提供友好直观的可视化操作界面，无需记忆命令行或手动修改配置文件。</p>
+                            <p><b>核心功能：</b>支持完整的视频加密与授权导出功能。</p>
+                            <ul class="flush-list">
+                                <li><b>本地设备 SN 管理：</b>便捷录入、分组和管理授权头显设备列表。</li>
+                                <li><b>加密视频管理：</b>直观查看已加密项目及历史记录。</li>
+                                <li><b>密钥与授权管理：</b>安全管理本地加密密钥与授权凭证。</li>
+                            </ul>
+                            <p><b>适用场景：</b>日常内容打包、多设备批量授权管理及交互式操作。</p>
+                            <p><i>* 下载文件夹内附详细操作说明。</i></p>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/424b06804510527170ff.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">03</span>
+                                <h2 class="step-title" id="section-2">CLI 版本（命令行 / 批处理版）</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p><b>特点：</b>轻量级，免安装，基于配置文件驱动。</p>
+                            <p><b>核心功能：</b>专为极简加密需求设计，仅保留核心加密引擎。支持在配置文件中填入视频路径、SN 列表及有效期后，一键运行 <span class="highlight">.bat</span> 脚本完成自动化加密。</p>
+                            <p><b>适用场景：</b>自动化脚本集成、批量静默加密、无 GUI 桌面环境。</p>
+                            <p><i>* 下载文件夹内附详细操作说明。</i></p>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    </div></article><nav class="page-turn"></nav></main><aside class="page-toc" id="page-toc"><h2>本页目录</h2><nav></nav></aside></div><button class="drawer-scrim" aria-label="关闭目录"></button><footer class="site-footer"><p>© Copyright DPVR. All Rights Reserved</p><p>沪ICP备2022019614号-1 Shanghai Lexiang Technology Co. Ltd</p></footer><dialog class="search-dialog" aria-label="搜索文档"><form class="search-form"><input id="search-query" name="q" type="search" placeholder="搜索产品、操作或接口…" aria-label="关键词"><button type="button" class="search-close" aria-label="关闭搜索">✕</button></form><div class="search-status" role="status"></div><div class="search-results"></div></dialog></body></html>

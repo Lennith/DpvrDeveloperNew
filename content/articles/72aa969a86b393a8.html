@@ -1,0 +1,59 @@
+<article role="main">
+          <section id="video-play-status">
+<span id="event-video-play-status"></span><h1>VIDEO_PLAY_STATUS<a class="headerlink" href="#video-play-status" title="Permalink to this heading">#</a></h1>
+<p>DPVR standalone player’s playback status.</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">VideoPlayStatusEvent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">time</span><span class="p">:</span><span class="w"> </span><span class="kt">Float?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.0f</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">videoName</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">videoPath</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">videoDisplayType</span><span class="p">:</span><span class="w"> </span><span class="kt">Int?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="m">1</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">state</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STOPED"</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">duration</span><span class="p">:</span><span class="w"> </span><span class="kt">Float?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.0f</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="permission">
+<h2>Permission<a class="headerlink" href="#permission" title="Permalink to this heading">#</a></h2>
+<p>APP_PERMISSION_NORMAL</p>
+</section>
+<section id="type-name">
+<h2>Type name<a class="headerlink" href="#type-name" title="Permalink to this heading">#</a></h2>
+<p>video_player_status</p>
+</section>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Float</span> <span class="pre">time</span></code>: Video playback progress (in seconds).</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">VideoName</span></code>: Video filename.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">VideoPath</span></code>: Video file path.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">Int</span> <span class="pre">videoDisplayType</span></code>: Video display type.</p>
+<p><cite>0</cite>:  Normal 2D.</p>
+<p><cite>1</cite>:  3D side-by-side.</p>
+<p><cite>4</cite>:  3D top-bottom.</p>
+<p><cite>16</cite>:  Panorama 2D.</p>
+<p><cite>17</cite>:  Panorama 3D side-by-side.</p>
+<p><cite>20</cite>:  Panorama 3D top-bottom.</p>
+<p><cite>32</cite>:  180 degrees 2D.</p>
+<p><cite>33</cite>:  180 degrees 3D side-by-side.</p>
+<p><cite>36</cite>:  180 degrees 3D top-bottom.</p>
+<p><cite>64</cite>:  Fisheye 2D.</p>
+<p><cite>65</cite>:  Fisheye 3D side-by-side.</p>
+<p><cite>68</cite>:  Fisheye 3D top-bottom.</p>
+<p><cite>128</cite>:  EAC 2D.</p>
+<p><cite>129</cite>:  EAC 3D side-by-side.</p>
+<p><cite>1024</cite>: Cubemap.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">state</span></code>: Video playback status.</p>
+<p><cite>“PREPARED”</cite>: Ready to play.</p>
+<p><cite>“BUFFERING”</cite>:  Buffering.</p>
+<p><cite>“PLAYING”</cite>:  Playing.</p>
+<p><cite>“PAUSE”</cite>:  Paused.</p>
+<p><cite>“STOPED”</cite>:  Stopped.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">Float</span> <span class="pre">duration</span></code>: Total video duration (in seconds).</p>
+</section>
+</section>
+
+        </article>

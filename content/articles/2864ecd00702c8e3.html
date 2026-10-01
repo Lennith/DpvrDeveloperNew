@@ -1,0 +1,40 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>客户端使用<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<p>现有的RDC客户端服务内置了这些远端控制功能：</p>
+<ol class="arabic simple">
+<li><p>视频控制：包含播放视频，关闭视频，暂停\恢复播放，音量设置。</p></li>
+<li><p>应用控制：开启应用，关闭应用。</p></li>
+<li><p>按键屏蔽：屏蔽和解除屏蔽机身按键和触摸板。</p></li>
+</ol>
+<section id="id2">
+<h2>系统要求<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p>首先，确认RDC服务已经被安装在系统中，你可以通过adb指令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">adb shell pm list packages| findstr com.deepoon.eggchair</span>
+</pre></div>
+</div>
+<p>来查看是否系统中是否已经包含RDC客户端服务。如果命令行输出包含了com.deepoon.eggchair，则已经具备了RDC功能。如果返回为空，请更新系统版本。</p>
+<p>如果需要使用视频播放功能，需要系统自带DpvrVideoPlayer，你可以通过adb指令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">adb shell pm list packages| findstr com.dpvr.videoplayer</span>
+</pre></div>
+</div>
+<p>来查看VideoPlayer预装情况。</p>
+<p>如果需要使用开机自启功能，需要系统自带DpvrDaemonService，你可以通过adb指令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">adb shell pm list packages| findstr com.dpvr.daemonservice</span>
+</pre></div>
+</div>
+<p>来查看DpvrDaemonService的预装情况。</p>
+</section>
+<section id="id3">
+<h2>配置和启动<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p>我们提供了两种启动方式来配置和启动RDC客户端。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/rdc/client_usage/normal_settings.html">通过应用配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/rdc/client_usage/setting_by_config.html">配置文件设置</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+        </article>

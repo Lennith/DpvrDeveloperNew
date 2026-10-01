@@ -1,0 +1,165 @@
+<div id="content-display" style="opacity: 1;">
+                <header class="header">
+                    <h1>Unity Player Plugin Integration Guide</h1>
+                    <p>Instructions and API reference for integrating and using the DPVR Player within Unity.</p>
+                </header>
+                
+            
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">01</span>
+                                <h2 class="step-title">Project Settings</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <ul class="flush-list">
+                                <li>When using in Unity, you must <b>uncheck</b> <span class="highlight">Multithreaded Rendering</span> in Unity's Player Settings.</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/efd338d614946e792196.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">02</span>
+                                <h2 class="step-title">SDK Notes</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <ul class="flush-list">
+                                <li>DPVR Unity SDK: When using SDK version 0.8.1, do not check Use <span class="highlight">SinglePass (Android)</span>.</li>
+                                <li>OpenXR SDK: When using OpenXR SDK, Render Mode can only be set to <span class="highlight">Multi-pass</span>; <span class="highlight">SinglePass</span> is likewise not supported.</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/6e298b813e441963546e.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">02</span>
+                                <h2 class="step-title">Importing the Package</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <ul class="flush-list">
+                                <li>Import the <span class="highlight">Player.unitypackage</span> into your Unity project.</li>
+                                <li>The ARM64 version library is included. When using IL2CPP, you can select 64-bit for building.</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/9c1c761f8c23cfb010e9.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">03</span>
+                                <h2 class="step-title">Auto Video Playback</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <ul class="flush-list">
+                                <li>Check <span class="highlight">AutoPlay</span>. Set <span class="highlight">MediaUrl</span> to the video address, and <span class="highlight">VOuts</span> to the video display target (render carrier).</li>
+                                <li>The video display target requires a material and shader. It can be displayed on a <span class="highlight">Plane</span> or <span class="highlight">RawImage</span>, which require different Shaders.</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/5c4fb154108c8b7e6c1f.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">04</span>
+                                <h2 class="step-title">Controlling Video Playback via Script</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <ul class="flush-list">
+                                <li>Add a script and the corresponding video target. Similar to auto-play, adjust the parameters accordingly.</li>
+                                <li>Create a new script where you can programmatically control video playback and handle the display target.</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/11c28a5a2e01ecf61022.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">05</span>
+                                <h2 class="step-title">API Reference: Control &amp; Progress</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>Use the following APIs to control video playback and monitor duration/progress:</p>
+                            <div class="settings-table-container">
+                                <table class="settings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>API Method / Property</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="feature-name">player.Play(videoUri, tim)</td>
+                                            <td>Plays the video. <b>videoUri</b> is the video address, <b>tim</b> is the start time (default is 0).</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">OnPreparedCallback</td>
+                                            <td>Callback triggered when the video is prepared and ready.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">player.Duration</td>
+                                            <td>Gets the total duration of the video.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">player.Current</td>
+                                            <td>Gets the current playback progress/time.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">player.Pause()</td>
+                                            <td>Pauses the video.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">player.Resume()</td>
+                                            <td>Resumes video playback.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">player.Seek(tim)</td>
+                                            <td>Adjusts video progress. If <b>tim=0</b>, the video restarts from the beginning.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    </div>

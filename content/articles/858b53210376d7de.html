@@ -1,0 +1,24 @@
+<article role="main" id="furo-main-content">
+          <section id="developer-recommendations">
+<h1>Developer Recommendations<a class="headerlink" href="#developer-recommendations" title="Link to this heading">¶</a></h1>
+<section id="rapid-development">
+<h2><code class="docutils literal notranslate"><span class="pre">Rapid</span> <span class="pre">development</span></code><a class="headerlink" href="#rapid-development" title="Link to this heading">¶</a></h2>
+<p>If you only need to use the built-in features of the RDC all-in-one device and do not plan to invest significant effort in developing the server, we offer two rapid development methods:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="/en/docs/rdc/server_dev/index.html#server-message"><span class="std std-ref">Server Development Based on Communication Protocol</span></a>: Developers can implement the communication protocol and develop server functionalities according to the communication protocol section. This method is more flexible when the client protocol is updated; developers only need to add corresponding communication processing for the new protocol to use the new RDC features.</p></li>
+</ol>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="/en/docs/rdc/lib_dev/RDCLib.html#server-lib"><span class="std std-ref">Based on RDC Library for Server-side Development</span></a> : Developers can use the encapsulated interfaces provided by Dpvr, invoking RDC functionalities through the C# Dll loading method. Compared to protocol-based development, when the client is updated, you need to wait for the corresponding RDC library update to import new features.</p></li>
+</ol>
+</section>
+<section id="server-development">
+<h2><code class="docutils literal notranslate"><span class="pre">Server</span> <span class="pre">development</span></code><a class="headerlink" href="#server-development" title="Link to this heading">¶</a></h2>
+<p>If developers wish to fully self-develop the server, we recommend that developers implement the communication protocol and develop server functionalities according to the communication protocol section in this document.</p>
+</section>
+<section id="extended-function-development-on-headset">
+<h2><code class="docutils literal notranslate"><span class="pre">Extended</span> <span class="pre">function</span> <span class="pre">development</span> <span class="pre">on</span> <span class="pre">headset</span></code><a class="headerlink" href="#extended-function-development-on-headset" title="Link to this heading">¶</a></h2>
+<p>If you need to implement control functions that are not currently available in RDC, developers can develop client applications to implement these functions and use the RDC pass-through feature to send messages directly to the application via the RDC communication link to invoke these functions. The pass-through feature can be called through the AIDL interface provided by RDC (Native Android) or the DPVR DeviceManagerService interface.</p>
+</section>
+</section>
+
+        </article>

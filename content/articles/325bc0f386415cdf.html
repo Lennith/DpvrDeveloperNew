@@ -1,0 +1,36 @@
+<article role="main">
+          <section id="release-note">
+<h1>Release Note<a class="headerlink" href="#release-note" title="Permalink to this heading">#</a></h1>
+<section id="v10011">
+<h2>2024-04-30 V10011<a class="headerlink" href="#v10011" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Added WifiDisplay-related interfaces and events to control the system’s WifiDisplay functionality.</p></li>
+<li><p>Added Sensor-related interfaces.</p></li>
+<li><p>Added descriptions of supported versions for some interfaces in the documentation.</p></li>
+<li><p>Fixed some documentation errors.</p></li>
+<li><p>Added demos of some module functions in the documentation.</p></li>
+<li><p>Changed the name of the CheckDpvrMirraCast interface to CheckDpvrMiraCast. The old interface name, if used, remains compatible.</p></li>
+<li><p>Fixed the issue where the RestoreDpnLauncher interface reported an error when passing an empty parameter.</p></li>
+<li><p>Added the ‘autoKillDelay’ parameter to the CheckApplicationAuthority interface to delay application termination.</p></li>
+<li><p>The ConnectBluetoothDevice interface no longer disconnects an existing connection and reconnects when attempting to connect to an already connected device.</p></li>
+<li><p>When GetAppInfoByPackageName detects an uninstalled app, it no longer returns a result through a parameter error. Instead, a new error is used.</p></li>
+<li><p>Fixed the issue where the ConnectWifi interface returned an SSID not found error when using a password with fewer than 8 characters. A new error is now returned in such cases.</p></li>
+<li><p>Fixed the issue where the CopyFiles interface failed to return correctly when the source path did not exist.</p></li>
+<li><p>Fixed the issue where remotecontrolJobs/IsServerConnected interface always returned that the server was not connected when it was not initialized.</p></li>
+</ol>
+</section>
+<section id="v10010">
+<h2>2024-04-12 V10010<a class="headerlink" href="#v10010" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Added support interface for Remote Device Control service, remotecontrolJobs.</p></li>
+<li><p>Added inter-application communication interface, messageJobs.</p></li>
+<li><p>Added interface for monitoring system property changes, systemJobs/RegisterConfigureObserver, systemJobs/unRegisterConfigureObserver.</p></li>
+<li><p>Added interface for getting the current foreground application, activityJobs/GetTopPackageName.</p></li>
+<li><p>Added interface for checking whether the current screen is on, batteryJobs/IsScreenOn.</p></li>
+<li><p>Added OTA package download cancellation interface, otaJobs/CancelDownload.</p></li>
+<li><p>Added Dpvr application authorization check interface, packageJobs/CheckApplicationAuthority.</p></li>
+</ol>
+</section>
+</section>
+
+        </article>

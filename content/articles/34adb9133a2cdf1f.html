@@ -1,0 +1,27 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>应用控制<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<section id="id2">
+<h2>开启应用<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">ActivityStart</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">packageName</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">activityName</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>string packageName</cite>：要开启的应用包名。</p>
+<p><cite>string activityName</cite>：要开启的应用的Activity名称。</p>
+<p><cite>List&lt;Client&gt; clientList</cite>：指定要开启的应用的客户端列表，默认为空，表示所有客户端。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>开启后的应用会在Client的TopPackage的值上体现。</p>
+</div>
+</section>
+<section id="id3">
+<h2>关闭应用<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">ActivityStop</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">packageName</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>string packageName</cite>：要关闭的应用包名。</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: 指定要关闭的应用的客户端列表，默认为空，表示所有客户端。</p>
+</section>
+</section>
+
+        </article>

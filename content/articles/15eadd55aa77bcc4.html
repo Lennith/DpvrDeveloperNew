@@ -1,0 +1,41 @@
+<article role="main" id="furo-main-content">
+          <section id="client-application-development">
+<h1>Client Application Development<a class="headerlink" href="#client-application-development" title="Link to this heading">¶</a></h1>
+<p>Client application development refers to developers using RDC pass-through messages and the RDC communication link to communicate with the server.</p>
+<p>Developers have two methods to integrate their applications with RDC pass-through.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Due to RDC’s AIDL listener only supporting one bound Listener, the two integration methods below cannot work simultaneously.</p>
+</div>
+<section id="aidl-integration">
+<h2>1. <a class="reference external" href="https://developer.android.google.cn/guide/components/aidl">AIDL</a>  Integration<a class="headerlink" href="#aidl-integration" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://static.dpvr.com/apps/developer/rdc/v2/resources/aidl.zip">Click here to download the AIDL files.</a></p>
+<p>The AIDL interface is as follows:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span> <span class="nc">IRemoteControllService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** Send a pass-through message to the server. fromPackage is the name of the sending package,</span>
+<span class="cm">    message is the content of the message */</span>
+<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">sendMessageToServer</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fromPackage</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/** Get the current server connection status */</span>
+<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isServerConnected</span><span class="p">();</span>
+
+<span class="w">    </span><span class="cm">/** Register a server pass-through message listener */</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">registerServerMessageListener</span><span class="p">(</span><span class="n">IRemoteControllerServerMessageListener</span><span class="w"> </span><span class="n">listener</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">interface</span> <span class="nc">IRemoteControllerServerMessageListener</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** Receive a server pass-through message. timeStamp is the UTC time the message was sent,</span>
+<span class="cm">    toPackage is the name of the receiving application package, message is the</span>
+<span class="cm">    pass-through content */</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">onMessage</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">timeStamp</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">toPackage</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="dms-interface-for-sending-and-receiving">
+<h2>2.DMS Interface for Sending and Receiving<a class="headerlink" href="#dms-interface-for-sending-and-receiving" title="Link to this heading">¶</a></h2>
+<p>DpvrDeviceManagerService provides a wrapped API after AIDL calls <a class="reference external" href="/en/docs/dm/Apis/remotecontrolJobs/index.html">API</a> for quick integration by developers.</p>
+</section>
+</section>
+
+        </article>

@@ -1,0 +1,78 @@
+<article role="main" id="furo-main-content">
+          <section id="device-management">
+<h1>Device Management<a class="headerlink" href="#device-management" title="Link to this heading">¶</a></h1>
+<section id="input-state-data-structure">
+<h2>Input State Data Structure:<a class="headerlink" href="#input-state-data-structure" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">InputState</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">HomeKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">PowerKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">TouchPadBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">VolumeKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">BackKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>bool HomeKeyBlock</cite>: Indicates whether the Home key (including the controller’s Home key short press) is blocked.</p>
+<p><cite>bool PowerKeyBlock</cite>: Indicates whether the Power key short press is blocked. Long press for 10 seconds to shut down cannot be blocked by this setting.</p>
+<p><cite>bool TouchPadBlock</cite>: Indicates whether the device’s touchpad is blocked.</p>
+<p><cite>bool VolumeKeyBlock</cite>: Indicates whether the volume keys are blocked.</p>
+<p><cite>bool BackKeyBlock</cite>: Indicates whether the Back key (including the controller’s Back key) is blocked.</p>
+</section>
+<section id="setting-and-clearing-input-state">
+<h2>Setting and Clearing Input State<a class="headerlink" href="#setting-and-clearing-input-state" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceSetInputState</span><span class="p">(</span><span class="n">InputState</span><span class="w"> </span><span class="n">states</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>InputState states</cite>: Specifies the desired input state.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional parameter to specify a list of clients for which the input state should be set. Default is null, meaning all clients.</p>
+</section>
+<section id="setting-volume">
+<h2>Setting Volume<a class="headerlink" href="#setting-volume" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceSetVolume</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>int value</cite>: Volume value, range 0-100.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional parameter to specify a list of clients for which the volume should be set. Default is null, meaning all clients.</p>
+</section>
+<section id="shutting-down-the-device">
+<h2>Shutting Down the Device<a class="headerlink" href="#shutting-down-the-device" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceShutdown</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional parameter to specify a list of clients for which the device should be shut down. Default is null, meaning all clients.</p>
+</section>
+<section id="rebooting-the-device">
+<h2>Rebooting the Device<a class="headerlink" href="#rebooting-the-device" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceReboot</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional parameter to specify a list of clients for which the device should be rebooted. Default is null, meaning all clients.</p>
+</section>
+<section id="recentering-the-device">
+<h2>Recentering the Device<a class="headerlink" href="#recentering-the-device" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceRecenter</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional parameter to specify a list of clients for which the device should be recentered. Default is null, meaning all clients.</p>
+</section>
+<section id="starting-dpvr-cast">
+<h2>Starting DPVR Cast<a class="headerlink" href="#starting-dpvr-cast" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceStartDpvrCast</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Sends message 1012 to the selected clients and requests the device-side DMS to start the DPVR Cast RTSP stream.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional list of clients. Default is null, meaning all clients.</p>
+</section>
+<section id="stopping-dpvr-cast">
+<h2>Stopping DPVR Cast<a class="headerlink" href="#stopping-dpvr-cast" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceStopDpvrCast</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Sends message 1013 to the selected clients and requests the device-side DMS to stop the DPVR Cast RTSP stream.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional list of clients. Default is null, meaning all clients.</p>
+<p>Whether Cast is actually available must be determined from the client’s subsequent heartbeat <code class="docutils literal notranslate"><span class="pre">CastRtspUrl</span></code> value. An empty string means that no Cast address is currently available.</p>
+</section>
+</section>
+
+        </article>

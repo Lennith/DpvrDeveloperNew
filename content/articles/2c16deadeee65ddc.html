@@ -1,0 +1,53 @@
+<article role="main" id="furo-main-content">
+          <section id="configuration-file-settings">
+<h1>Configuration File Settings<a class="headerlink" href="#configuration-file-settings" title="Link to this heading">¶</a></h1>
+<p>You can also configure the RDC all-in-one device by placing a configuration file in the root directory of the device.</p>
+<p>Place the <code class="docutils literal notranslate"><span class="pre">persist_settings</span></code> file in the root directory of the all-in-one device for Dpvr preloaded configuration.</p>
+<p>For RDC-related settings, you can add the following configurations:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"SettingKey"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"WifiConfig"</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">"password"</span><span class="p">:</span><span class="s2">"Dpvr@2022"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"ssid"</span><span class="p">:</span><span class="s2">"DPVR_Office"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"WEP"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"SettingConfig"</span><span class="p">:</span>
+<span class="w">    </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"Key"</span><span class="p">:</span><span class="s2">"LCServerIP"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"SettingType"</span><span class="p">:</span><span class="s2">"global"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"Value"</span><span class="p">:</span><span class="s2">"192.168.1.1"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"ValueType"</span><span class="p">:</span><span class="s2">"string"</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"Key"</span><span class="p">:</span><span class="s2">"LCServerPort"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"SettingType"</span><span class="p">:</span><span class="s2">"global"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"Value"</span><span class="p">:</span><span class="s2">"1000"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"ValueType"</span><span class="p">:</span><span class="s2">"int"</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"Key"</span><span class="p">:</span><span class="s2">"dp_auto_start_remote_control"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"SettingType"</span><span class="p">:</span><span class="s2">"int"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"Value"</span><span class="p">:</span><span class="s2">"1"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"ValueType"</span><span class="p">:</span><span class="s2">"global"</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">SettingConfig</span></code> is the preloaded Settings, which will be automatically loaded every time the device starts.</p>
+<p><code class="docutils literal notranslate"><span class="pre">LCServerIP</span></code> : The IP address of the remote control server.</p>
+<p><code class="docutils literal notranslate"><span class="pre">LCServerPort</span></code> : The port number of the remote control server.</p>
+<p><code class="docutils literal notranslate"><span class="pre">dp_auto_start_remote_control</span></code> : Whether to start remote control automatically.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">Value</span></code> to 1 means the RDC service will start automatically at boot; 0 means it will not start automatically.</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">WifiConfig</span></code> : Sets the WiFi to connect automatically at boot. <code class="docutils literal notranslate"><span class="pre">ssid</span></code>  is the WiFi name, <code class="docutils literal notranslate"><span class="pre">password</span></code> is the WiFi password, and <code class="docutils literal notranslate"><span class="pre">type</span></code> is the WiFi encryption type. Currently,  <code class="docutils literal notranslate"><span class="pre">WEP</span></code> and <code class="docutils literal notranslate"><span class="pre">WPA</span></code> encryption types are supported.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The AutoWifi connection logic will continuously attempt to connect to the specified WiFi if no WiFi is connected at boot.</p>
+</div>
+</section>
+
+        </article>

@@ -1,0 +1,38 @@
+<article role="main" id="furo-main-content">
+          <section id="client-usage">
+<h1>Client Usage<a class="headerlink" href="#client-usage" title="Link to this heading">¶</a></h1>
+<p>The existing RDC client service includes the following remote control functions:</p>
+<ol class="arabic simple">
+<li><p>Video Control: Includes playing videos, closing videos, pausing/resuming playback, and volume settings.</p></li>
+<li><p>Application Control: Starting and closing applications.</p></li>
+<li><p>Key Blocking: Blocking and unblocking physical buttons and the touchpad.</p></li>
+</ol>
+<section id="system-requirements">
+<h2>System Requirements<a class="headerlink" href="#system-requirements" title="Link to this heading">¶</a></h2>
+<p>First, ensure the RDC service is installed on the system. You can check this using the adb command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">adb shell pm list packages| findstr com.deepoon.eggchair</span>
+</pre></div>
+</div>
+<p>If the command output includes com.deepoon.eggchair, the RDC client service is present. If the output is empty, please update the system version.</p>
+<p>To use the video playback functionality, the system needs to have DpvrVideoPlayer pre-installed. You can check this using the adb command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">adb shell pm list packages| findstr com.dpvr.videoplayer</span>
+</pre></div>
+</div>
+<p>To use the auto-start feature, the system needs to have DpvrDaemonService pre-installed. You can check this using the adb command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">adb shell pm list packages| findstr com.dpvr.daemonservice</span>
+</pre></div>
+</div>
+</section>
+<section id="configuration-and-startup">
+<h2>Configuration and Startup<a class="headerlink" href="#configuration-and-startup" title="Link to this heading">¶</a></h2>
+<p>We provide two methods to configure and start the RDC client.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/rdc/client_usage/normal_settings.html">Configure via Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/rdc/client_usage/setting_by_config.html">Configuration File Settings</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+        </article>

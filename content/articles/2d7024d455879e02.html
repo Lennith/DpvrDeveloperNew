@@ -1,0 +1,47 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>客户端管理<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<section id="id2">
+<h2>客户端数据结构<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Client</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">SN</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">IP</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Port</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">TopPackage</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">BatteryLevel</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">CastRtspUrl</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ConnectState</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>string SN</cite>：客户端序列号。</p>
+<p><cite>string IP</cite>：客户端IP地址。</p>
+<p><cite>int Port</cite>：客户端端口号。</p>
+<p><cite>string TopPackage</cite>：客户端当前的最上层应用包名。</p>
+<p><cite>int BatteryLevel</cite>：客户端电池电量。</p>
+<p><cite>string CastRtspUrl</cite>：客户端当前 DPVR Cast 的 RTSP 地址；未 Cast 或地址不可用时为空字符串。该值来自客户端心跳字段 <code class="docutils literal notranslate"><span class="pre">cast_rtsp_url</span></code>，并不是发送 1012 后同步返回的结果。</p>
+<p><cite>int ConnectState</cite>：客户端连接状态，1: 已连接，2: 未连接。</p>
+</section>
+<section id="id3">
+<h2>获取客户端列表<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ClientList</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>当前已经建立过连接的客户端列表。</p>
+</section>
+<section id="id4">
+<h2>获取客户端实例<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="n">Client</span><span class="w"> </span><span class="nf">GetClient</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">serialNo</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>根据客户端SN和IP获取客户端，SN的优先级高于IP，当找到符合SN的客户端对象，则不再根据IP查找。</p>
+<p>参数：</p>
+<p><cite>string serialNo</cite>：需要查找的客户端SN。</p>
+<p><cite>string ip</cite>：需要查找的客户端IP，默认为null。</p>
+<p>返回值：</p>
+<p><cite>Client</cite>：客户端对象。</p>
+</section>
+</section>
+
+        </article>

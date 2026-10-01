@@ -1,0 +1,85 @@
+<article role="main">
+          <section id="messenger">
+<h1>Messenger<a class="headerlink" href="#messenger" title="Permalink to this heading">#</a></h1>
+<p>这里展示了一个使用Messenger的示例，它定期向自身发送消息，并且进行了消息的接收。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">ApiTest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">companion</span><span class="w"> </span><span class="kd">object</span><span class="w"> </span><span class="nc">TestStatic</span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"DMST-MT"</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">MESSENGER_RECEIVED</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"messenger_received"</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span><span class="w"> </span><span class="nc">MessageReceivedEvent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="p">:</span><span class="w"> </span><span class="n">DpvrDeviceManagerEvents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DpvrDeviceManagerEvents</span><span class="p">.</span><span class="na">MESSENGER_RECEIVED</span>
+
+<span class="w">        </span><span class="nd">@Expose</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">fromPackage</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span>
+
+<span class="w">        </span><span class="nd">@Expose</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">message</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span><span class="w"> </span><span class="nc">SendMessageParams</span><span class="p">(){</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">toPackage</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">message</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">mMessageCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mMessageCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">TestDeviceManager</span><span class="p">.</span><span class="na">EventCallback</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onEvent</span><span class="p">(</span><span class="n">eventInfo</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kd">val</span><span class="w"> </span><span class="nv">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GlobalInstances</span><span class="p">.</span><span class="na">gsonOnlyExposed</span><span class="p">.</span><span class="na">fromJson</span><span class="p">(</span><span class="n">eventInfo</span><span class="p">,</span><span class="n">MessageReceivedEvent</span><span class="o">::</span><span class="n">class</span><span class="p">.</span><span class="na">java</span><span class="p">)</span>
+<span class="w">                </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="s">"Received message from package: </span><span class="si">${</span><span class="n">msg</span><span class="p">.</span><span class="na">fromPackage</span><span class="si">}</span><span class="s"> : </span><span class="si">${</span><span class="n">msg</span><span class="p">.</span><span class="na">message</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="n">Exception</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">()</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">setEventCallbacks</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">setEventCallbacks</span><span class="p">(</span>
+<span class="w">            </span><span class="n">MESSENGER_RECEIVED</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mMessageCallback</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">registerCallback</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"messengerJobs"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"StartListenMessenger"</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">stopListenMessenger</span><span class="p">(){</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"messengerJobs"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"StopListenMessenger"</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">sendTestMessage</span><span class="p">(){</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"messengerJobs"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"SendMessage"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">apiParams</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SendMessageParams</span><span class="p">().</span><span class="na">apply</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="cm">/** we send a test message to self */</span>
+<span class="w">            </span><span class="n">toPackage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GlobalInstances</span><span class="p">.</span><span class="na">serviceContext</span><span class="o">!!</span><span class="p">.</span><span class="na">packageName</span>
+<span class="w">            </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"this is </span><span class="si">${</span><span class="n">mMessageCount</span><span class="o">++</span><span class="si">}</span><span class="s"> message"</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">apiParams</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">fun</span><span class="w"> </span><span class="nf">run</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">registerCallback</span><span class="p">()</span>
+<span class="w">        </span><span class="n">setEventCallbacks</span><span class="p">()</span>
+<span class="w">        </span><span class="n">GlobalScope</span><span class="p">.</span><span class="na">launch</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">while</span><span class="p">(</span><span class="kc">true</span><span class="p">){</span>
+<span class="w">                </span><span class="n">sendTestMessage</span><span class="p">()</span>
+<span class="w">                </span><span class="n">delay</span><span class="p">(</span><span class="m">2000</span><span class="p">)</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+        </article>

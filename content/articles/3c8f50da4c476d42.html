@@ -1,0 +1,168 @@
+<article role="main">
+          <section id="wifidisplay">
+<h1>WifiDisplay<a class="headerlink" href="#wifidisplay" title="Permalink to this heading">#</a></h1>
+<p>这里展示了一个WifiDisplay的简单示例，示例中进行了WifiDisplay扫描，在发现一个包含Hagbis的设备后，进行连接，并且再连接断开后进行重新扫描。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">ApiTest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">companion</span><span class="w"> </span><span class="kd">object</span><span class="w"> </span><span class="nc">ApiTest</span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"DMST-WD"</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span><span class="w"> </span><span class="nc">WifiDisplayDeviceInfo</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nd">@Expose</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">mac</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+
+<span class="w">        </span><span class="nd">@Expose</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">name</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+
+<span class="w">        </span><span class="nd">@Expose</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">isAvailable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">        </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">toString</span><span class="p">():</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">"WifiDisplay Info: </span><span class="si">$</span><span class="n">name</span><span class="s">, </span><span class="si">$</span><span class="n">mac</span><span class="s">, is active </span><span class="si">$</span><span class="n">isAvailable</span><span class="s">"</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span><span class="w"> </span><span class="nc">WifiDisplayScanResultEvent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">companion</span><span class="w"> </span><span class="kd">object</span><span class="w"> </span><span class="nc">ScanResult</span><span class="p">{</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">EVENT_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"wifi_display_scan_result"</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="nd">@Expose</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">list</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">WifiDisplayDeviceInfo</span><span class="o">&gt;?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span><span class="w"> </span><span class="nc">WifiDisplayConnectionChanged</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">companion</span><span class="w"> </span><span class="kd">object</span><span class="w"> </span><span class="nc">ConnectionChanged</span><span class="p">{</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">EVENT_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"wifi_display_connection_changed"</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="nd">@Expose</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">connected</span><span class="p">:</span><span class="w"> </span><span class="kt">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+
+<span class="w">        </span><span class="nd">@Expose</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">deviceInfo</span><span class="p">:</span><span class="w"> </span><span class="n">WifiDisplayDeviceInfo? </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span><span class="w"> </span><span class="nc">StartScanParams</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">duration</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">1000</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span><span class="w"> </span><span class="nc">ConnectParams</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">name</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">mac</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span><span class="w"> </span><span class="nc">ConnectResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">device</span><span class="p">:</span><span class="w"> </span><span class="n">com</span><span class="p">.</span><span class="na">dpvr</span><span class="p">.</span><span class="na">devicemanager</span><span class="p">.</span><span class="na">module</span><span class="p">.</span><span class="na">cast</span><span class="p">.</span><span class="na">WifiDisplayDeviceInfo</span><span class="o">?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">failReason</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mScanResultCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">TestDeviceManager</span><span class="p">.</span><span class="na">EventCallback</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onEvent</span><span class="p">(</span><span class="n">eventInfo</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">GlobalInstances</span><span class="p">.</span><span class="na">gsonOnlyExposed</span><span class="p">.</span><span class="na">fromJson</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">eventInfo</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">WifiDisplayScanResultEvent</span><span class="o">::</span><span class="n">class</span><span class="p">.</span><span class="na">java</span>
+<span class="w">                </span><span class="p">)</span><span class="o">?.</span><span class="na">let</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="nb">it</span><span class="p">.</span><span class="na">list</span><span class="o">?.</span><span class="na">let</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">deviceList</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">                        </span><span class="n">deviceList</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">device</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">                            </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"Found device </span><span class="si">${</span><span class="n">device</span><span class="p">.</span><span class="na">name</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">device</span><span class="p">.</span><span class="na">name</span><span class="p">.</span><span class="na">isNullOrEmpty</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">device</span><span class="p">.</span><span class="na">name</span><span class="o">!!</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">"HAGiBiS"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                                </span><span class="n">connectWifiDisplay</span><span class="p">(</span><span class="n">device</span><span class="p">.</span><span class="na">mac</span><span class="o">!!</span><span class="p">)</span>
+<span class="w">                            </span><span class="p">}</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="n">Exception</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">()</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mConnectionCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">TestDeviceManager</span><span class="p">.</span><span class="na">EventCallback</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onEvent</span><span class="p">(</span><span class="n">eventInfo</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">GlobalInstances</span><span class="p">.</span><span class="na">gsonOnlyExposed</span><span class="p">.</span><span class="na">fromJson</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">eventInfo</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">WifiDisplayConnectionChanged</span><span class="o">::</span><span class="n">class</span><span class="p">.</span><span class="na">java</span>
+<span class="w">                </span><span class="p">)</span><span class="o">?.</span><span class="na">let</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">it</span><span class="p">.</span><span class="na">connected</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"On connected to wifi display: </span><span class="si">${</span><span class="nb">it</span><span class="p">.</span><span class="na">deviceInfo</span><span class="o">?.</span><span class="na">name</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"On wifi display disconnected </span><span class="si">${</span><span class="nb">it</span><span class="p">.</span><span class="na">deviceInfo</span><span class="o">?.</span><span class="na">name</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="w">                        </span><span class="n">startScan</span><span class="p">()</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="n">Exception</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">()</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+
+<span class="w">    </span><span class="kd">fun</span><span class="w"> </span><span class="nf">setEventCallbacks</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">setEventCallbacks</span><span class="p">(</span>
+<span class="w">            </span><span class="n">WifiDisplayConnectionChanged</span><span class="p">.</span><span class="na">EVENT_TYPE</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mConnectionCallback</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">setEventCallbacks</span><span class="p">(</span>
+<span class="w">            </span><span class="n">WifiDisplayScanResultEvent</span><span class="p">.</span><span class="na">EVENT_TYPE</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mScanResultCallback</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">registerCallback</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"wifidisplayJobs"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"RegisterConnectionCallback"</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">startScan</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"wifidisplayJobs"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"StartScan"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StartScanParams</span><span class="p">().</span><span class="na">apply</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">600</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">1000</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">connectWifiDisplay</span><span class="p">(</span><span class="n">mac</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"wifidisplayJobs"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ConnectWifiDisplay"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConnectParams</span><span class="p">().</span><span class="na">apply</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">mac</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mac</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span>
+<span class="w">            </span><span class="n">category</span><span class="p">,</span>
+<span class="w">            </span><span class="n">type</span><span class="p">,</span>
+<span class="w">            </span><span class="n">params</span><span class="p">,</span>
+<span class="w">            </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">            </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">TestDeviceManager</span><span class="p">.</span><span class="na">JobDoneCallback</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onJobDone</span><span class="p">(</span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"On Connect job done, result </span><span class="si">$</span><span class="n">result</span><span class="s">"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onJobFailed</span><span class="p">(</span><span class="n">code</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"On Connect failed"</span><span class="p">)</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">})</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">stopWifiDisplay</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"wifidisplayJobs"</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"StopWifiDisplay"</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">fun</span><span class="w"> </span><span class="nf">run</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">registerCallback</span><span class="p">()</span>
+<span class="w">        </span><span class="n">setEventCallbacks</span><span class="p">()</span>
+<span class="w">        </span><span class="n">stopWifiDisplay</span><span class="p">()</span>
+<span class="w">        </span><span class="n">startScan</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+        </article>

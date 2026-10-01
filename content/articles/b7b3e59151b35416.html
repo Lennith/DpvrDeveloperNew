@@ -1,0 +1,95 @@
+<article role="main" id="furo-main-content">
+          <section id="videoencryptor">
+<h1>VideoEncryptor<a class="headerlink" href="#videoencryptor" title="Link to this heading">¶</a></h1>
+<p>This tool is designed to help developers batch encrypt video files using the Dpvr V3 encryption method. It offers better performance compared to traditional AES stream encryption.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>V3-encrypted videos can only be decrypted and played using the Dpvr VideoPlayer and only support MP4 container format.</p>
+</div>
+<p>If you need to encrypt non-MP4 video files, you can use the <a class="reference external" href="https://developer.dpvr.com/resources-list-5.html">DPVR Video Encryption Tool V1</a> instead.</p>
+<p>Compared with the V1 version, V3 video encryption consumes fewer resources during playback, providing performance equivalent to the original video.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>V3 authorization files only support V3-encrypted videos, and V1 authorization files only support V1-encrypted videos. The two encryption methods are completely different at the implementation level.
+When played on non-standalone devices, both methods only validate authorization time and do not verify the device.</p>
+</div>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
+<p>VideoEncryptor is a console application that provides the following three functions:</p>
+<ol class="arabic simple">
+<li><p>Encrypt MP4 videos in the specified directory, generating encrypted video files (.dpve1, .mp4) and corresponding authorization files (.dpvei).</p></li>
+<li><p>Update V3 authorization files (.dpvei) in the specified directory to support new device serial numbers and authorization dates.</p></li>
+<li><p>Update Dpvr V1 authorization files (.dat) in the specified directory and generate new V1-encrypted authorization files.</p></li>
+</ol>
+<p><a class="reference external" href="https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip">Click here to download the VideoEncryptor tool.</a></p>
+<p>Authorization methods include:</p>
+<ol class="arabic simple">
+<li><p>Authorization by device serial number (SN).</p></li>
+<li><p>Authorization by date.</p></li>
+</ol>
+<p>Usage Process:</p>
+<ol class="arabic simple">
+<li><p>Use <cite>DpvrEncryptorUpdate.exe</cite> to encrypt MP4 video files in the specified path, generating .dpve1/.mp4 and .dpvei files.</p></li>
+<li><p>Use DpvrVideoPlayer to play the video using the .dpvei1 file as the entry point.</p></li>
+</ol>
+</section>
+<section id="command-line-arguments">
+<h2>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading">¶</a></h2>
+<p><cite>-e &lt;Boolean&gt;</cite> or <cite>–encrypt_dpvr_v3 &lt;Boolean&gt;</cite></p>
+<p>Choose the working mode:
+- <cite>false</cite>: Update authorization files
+- <cite>true</cite>: Encrypt video files (default: <cite>false</cite>)</p>
+<p><cite>-b &lt;String&gt;</cite> or <cite>–encrypt_key &lt;String&gt;</cite></p>
+<p>16-character alphanumeric string. Required for V3 encryption. Acts as the decryption key during playback. Default is <cite>DPVR20222023HHHH</cite>.</p>
+<p><cite>-c &lt;Date&gt;</cite> or <cite>–encrypt_effective_date &lt;Date&gt;</cite></p>
+<p>Authorization effective date in the format <cite>YYYY/MM/DD</cite>.
+- For encryption: defaults to <cite>2099/01/01</cite>.
+- For updates: defaults to the original authorization date.</p>
+<p><cite>-i &lt;String&gt;</cite> or <cite>–input_dir &lt;String&gt;</cite></p>
+<p>Input folder path.
+- In encryption mode: path to MP4 files.
+- In update mode: path to authorization files.</p>
+<p><cite>-o &lt;String&gt;</cite> or <cite>–output_dir &lt;String&gt;</cite></p>
+<p>Output folder path.
+- In encryption mode: output path for encrypted videos and authorization files.
+- In update mode: output path for updated authorization files.</p>
+<p><cite>-d &lt;String&gt;</cite> or <cite>–device_list &lt;String&gt;</cite></p>
+<p>Path to device list file. One serial number per line in a <cite>.txt</cite> file.</p>
+<p><cite>-y &lt;String&gt;</cite> or <cite>–output_vei_key &lt;String&gt;</cite></p>
+<p>Output VEI_KEY. Only valid in V3 encryption mode. Used for future updates. Defaults to <cite>dpvr</cite> during encryption. If updating, it retains the previous VEI_KEY.</p>
+<p><cite>-k &lt;String&gt;</cite> or <cite>–input_vei_key &lt;String&gt;</cite></p>
+<p>Input VEI_KEY. Used when updating V3 authorization files. Must match the VEI_KEY used during encryption.</p>
+<p><cite>-t &lt;String&gt;</cite> or <cite>–update_type &lt;String&gt;</cite></p>
+<p>Optional values: <cite>dat</cite> or <cite>vei</cite>. Only effective in update mode. Specifies the type of updated authorization file. Defaults to <cite>vei</cite>.</p>
+<p><cite>-h</cite> or <cite>–help</cite></p>
+<p>Displays help information for all command-line options.</p>
+</section>
+<section id="usage-examples">
+<h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading">¶</a></h2>
+<section id="encryption">
+<h3>Encryption<a class="headerlink" href="#encryption" title="Link to this heading">¶</a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>DpvrEncryptorUpdate.exe<span class="w"> </span>--encrypt_dpvr_v3<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--input_dir<span class="w"> </span>d:<span class="se">\t</span>est<span class="w"> </span>--output_dir<span class="w"> </span>d:<span class="se">\t</span>estout
+--device_list<span class="w"> </span>d:<span class="se">\d</span>evicelist.txt<span class="w"> </span>--output_vei_key<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+<p>Encrypts all MP4 files in the specified folder using V3 encryption, and outputs to the target folder.</p>
+</section>
+<section id="authorization-file-update">
+<h3>Authorization File Update<a class="headerlink" href="#authorization-file-update" title="Link to this heading">¶</a></h3>
+<p><strong>V3 Authorization Update:</strong></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>DpvrEncryptorUpdate.exe<span class="w"> </span>--input_dir<span class="w"> </span>d:<span class="se">\t</span>est<span class="w"> </span>--output_dir<span class="w"> </span>d:<span class="se">\t</span>estout<span class="w"> </span>--update_type<span class="w"> </span>vei
+--device_list<span class="w"> </span>d:<span class="se">\d</span>evicelist.txt<span class="w"> </span>--input_vei_key<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--output_vei_key<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+<p>Updates all authorization files in the folder (including V1 and V3). Outputs new V3 authorization files to the target folder.</p>
+<p><strong>V1 Authorization Update:</strong></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>DpvrEncryptorUpdate.exe<span class="w"> </span>--input_dir<span class="w"> </span>d:<span class="se">\t</span>est<span class="w"> </span>--output_dir<span class="w"> </span>d:<span class="se">\t</span>estout<span class="w"> </span>--update_type<span class="w"> </span>dat
+--device_list<span class="w"> </span>d:<span class="se">\d</span>evicelist.txt
+</pre></div>
+</div>
+<p>Updates all V1 (.dat) authorization files and generates updated V1 authorization files in the output path.</p>
+</section>
+</section>
+</section>
+
+        <aside class="source-note" data-editorial-note="source_download_unavailable">The source references tool subfiles that were not found in the verified official V3 package. These links open the official complete package; they do not claim that the named subfiles are available separately.</aside></article>

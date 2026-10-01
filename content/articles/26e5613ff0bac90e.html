@@ -1,0 +1,32 @@
+<article role="main">
+          <section id="v10011">
+<h1>2024-04-30 V10011<a class="headerlink" href="#v10011" title="Permalink to this heading">#</a></h1>
+<ol class="arabic simple">
+<li><p>Added WifiDisplay-related interfaces and events to control the system’s WifiDisplay functionality.</p></li>
+<li><p>Added Sensor-related interfaces.</p></li>
+<li><p>Added descriptions of supported versions for some interfaces in the documentation.</p></li>
+<li><p>Fixed some documentation errors.</p></li>
+<li><p>Added demos of some module functions in the documentation.</p></li>
+<li><p>Changed the name of the CheckDpvrMirraCast interface to CheckDpvrMiraCast. The old interface name, if used, remains compatible.</p></li>
+<li><p>Fixed the issue where the RestoreDpnLauncher interface reported an error when passing an empty parameter.</p></li>
+<li><p>Added the ‘autoKillDelay’ parameter to the CheckApplicationAuthority interface to delay application termination.</p></li>
+<li><p>The ConnectBluetoothDevice interface no longer disconnects an existing connection and reconnects when attempting to connect to an already connected device.</p></li>
+<li><p>When GetAppInfoByPackageName detects an uninstalled app, it no longer returns a result through a parameter error. Instead, a new error is used.</p></li>
+<li><p>Fixed the issue where the ConnectWifi interface returned an SSID not found error when using a password with fewer than 8 characters. A new error is now returned in such cases.</p></li>
+<li><p>Fixed the issue where the CopyFiles interface failed to return correctly when the source path did not exist.</p></li>
+<li><p>Fixed the issue where remotecontrolJobs/IsServerConnected interface always returned that the server was not connected when it was not initialized.</p></li>
+</ol>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/dm/ReleaseNote.html">Release Note</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/dm/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/dm/GettingStarted/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/dm/Apis/index.html">Apis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/dm/Events/index.html">Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/dm/Types/index.html">Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/en/docs/dm/Examples/index.html">Examples</a></li>
+</ul>
+</div>
+</section>
+
+        </article>

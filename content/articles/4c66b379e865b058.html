@@ -1,0 +1,76 @@
+<article role="main" id="furo-main-content">
+          <section id="video-playback-control">
+<h1>Video Playback Control<a class="headerlink" href="#video-playback-control" title="Link to this heading">¶</a></h1>
+<section id="video-rendering-format-types">
+<h2>Video Rendering Format Types<a class="headerlink" href="#video-rendering-format-types" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">VideoRenderType</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NORMAL_2D</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NORMAL_3D_LEFT_RIGHT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NORMAL_3D_UP_DOWN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_180_2D</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_180_3D_LEFT_RIGHT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_180_3D_UP_DOWN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_360_2D</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_360_3D_LEFT_RIGHT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_360_3D_UP_DOWN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>NORMAL_2D</cite>: Standard 2D video.</p>
+<p><cite>NORMAL_3D_LEFT_RIGHT</cite>: Left-right 3D video.</p>
+<p><cite>NORMAL_3D_UP_DOWN</cite>: Top-bottom 3D video.</p>
+<p><cite>VR_180_2D</cite>: 180-degree VR video.</p>
+<p><cite>VR_180_3D_LEFT_RIGHT</cite>: Left-right 180-degree VR video.</p>
+<p><cite>VR_180_3D_UP_DOWN</cite>: Top-bottom 180-degree VR video.</p>
+<p><cite>VR_360_2D</cite>: 360-degree VR video.</p>
+<p><cite>VR_360_3D_LEFT_RIGHT</cite>: Left-right 360-degree 3D VR video.</p>
+<p><cite>VR_360_3D_UP_DOWN</cite>: Top-bottom 360-degree 3D VR video.</p>
+</section>
+<section id="start-playback">
+<h2>Start Playback<a class="headerlink" href="#start-playback" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">VideoStart</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">filePath</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">startWhenPrepared</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>string filePath</cite>: File path of the video.</p>
+<p><cite>int mode</cite>: Rendering format, corresponding to the types listed above. Defaults to automatic selection.</p>
+<p><cite>bool startWhenPrepared</cite>: Automatically start playback after loading completes. Defaults to false; use VideoResume to resume playback if needed.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: List of clients for which to start playback. Default is null, indicating all clients.</p>
+</section>
+<section id="stop-playback">
+<h2>Stop Playback<a class="headerlink" href="#stop-playback" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">VideoStop</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: List of clients for which to stop playback. Default is null, indicating all clients.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The client selects the stop route used by the most recent 1002 playback message: it sends the stop command to <code class="docutils literal notranslate"><span class="pre">com.dpvr.videoplayer.VIDEOPLAYERCONTROLLER</span></code> when the DPVR player is used, or sends <code class="docutils literal notranslate"><span class="pre">controltype=playcommand</span></code> and <code class="docutils literal notranslate"><span class="pre">operation=stop</span></code> through <code class="docutils literal notranslate"><span class="pre">com.deepoon.dpnlauncher.PLAY_CONTROL</span></code> when playback falls back to DpnLauncher. This interface does not affect the RDC connection; whether the player UI exits is decided by the player app itself.</p>
+</div>
+</section>
+<section id="pause-playback">
+<h2>Pause Playback<a class="headerlink" href="#pause-playback" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">VideoPause</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: List of clients for which to pause playback. Default is null, indicating all clients.</p>
+</section>
+<section id="resume-playback">
+<h2>Resume Playback<a class="headerlink" href="#resume-playback" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">VideoResume</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>int delay</cite>: Delay in seconds before resuming playback. Defaults to 0. The server adds this value to its current time and sends the resulting unified resume moment (<code class="docutils literal notranslate"><span class="pre">PlayTime</span></code>, format <code class="docutils literal notranslate"><span class="pre">yyyy-MM-dd-HH-mm-ss</span></code>) to the devices; all devices resume playback at that moment. A device that receives the command after that moment plays immediately. When using scheduled resume, make sure the device system time is synchronized with the server; multi-device sync precision is about ±1 second.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: List of clients for which to resume playback. Default is null, indicating all clients.</p>
+</section>
+<section id="seek-playback">
+<h2>Seek Playback<a class="headerlink" href="#seek-playback" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">VideoSeek</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">time</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>int time</cite>: Time position to seek to, in seconds.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: List of clients for which to seek playback. Default is null, indicating all clients.</p>
+</section>
+</section>
+
+        </article>

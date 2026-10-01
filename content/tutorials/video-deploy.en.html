@@ -1,0 +1,34 @@
+<h1>Play a chosen video when the headset player starts</h1>
+<p class="lead">Verify ordinary video playback on one headset first. Add authorization or bulk delivery only if your task requires it. This uses the system player, without building a Unity app.</p>
+<h2 id="prepare">1. Prepare the video and headset</h2>
+<p>DPVR lists P1 Max, P2, P1 Ultra 4K, P1 Pro 4K and P1 Pro for this resource. Start with a video that plays correctly on the device and identify its projection format. This example uses monoscopic 360° video; use <code>videoModel: 0</code> for ordinary flat 2D video.</p>
+<p>Connect a USB data cable and put <code>demo.mp4</code> at the root of the headset shared storage. Its device path is <code>/sdcard/demo.mp4</code>. Open it manually on the headset and confirm the picture and sound first. If Windows cannot show storage, see the <a href="/en/docs/troubleshooting/connection-issue.html">P1 Max MTP troubleshooting guide</a>; that guide does not cover ADB authorization.</p>
+<h2 id="configuration">2. Create the complete configuration</h2>
+<p>Create a UTF-8 text file named <code>AutoPlayDisposition.json</code> and paste the complete JSON below. Check that the extension is not <code>.json.txt</code>.</p>
+<pre><code>{
+  "isAutoPlay": 1,
+  "videoPath": "/sdcard/demo.mp4",
+  "videoModel": 16,
+  "isSteadyOn": 0,
+  "sleepTimes": 10,
+  "lockView": false,
+  "distance": 0,
+  "isStartBeginning": 1,
+  "showUI": 0
+}</code></pre>
+<p>This example automatically plays <code>demo.mp4</code> as monoscopic 360° video, turns off the display when removed, starts from the beginning and hides the playback menu. <code>lockView=false</code> keeps the image fixed in space. These are the online guide's example choices, not a claim about device defaults.</p>
+<table><thead><tr><th>Your goal</th><th>Change</th></tr></thead><tbody><tr><td>Use another video</td><td>Set <code>videoPath</code> to its actual absolute device path</td></tr><tr><td>Play ordinary flat 2D video</td><td><code>videoModel: 0</code></td></tr><tr><td>Keep controls visible while testing</td><td><code>showUI: 1</code></td></tr><tr><td>Resume from the last position</td><td><code>isStartBeginning: 0</code></td></tr><tr><td>Keep the display on when removed</td><td><code>isSteadyOn: 1</code></td></tr></tbody></table>
+<aside class="editorial-note"><strong>One unresolved range:</strong> <code>distance</code> applies only to flat modes 0, 1 and 4. The Chinese reference says -120 to 200, the English reference says 120 to 200, and both examples use 0. The exact range needs device or implementation verification; mode 16 in this example does not use it. The downloadable example uses <code>lockView=true</code>; both values are valid choices.</aside>
+<h2 id="place">3. Put the file where the player reads it</h2>
+<p>Create <code>AutoVideoPlay</code> at the shared-storage root and place the JSON inside it. Keep the video at the path configured above. Do not use a Windows drive path in the JSON.</p>
+<pre><code>/sdcard/
+├── demo.mp4
+└── AutoVideoPlay/
+    └── AutoPlayDisposition.json</code></pre>
+<p>Exit and restart the system player. The documentation says the configuration is read at startup; it does not promise live reload after editing.</p>
+<h2 id="verify">4. Verify the first successful result</h2>
+<ol><li>Restart the player and confirm that it automatically opens the chosen video.</li><li>Check the projection against the source video. If the picture is wrong, check <code>videoModel</code> before changing authorization or SDK settings.</li><li>Check controls, display behavior when removed and restart behavior. For diagnosis, set <code>showUI</code> to 1 and restart the player again.</li><li>If playback does not start, check the filename, JSON syntax, folder, <code>videoPath</code> and manual playback in that order. Keep the current configuration before changing another setting.</li></ol>
+<h2 id="optional">5. Add authorization or bulk delivery only when needed</h2>
+<p><strong>Restrict devices or expiry:</strong> the <a href="/en/resources/encryption.html">video encryption tool</a> creates matching <code>.mp4</code>, <code>.dpve1</code> and <code>.dpvei</code> files. Deploy all three together and verify with a compatible DPVR player. Ordinary videos do not need encryption. GUI authorization edits re-encrypt; the CLI also offers an authorization-file-only update workflow.</p>
+<p><strong>Deploy offline to multiple headsets:</strong> use FILE or ZIP_UNPACK tasks in the <a href="/en/resources/copy.html">TF deployment tool</a> to place video and configuration at the locations above. Copy success is not playback verification. The tool's OTA_PACKAGE task only copies firmware packages; it does not run an upgrade.</p>
+<footer class="article-sources"><h2>Sources and complete parameters</h2><ul><li><a href="/en/docs/playback/videoplay-config.html">Official configuration reference and projection modes</a></li><li><a href="/en/docs/playback/configuration-example.html">JSON from the official download</a></li><li><a href="https://developer.dpvr.com/resources/doc_en.html#videoplay-config">Official online source</a></li></ul></footer>

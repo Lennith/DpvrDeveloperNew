@@ -1,0 +1,139 @@
+<article role="main">
+          <section id="id1">
+<h1>基础概念<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<section id="job">
+<h2><code class="docutils literal notranslate"><span class="pre">Job</span></code><a class="headerlink" href="#job" title="Permalink to this heading">#</a></h2>
+<p>所有DeviceManagerService的Api调用，都会在DeviceManagerService中，产生一个与之对应的Job，用于描述该次调用的具体接口信息和调用参数。</p>
+</section>
+<hr class="docutils">
+<section id="call">
+<h2><code class="docutils literal notranslate"><span class="pre">Call</span></code><a class="headerlink" href="#call" title="Permalink to this heading">#</a></h2>
+<p>在DeviceManagerService的具体业务的实现，都是通过AIDL中的接口 <code class="docutils literal notranslate"><span class="pre">Call</span></code> 进行调用，在 <code class="docutils literal notranslate"><span class="pre">Call</span></code> 的参数中用于指定调用的具体Api和Api参数。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kt">String</span><span class="w"> </span><span class="n">call</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">jobCat</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">jobType</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">jobParams</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">callParams</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="jobcat">
+<h3><code class="docutils literal notranslate"><span class="pre">jobCat</span></code><a class="headerlink" href="#jobcat" title="Permalink to this heading">#</a></h3>
+<p><cite>需要调用Api的大类别，例如</cite> <code class="docutils literal notranslate"><span class="pre">wifiJobs</span></code> <cite>，</cite> <code class="docutils literal notranslate"><span class="pre">packageJobs</span></code> <cite>等</cite></p>
+</section>
+<section id="jobtype">
+<h3><code class="docutils literal notranslate"><span class="pre">jobType</span></code><a class="headerlink" href="#jobtype" title="Permalink to this heading">#</a></h3>
+<p><cite>需要调用的具体Api，例如</cite> <code class="docutils literal notranslate"><span class="pre">TakeScreenShot</span></code> <cite>等</cite></p>
+</section>
+<section id="jobparams">
+<h3><code class="docutils literal notranslate"><span class="pre">jobParams</span></code><a class="headerlink" href="#jobparams" title="Permalink to this heading">#</a></h3>
+<p><cite>调用的Api参数</cite></p>
+</section>
+<section id="callparams">
+<h3><code class="docutils literal notranslate"><span class="pre">callParams</span></code><a class="headerlink" href="#callparams" title="Permalink to this heading">#</a></h3>
+<p><cite>该次</cite> <code class="docutils literal notranslate"><span class="pre">Call</span></code> <cite>的参数，不同于jobParams，它作用于该次调用的属性，目前版本中，它的定义如下：</cite></p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">CallParams</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">dependencyJobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="m">1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">delay</span></code> ：调用的延迟，单位ms。</p>
+<p><code class="docutils literal notranslate"><span class="pre">dependencyJobId</span></code> ：依赖JobId，当指定的Job成功完成后，该Job才会被执行，否则会被取消。</p>
+</section>
+<section id="callresult">
+<h3><code class="docutils literal notranslate"><span class="pre">CallResult</span></code><a class="headerlink" href="#callresult" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Call</span></code> 的返回值是 <code class="docutils literal notranslate"><span class="pre">CallResult</span></code> 的 <strong>Json序列化字符串</strong>，用于表示这次 <code class="docutils literal notranslate"><span class="pre">Call</span></code> 的调用结果，它具体构成如下:</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">CallResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">errorDescription</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobID</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="jobid">
+<h3><code class="docutils literal notranslate"><span class="pre">jobID</span></code><a class="headerlink" href="#jobid" title="Permalink to this heading">#</a></h3>
+<p><cite>当一个</cite> <code class="docutils literal notranslate"><span class="pre">Call</span></code> <cite>被DeviceManagerService成功响应时，会生成一个与该</cite> <code class="docutils literal notranslate"><span class="pre">Call</span></code> <cite>对应的</cite> <code class="docutils literal notranslate"><span class="pre">大于0的jobID</span></code> <cite>，当一个Call失败时，会生成一个</cite> <code class="docutils literal notranslate"><span class="pre">小于0的JobID</span></code> <cite>。</cite></p>
+</section>
+<section id="errordescription">
+<h3><code class="docutils literal notranslate"><span class="pre">errorDescription</span></code><a class="headerlink" href="#errordescription" title="Permalink to this heading">#</a></h3>
+<p><cite>当</cite> <code class="docutils literal notranslate"><span class="pre">Call</span></code> <cite>调用失败时，用于返回失败原因。</cite></p>
+<p><strong>需要注意的是，</strong> <code class="docutils literal notranslate"><span class="pre">CallResult</span></code> <strong>不代表这次Api的完成结果，只是表示这次</strong> <code class="docutils literal notranslate"><span class="pre">Call</span></code> <strong>的结果，调用结果通过</strong> <code class="docutils literal notranslate"><span class="pre">Api</span> <span class="pre">Result</span></code> <strong>返回给调用者。</strong></p>
+</section>
+</section>
+<hr class="docutils">
+<section id="api-result">
+<h2><code class="docutils literal notranslate"><span class="pre">Api</span> <span class="pre">Result</span></code><a class="headerlink" href="#api-result" title="Permalink to this heading">#</a></h2>
+<p>DeviceManagerService所有的Api都是异步处理的，它的结果通过 <code class="docutils literal notranslate"><span class="pre">IDeviceManagerResultListener</span></code> ：</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span><span class="w"> </span><span class="nc">IDeviceManagerResultListener</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="n">onResult</span><span class="p">(</span><span class="n">int</span><span class="w"> </span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>返回给调用者，当一个Job的完成，会在调用者的进程触发一次该回调。</p>
+<p><code class="docutils literal notranslate"><span class="pre">jobID</span></code> : 该结果对应的 <code class="docutils literal notranslate"><span class="pre">Call</span></code> 的 <code class="docutils literal notranslate"><span class="pre">jobId</span></code> 。</p>
+<p><code class="docutils literal notranslate"><span class="pre">result</span></code>: Api调用结果，我们称之为 <code class="docutils literal notranslate"><span class="pre">ApiResult</span></code> ,它通过AIDL接口：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">setDeviceManagerResultListener</span><span class="p">(</span><span class="n">IDeviceManagerResultListener</span><span class="w"> </span><span class="n">listener</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>进行设置，每一个进程只能设置一个一个有效的ResultListener，每次调用会覆盖之前的设置。</p>
+<p><strong>Job完成时，如果没有设置Listener、或者Listener被释放或者调用者进程被释放，则不会收到这个回调，但是，该Job依然会正常执行并产生结果。</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">ApiResult</span></code> 对应的数据结构如下：</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">ApiFinishedResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">returnCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">error</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>它是该结构的Json序列化字符串。</p>
+<section id="id2">
+<h3><code class="docutils literal notranslate"><span class="pre">jobId</span></code><a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<p><cite>该结果对应的</cite> <code class="docutils literal notranslate"><span class="pre">Call</span></code> <cite>的</cite> <code class="docutils literal notranslate"><span class="pre">jobId</span></code> <cite>。</cite></p>
+</section>
+<section id="returncode">
+<h3><code class="docutils literal notranslate"><span class="pre">returnCode</span></code><a class="headerlink" href="#returncode" title="Permalink to this heading">#</a></h3>
+<p><cite>Api执行结果，0：成功执行 ，1：任务被取消，2：调用错误。</cite></p>
+</section>
+<section id="result">
+<h3><code class="docutils literal notranslate"><span class="pre">result</span></code><a class="headerlink" href="#result" title="Permalink to this heading">#</a></h3>
+<p><cite>Api执行结果的Json序列化字符串，对应的是</cite> <strong>Api文档中的Result</strong> <cite>定义。</cite></p>
+</section>
+<section id="error">
+<h3><code class="docutils literal notranslate"><span class="pre">error</span></code><a class="headerlink" href="#error" title="Permalink to this heading">#</a></h3>
+<p><cite>当Api调用失败时，用于显示错误原因。</cite></p>
+</section>
+</section>
+<hr class="docutils">
+<section id="event">
+<h2><code class="docutils literal notranslate"><span class="pre">Event</span></code><a class="headerlink" href="#event" title="Permalink to this heading">#</a></h2>
+<p>除了标准的 <code class="docutils literal notranslate"><span class="pre">ApiResult</span></code> 以外，我们提供了 <code class="docutils literal notranslate"><span class="pre">Event</span></code> 用于处理一些长期或者持续性的回调，例如，在扫描蓝牙或者Wifi时，由于扫描结果是持续性的，会触发多次回调，我们通过 <code class="docutils literal notranslate"><span class="pre">Event</span></code> 回调来进行结果的返回。</p>
+<p>又如，监听电池变化事件，由于电池变化是个长时间的持续变化的事件，因此，调用对应的Api会激活应用的 <code class="docutils literal notranslate"><span class="pre">Event</span></code> 监听，并且持续通过 <code class="docutils literal notranslate"><span class="pre">EventListener</span></code> 进行事件上报。</p>
+<p><strong>通常来说，我们不显式地提供具体某个事件的注册接口，通常事件的注册是与接口相关的，在API文档中会标注每个API相关的Event，其中，大部分Event监听会在API完成后自动释放。</strong></p>
+<p>与Result类似，它使用AIDL接口：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">setDeviceManagerEventListener</span><span class="p">(</span><span class="n">IDeviceManagerEventListener</span><span class="w"> </span><span class="n">listener</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>进行设置。</p>
+<p>其中， <code class="docutils literal notranslate"><span class="pre">IDeviceManagerEventListener</span></code> 如下所示：</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span><span class="w"> </span><span class="nc">IDeviceManagerEventListener</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">void</span><span class="w"> </span><span class="n">onEvent</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="eventtype">
+<h3><code class="docutils literal notranslate"><span class="pre">eventType</span></code><a class="headerlink" href="#eventtype" title="Permalink to this heading">#</a></h3>
+<p><cite>事件的名称，</cite> <code class="docutils literal notranslate"><span class="pre">Event</span></code> <cite>的具体String值在本文档的</cite> <code class="docutils literal notranslate"><span class="pre">Event</span></code> <cite>下可以进行查看。</cite></p>
+</section>
+<section id="eventinfo">
+<h3><code class="docutils literal notranslate"><span class="pre">eventInfo</span></code><a class="headerlink" href="#eventinfo" title="Permalink to this heading">#</a></h3>
+<p><cite>事件的具体信息的Json序列化，根据Event类型变化，具体数据结构可以在本文档Event下进行查看。</cite></p>
+<p>与 <code class="docutils literal notranslate"><span class="pre">ResultListener</span></code> 类似， <code class="docutils literal notranslate"><span class="pre">EventListener</span></code> 每个应用只能进行一个有效的回调注册。</p>
+<p>同时，它还具有以下特点：</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Event</span></code> 大多是与某个Api调用所绑定的，在Api文档中，可以看到每个Api所关联的 <code class="docutils literal notranslate"><span class="pre">Event</span></code> 事件。</p></li>
+<li><p>大多 <code class="docutils literal notranslate"><span class="pre">EventListener</span></code> 会在Api调用完成后被释放。</p></li>
+<li><p>如果多个应用监听了某 <code class="docutils literal notranslate"><span class="pre">Event</span></code> 的监听，则这些应用都会收到 <code class="docutils literal notranslate"><span class="pre">Event</span></code> 回调。</p></li>
+<li><p>与Api类似， <code class="docutils literal notranslate"><span class="pre">Event</span></code> 的监听同样有权限，只有达到该权限的DeviceManagerService调用者才会监听到对应的 <code class="docutils literal notranslate"><span class="pre">Event</span></code>。</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+        </article>

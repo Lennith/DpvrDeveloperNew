@@ -1,0 +1,87 @@
+<article role="main" id="furo-main-content">
+          <section id="apkencryptor">
+<h1>ApkEncryptor<a class="headerlink" href="#apkencryptor" title="Link to this heading">¶</a></h1>
+<p>This tool is designed to help developers quickly complete the development of application authentication functionality.
+It provides an application authorization file generation tool with the following two features:</p>
+<ol class="arabic simple">
+<li><p>Generate authorization files (.dpaei) through APK files and a list of authorized devices.</p></li>
+<li><p>Update existing authorization files (.dpaei).</p></li>
+</ol>
+<p><a class="reference external" href="https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip">Click here to download the authorization file generation tool.</a></p>
+<p>The authentication methods covered by the authorization file include:</p>
+<ol class="arabic simple">
+<li><p>Authentication based on device serial number.</p></li>
+<li><p>Authorization based on the authorization date.</p></li>
+</ol>
+<section id="usage-process">
+<h2>Usage Process<a class="headerlink" href="#usage-process" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Use ApkEncryptor to generate the authorization file and record the Encryptor_Key entered during the generation.</p></li>
+<li><p>Place the authorization file in the specified location on the device as the authorization credential for the device.</p></li>
+<li><p>Call the authentication interface of DeviceManager, pass in the generated authorization file and Encryptor_Key for verification.</p></li>
+<li><p>After successful authentication, the application can be used normally.</p></li>
+<li><p>When updating an existing .dpaei authorization file, you need to use the Encryptor_Key that was used to generate the authorization file for verification.</p></li>
+</ol>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The application will not be checked for authentication by the system if the DeviceManager authentication interface is not called within the application.</p>
+</div>
+</section>
+<section id="encryption-tool-usage">
+<h2>Encryption Tool Usage<a class="headerlink" href="#encryption-tool-usage" title="Link to this heading">¶</a></h2>
+<p>Authorization Generation:</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="n">DpvrApkEncryptor</span><span class="p">.</span><span class="na">exe</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="n">encrypt</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="n">input_apks_dir</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="o">&lt;</span><span class="n">output_dpaei_dir</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="n">encryptor_key</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="o">&lt;</span><span class="n">device_list_file</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">c</span><span class="w"> </span><span class="o">&lt;</span><span class="n">effective_date</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><cite>-m</cite>: encrypt: Generate authorization file.</p>
+<p><cite>-i</cite>: Input APK file directory.</p>
+<p><cite>-o</cite>: Output authorization file directory.</p>
+<p><cite>-k</cite>: Encryptor_Key entered when generating the authorization file.</p>
+<p><cite>-d</cite>: Authorized device list file, with all authorized devices placed in one file. The file format is txt, with one device serial number per line.</p>
+<p><cite>-c</cite>: Authorization file validity period in the form: 2021/01/01.</p>
+<p>Authorization Update:</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="n">DpvrApkEncryptor</span><span class="p">.</span><span class="na">exe</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="n">input_dpaei_dir</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="o">&lt;</span><span class="n">output_dpaei_file</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="n">encryptor_key</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="o">&lt;</span><span class="n">device_list_file</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><cite>-m</cite>: update: Update authorization file.</p>
+<p><cite>-i</cite>: Input authorization file dpaei directory.</p>
+<p><cite>-o</cite>: Output authorization file directory.</p>
+<p><cite>-d</cite>: Authorized device list file, with all authorized devices placed in one file. The file format is txt, with one device serial number per line.</p>
+<p><cite>-c</cite>: Authorization file validity period in the form: 2021/01/01.</p>
+</section>
+<section id="device-side-authentication">
+<h2>Device-Side Authentication<a class="headerlink" href="#device-side-authentication" title="Link to this heading">¶</a></h2>
+<p>Place the generated authorization file in the specified location on the device as the authorization credential for the device.
+Call the <cite>packageJobs/CheckApplicationAuthority</cite>  interface of DeviceManager for authentication, returning True upon success. For details, please refer to the <a class="reference external" href="/en/docs/dm/Apis/packageJobs/CheckApplicationAuthority.html">DeviceManager documentation</a>.</p>
+<p>Example Call (Kotlin):</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">ParamsAuthority</span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Whether to automatically kill the application. It only auto-closes if the caller and the checked package name are the same. Default is false.</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">autoKill</span><span class="p">:</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="c1">// The package name of the application to be checked for authorization. Default is the caller's package name.</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">packageName</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="o">?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="c1">// Encryptor_key used during encryption</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">key</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"dpvr"</span>
+<span class="w">    </span><span class="c1">// Path to the authorization file, default is /sdcard/applicationAuthority/&lt;packageName&gt;.dpaei</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">keyFilePath</span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="o">?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+
+<span class="n">fun</span><span class="w"> </span><span class="nf">testAuthority</span><span class="p">(){</span>
+<span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="n">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ParamsAuthority</span><span class="p">().</span><span class="na">apply</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"com.dpvr.qatool"</span>
+<span class="w">        </span><span class="n">keyFilePath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/sdcard/applicationAuthority/com_dpvr_qatool.dpaei"</span>
+<span class="w">        </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"dpvr"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="n">cat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"packageJobs"</span>
+<span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CheckApplicationAuthority"</span>
+<span class="w">    </span><span class="n">call</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ResultCallback</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">override</span><span class="w"> </span><span class="n">fun</span><span class="w"> </span><span class="nf">onResult</span><span class="p">(</span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="n">BinderEntities</span><span class="p">.</span><span class="na">ApiFinishedResult</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"result"</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        <aside class="source-note" data-editorial-note="source_download_unavailable">The source references tool subfiles that were not found in the verified official V3 package. These links open the official complete package; they do not claim that the named subfiles are available separately.</aside></article>

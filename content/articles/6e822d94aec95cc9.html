@@ -1,0 +1,81 @@
+<article role="main" id="furo-main-content">
+          <section id="enabling-disabling-and-callback-registration">
+<h1>Enabling, disabling and callback registration<a class="headerlink" href="#enabling-disabling-and-callback-registration" title="Link to this heading">¶</a></h1>
+<section id="initializing-the-server">
+<h2>Initializing the Server<a class="headerlink" href="#initializing-the-server" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="n">DpvrRDCServer</span><span class="w"> </span><span class="n">mServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="starting-the-server">
+<h2>Starting the Server<a class="headerlink" href="#starting-the-server" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Start</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">localIp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10086</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maxClient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Starts the server and allows you to set the following parameters.</p>
+<p><cite>string localIp</cite>: The local IP address (defaults to null, which automatically detects the IP address).</p>
+<p><cite>int port</cite>: The port number for connection listening (defaults to 10086).</p>
+<p><cite>int maxClient</cite>: The maximum allowed number of client connections (defaults to 64).</p>
+</section>
+<section id="stopping-the-server">
+<h2>Stopping the Server<a class="headerlink" href="#stopping-the-server" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Stops the server.</p>
+</section>
+<section id="client-connection-state-change-callback">
+<h2>Client Connection State Change Callback<a class="headerlink" href="#client-connection-state-change-callback" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">event</span><span class="w"> </span><span class="n">OnConnectState</span><span class="w"> </span><span class="n">OnConnectStateChangedEvent</span><span class="p">;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">delegate</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnConnectState</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This event is triggered when the client’s connection state changes.</p>
+<p><cite>Client client</cite>: parameter represents the client whose state changed.</p>
+<p><cite>int state</cite>: parameter indicates the connection state (1: connected, 2: disconnected).</p>
+</section>
+<section id="client-message-callback">
+<h2>Client Message Callback<a class="headerlink" href="#client-message-callback" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">event</span><span class="w"> </span><span class="n">OnMessage</span><span class="w"> </span><span class="n">OnMessageEvent</span><span class="p">;</span>
+<span class="k">public</span><span class="w"> </span><span class="k">delegate</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnMessage</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">ClientMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This event handles application-specific messages received from clients.</p>
+<p><cite>Client client</cite>: parameter represents the client.</p>
+<p><cite>ClientMessage msg</cite>:parameter contains the client’s transmitted message.</p>
+<p>The ClientMessage struct includes,</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ClientMessage</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">fromPackage</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>string fromPackage</cite>: The package name from which the message was sent.</p>
+<p><cite>string content</cite>: The content of the transmitted message.</p>
+</section>
+<section id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">InitServer</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">mServer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mServer</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+<span class="w">    </span><span class="n">mServer</span><span class="p">.</span><span class="n">OnMessageEvent</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">HandleMessageFromClient</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mServer</span><span class="p">.</span><span class="n">OnConnectStateChangedEvent</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">HandleConnectState</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">HandleMessageFromClient</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">ClientMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="n">D</span><span class="p">(</span><span class="s">$"Got message from {client.IP}: {msg.fromPackage} - {msg.content}"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">HandleConnectState</span><span class="p">(</span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">state</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Log</span><span class="p">.</span><span class="n">D</span><span class="p">(</span><span class="s">$"Connected state changed :{client} state: {state}"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>

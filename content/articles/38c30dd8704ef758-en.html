@@ -1,0 +1,256 @@
+<div>
+<div class="wrap">
+
+  <!-- ============ 页头 ============ -->
+  <div class="hero">
+    <a id="langBtn" href="/cn/docs/encryption/gui-user-manual.html">中文</a>
+    <h1 data-i18n="hero.title">DPVR Video Encryptor · User Guide</h1>
+    <div class="sub" data-i18n="hero.sub">Local video encryption &amp; device authorization tool — Key setup → Device SN management → Video add &amp; encrypt → Deploy to VR headsets</div>
+    <div class="badges">
+      <span class="badge" data-i18n="badge.v">Version 2.0.0</span>
+      <span class="badge">Windows 10/11 x64</span>
+      <span class="badge" data-i18n="badge.lang">中文 / English</span>
+      <span class="badge" data-i18n="badge.offline">Runs locally · No internet required</span>
+    </div>
+  </div>
+
+  <!-- ============ 目录 ============ -->
+  <div class="toc">
+    <h2 data-i18n="toc.h2">Contents</h2>
+    <ol>
+      <li><a href="#install" data-i18n="toc.1">Installation &amp; Launch</a></li>
+      <li><a href="#setup" data-i18n="toc.2">First-run Setup (Language / Keys / Admin Password)</a></li>
+      <li><a href="#device" data-i18n="toc.3">Device Management (Groups &amp; SN)</a></li>
+      <li><a href="#video" data-i18n="toc.4">Video Management (Add / Encrypt / Edit / Delete)</a></li>
+      <li><a href="#output" data-i18n="toc.5">Encrypted Output &amp; Playback</a></li>
+      <li><a href="#faq" data-i18n="toc.6">Notes &amp; Common Messages</a></li>
+    </ol>
+  </div>
+
+  <!-- ============ 1 安装与启动 ============ -->
+  <section id="install">
+    <h2 data-i18n="s1.h2">1. Installation &amp; Launch</h2>
+
+    <div class="step"><div class="num">1</div><div class="txt" data-i18n="s1.s1">Double-click to run the installer <code>DPVR视频加密工具-Setup-2.0.0.exe</code>.</div></div>
+    <div class="step"><div class="num">2</div><div class="txt" data-i18n="s1.s2">Follow the wizard to complete the installation; you can tick <kbd>Run DPVR Video Encryptor Platform</kbd> to launch it directly.</div></div>
+    <div class="step"><div class="num">3</div><div class="txt" data-i18n="s1.s3">Launch (either way): ① double-click the desktop / Start-menu shortcut <b>"DPVR Video Encryptor Platform"</b>; ② double-click <code>EncryptedVideoTool.exe</code> in the installation directory.</div></div>
+    <div class="note info" data-i18n="s1.note">Tip: the app is a local standalone tool — all data (keys, devices, videos) stays on this machine and <b>works fully offline</b>.</div>
+  </section>
+
+  <!-- ============ 2 首次启动设置 ============ -->
+  <section id="setup">
+    <h2 data-i18n="s2.h2">2. First-run Setup (Language / Keys / Admin Password)</h2>
+    <p data-i18n="s2.p">On first launch the app <b>forces you into the Settings page</b>; complete language confirmation, key configuration and the admin password before using other features.</p>
+    <img src="/assets/media/36c50a7ae1d85b8a1fb5.png" alt="Settings page shown on first launch" class="ph" data-i18n-alt="img.1">
+
+    <h3 data-i18n="s2.21h3">2.1 Language Settings</h3>
+    <div class="step"><div class="num">1</div><div class="txt" data-i18n="s2.21s1">The default follows your <b>current system/browser language</b>: Chinese → 中文, otherwise → English.</div></div>
+    <div class="step"><div class="num">2</div><div class="txt" data-i18n="s2.21s2">You can switch 中文 / English anytime from the language card at the top of the Settings page; <b>changes apply immediately</b>.</div></div>
+
+    <h3 data-i18n="s2.22h3">2.2 Key Configuration</h3>
+    <table>
+      <tr>
+        <th data-i18n="s2.t.th1">Key</th>
+        <th data-i18n="s2.t.th2">Spec</th>
+        <th data-i18n="s2.t.th3">Purpose</th>
+        <th data-i18n="s2.t.th4">Example</th>
+      </tr>
+      <tr>
+        <td data-i18n="s2.t.r1c1">Encryption key encrypt_key</td>
+        <td data-i18n="s2.t.r1c2">16 characters, English letters and digits only</td>
+        <td data-i18n="s2.t.r1c3">Credential for video encryption and playback decryption</td>
+        <td><code>A1b2C3d4E5f6G7h8</code></td>
+      </tr>
+      <tr>
+        <td data-i18n="s2.t.r2c1">Authorization key VEI_KEY</td>
+        <td data-i18n="s2.t.r2c2">12 characters, English letters and digits only</td>
+        <td data-i18n="s2.t.r2c3">Credential for authorization file updates</td>
+        <td><code>X9y8Z7w6V5u4</code></td>
+      </tr>
+    </table>
+    <div class="step"><div class="num">1</div><div class="txt" data-i18n="s2.22s1">Type the keys manually, or click <kbd>Random</kbd> to generate a compliant value (a spec example is shown next to each input).</div></div>
+    <div class="step"><div class="num">2</div><div class="txt" data-i18n="s2.22s2">Set the <b>admin password</b> (at least 6 characters) and confirm it — used later to view the keys on the Settings page.</div></div>
+    <div class="step"><div class="num">3</div><div class="txt" data-i18n="s2.22s3">Click <kbd>Save Keys</kbd>; after "Keys saved" the app enters Device Management automatically.</div></div>
+    <img src="/assets/media/930c30972f9d77e653a5.png" alt="Key configuration &amp; admin password form" class="ph" data-i18n-alt="img.2">
+
+    <div class="note danger" data-i18n="s2.danger">Important: keys are <b>immutable</b> once saved — keep them safe. Losing the keys means encrypted videos can no longer be decrypted or re-authorized.</div>
+    <div class="note info" data-i18n="s2.info">Note: do not use the engine built-in defaults. After saving, keys are masked on the Settings page; enter the correct admin password and click "View Keys" to reveal them.</div>
+  </section>
+
+  <!-- ============ 3 设备管理 ============ -->
+  <section id="device">
+    <h2 data-i18n="s3.h2">3. Device Management (Groups &amp; SN)</h2>
+    <p data-i18n="s3.p">Device management maintains the serial number (SN) list of your VR headsets — the data source for video binding and authorization. Left: the <b>group tree</b> (the "All Devices" root shows the total SN count, groups show count badges); right: the <b>SN table</b> (SN, group, added time).</p>
+    <img src="/assets/media/4630f828ef5fde070b54.png" alt="Device Management page (group tree + SN table)" class="ph" data-i18n-alt="img.3">
+
+    <h3 data-i18n="s3.31h3">3.1 Device Group Management</h3>
+    <ul>
+      <li data-i18n="s3.31l1"><b>New group</b>: click "New Group" and enter a name (required, must be unique).</li>
+      <li data-i18n="s3.31l2"><b>Edit group</b>: rename a group.</li>
+      <li data-i18n="s3.31l3"><b>Delete group</b>: deleted after confirmation; its SNs are kept under the "All Devices" root — <b>nothing is lost</b>.</li>
+    </ul>
+
+    <h3 data-i18n="s3.32h3">3.2 Add SN</h3>
+    <p data-i18n="s3.32p1"><b>Single add</b>: click <kbd>Add SN</kbd> → enter the SN and pick the group ("All Devices" means no group) → OK.</p>
+    <ul>
+      <li data-i18n="s3.32l1">SN format: 2–120 characters, letters, digits and <code>. _ : -</code> only; spaces are not allowed.</li>
+      <li data-i18n="s3.32l2">SNs must be unique within the same group.</li>
+    </ul>
+    <p data-i18n="s3.32p2"><b>Batch add</b>: click <kbd>Batch Add</kbd> → paste text or drop a txt file (one SN per line) → pick the group → import. Every line is validated and de-duplicated, with a summary "N succeeded, M duplicates, K invalid".</p>
+    <img src="/assets/media/fc32410ee67af01f6878.png" alt="Add SN dialog &amp; batch import dialog" class="ph" data-i18n-alt="img.4">
+
+    <h3 data-i18n="s3.33h3">3.3 Edit / Delete SN</h3>
+    <ul>
+      <li data-i18n="s3.33l1"><b>Edit</b>: the row "Edit" button changes the SN value and its group.</li>
+      <li data-i18n="s3.33l2"><b>Delete</b>: tick one or more SNs and click "Batch Delete" (or delete a single row), then confirm. <span style="color:#DC2626">Deleting a bound SN unbinds it from all videos.</span></li>
+    </ul>
+
+    <h3 data-i18n="s3.34h3">3.4 Export SN</h3>
+    <p data-i18n="s3.34p">Click <kbd>Export SN</kbd>: with "All Devices" selected it exports every SN; with a group selected it exports only that group, as a txt file (one per line).</p>
+  </section>
+
+  <!-- ============ 4 视频管理 ============ -->
+  <section id="video">
+    <h2 data-i18n="s4.h2">4. Video Management (Add / Encrypt / Edit / Delete)</h2>
+    <p data-i18n="s4.p">The Video Management page lists local videos and supports adding, encrypting, editing, deleting and filtering.</p>
+    <img src="/assets/media/7048dc6af54a37b189e9.png" alt="Video Management page (filter bar + video list)" class="ph" data-i18n-alt="img.5">
+
+    <h3 data-i18n="s4.41h3">4.1 List Columns</h3>
+    <table>
+      <tr>
+        <th data-i18n="s4.t.th1">Column</th>
+        <th data-i18n="s4.t.th2">Description</th>
+      </tr>
+      <tr>
+        <td data-i18n="s4.t.r1c1">Video file name</td>
+        <td data-i18n="s4.t.r1c2">The source file name (without extension) used when adding</td>
+      </tr>
+      <tr>
+        <td data-i18n="s4.t.r2c1">Valid until</td>
+        <td data-i18n="s4.t.r2c2">Authorization expiry date; shown in red when expired</td>
+      </tr>
+      <tr>
+        <td data-i18n="s4.t.r3c1">Encrypt status</td>
+        <td data-i18n="s4.t.r3c2">Not encrypted (gray) / Encrypting (blue) / Success (green) / Failed (red)</td>
+      </tr>
+      <tr>
+        <td data-i18n="s4.t.r4c1">Encrypted at</td>
+        <td data-i18n="s4.t.r4c2">Completion time; <code>-</code> when not encrypted</td>
+      </tr>
+      <tr>
+        <td data-i18n="s4.t.r5c1">Devices</td>
+        <td data-i18n="s4.t.r5c2">Number of bound devices; click "Details" to expand the bound SN list</td>
+      </tr>
+    </table>
+
+    <h3 data-i18n="s4.42h3">4.2 Add Video &amp; Encrypt (Single)</h3>
+    <div class="step"><div class="num">1</div><div class="txt" data-i18n="s4.42s1">Click <kbd>Add Video</kbd> and choose "Single"; then select or <b>drop an MP4 video file</b> (MP4 only).</div></div>
+    <div class="step"><div class="num">2</div><div class="txt" data-i18n="s4.42s2">Set the <b>valid-until date</b> with the calendar picker — defaults to today + 5 years, and cannot be earlier than today.</div></div>
+    <div class="step"><div class="num">3</div><div class="txt" data-i18n="s4.42s3"><b>Bind device SNs (required)</b>: tick devices in the tree-select; ticking a group selects the whole group, with a live count of selected devices.</div></div>
+    <div class="step"><div class="num">4</div><div class="txt" data-i18n="s4.42s4">Click <kbd>Encrypt</kbd> — the video is saved and <b>encryption starts automatically</b>; the progress dialog shows a bar and an integer percentage (the overlay cannot be dismissed by clicking).</div></div>
+    <div class="step"><div class="num">5</div><div class="txt" data-i18n="s4.42s5">When finished, the status becomes "Success" with the encryption time; output is saved to the <code>EncryptVideo</code> folder in the installation directory.</div></div>
+    <div class="ph" data-i18n="s4.ph">Screenshot placeholder: single-add dialog &amp; encryption progress dialog</div>
+
+    <div class="note warn" data-i18n="s4.warn">Note: if a file with the same name already exists in <code>EncryptVideo</code> (or in the list), the video cannot be added — delete or rename the source file first.</div>
+
+    <h3 data-i18n="s4.43h3">4.3 Batch Add</h3>
+    <div class="step"><div class="num">1</div><div class="txt" data-i18n="s4.43s1">Click <kbd>Add Video</kbd> → "Batch", then <b>drop multiple video files</b> into the window.</div></div>
+    <div class="step"><div class="num">2</div><div class="txt" data-i18n="s4.43s2">In the common settings area, set the shared <b>valid-until date</b> and <b>bound device SNs (required)</b> — applied to every video in the batch.</div></div>
+    <div class="step"><div class="num">3</div><div class="txt" data-i18n="s4.43s3">Review the preview list and click <kbd>Encrypt</kbd>; videos are encrypted one by one automatically, and non-MP4 files are filtered with a notice.</div></div>
+    <img src="/assets/media/e805cbbeabb9648f97de.png" alt="Batch add dialog (common settings + preview list)" class="ph" data-i18n-alt="img.6">
+
+    <h3 data-i18n="s4.44h3">4.4 Filter &amp; Search</h3>
+    <ul>
+      <li data-i18n="s4.44l1"><b>Filter by device group</b>: the filter defaults to "All Devices" (all videos); picking a group shows only videos bound to SNs of that group.</li>
+      <li data-i18n="s4.44l2"><b>Search by file name</b>: type a keyword in the search box to filter the list instantly.</li>
+    </ul>
+
+    <h3 data-i18n="s4.45h3">4.5 Edit Video (Save &amp; Encrypt)</h3>
+    <div class="step"><div class="num">1</div><div class="txt" data-i18n="s4.45s1">Click the row "Edit" button to change the <b>valid-until date</b> and <b>bound device SNs</b>.</div></div>
+    <div class="step"><div class="num">2</div><div class="txt" data-i18n="s4.45s2">Click <kbd>Save &amp; Encrypt</kbd>: changes are saved and <b>re-encryption starts automatically</b> with the new date and device list.</div></div>
+    <div class="note info" data-i18n="s4.45note">Note: re-encrypting overwrites the previous encrypted output.</div>
+
+    <h3 data-i18n="s4.46h3">4.6 Delete Videos</h3>
+    <ul>
+      <li data-i18n="s4.46l1"><b>Single delete</b>: row "Delete" → confirmation with a red "irreversible" warning.</li>
+      <li data-i18n="s4.46l2"><b>Batch delete</b>: tick multiple videos (encrypting ones cannot be ticked) → "Batch Delete" → confirm.</li>
+      <li data-i18n="s4.46l3">Deleting also <b>removes</b> the local records and the matching files in the <code>EncryptVideo</code> folder.</li>
+    </ul>
+
+    <h3 data-i18n="s4.47h3">4.7 Open Output Folder</h3>
+    <p data-i18n="s4.47p">Click "Open Folder" to open the <code>EncryptVideo</code> folder in File Explorer.</p>
+  </section>
+
+  <!-- ============ 5 产物与播放 ============ -->
+  <section id="output">
+    <h2 data-i18n="s5.h2">5. Encrypted Output &amp; Playback</h2>
+    <p data-i18n="s5.p">After a successful encryption, three kinds of files are generated in <code>&lt;install dir&gt;\EncryptVideo</code>:</p>
+    <table>
+      <tr>
+        <th data-i18n="s5.t.th1">File</th>
+        <th data-i18n="s5.t.th2">Description</th>
+      </tr>
+      <tr>
+        <td><code>*.dpve1</code> + <code>*.mp4</code></td>
+        <td data-i18n="s5.t.r1c2">Encrypted video data and container file</td>
+      </tr>
+      <tr>
+        <td><code>*.dpvei</code></td>
+        <td data-i18n="s5.t.r2c2">Authorization file (contains the expiry date and bound device SNs)</td>
+      </tr>
+    </table>
+    <ul>
+      <li data-i18n="s5.l1">V3 encryption supports <b>MP4-container sources only</b>.</li>
+      <li data-i18n="s5.l2">Encrypted videos <b>can only be played by Dpvr VideoPlayer</b>.</li>
+      <li data-i18n="s5.l3">Authorization: <b>expiry-date authorization</b> (video valid-until; unplayable when expired) + <b>device SN authentication</b> (only bound SNs can play).</li>
+    </ul>
+    <img src="/assets/media/e8e91cbc3869b1b74d07.png" alt="Files in the EncryptVideo folder" class="ph" data-i18n-alt="img.7">
+  </section>
+
+  <!-- ============ 6 注意事项 ============ -->
+  <section id="faq">
+    <h2 data-i18n="s6.h2">6. Notes &amp; Common Messages</h2>
+    <table>
+      <tr>
+        <th data-i18n="s6.t.th1">Scenario</th>
+        <th data-i18n="s6.t.th2">What to do</th>
+      </tr>
+      <tr>
+        <td data-i18n="s6.t.r1c1">Message "Please configure keys in Settings first"</td>
+        <td data-i18n="s6.t.r1c2">Keys not configured — finish key setup in "Settings" before encrypting</td>
+      </tr>
+      <tr>
+        <td data-i18n="s6.t.r2c1">Message "Only MP4 video files are supported"</td>
+        <td data-i18n="s6.t.r2c2">The source is not MP4-container; convert it to MP4 first</td>
+      </tr>
+      <tr>
+        <td data-i18n="s6.t.r3c1">Message "A file with the same name already exists in EncryptVideo"</td>
+        <td data-i18n="s6.t.r3c2">Same-name output exists — delete the old video or rename the source file and retry</td>
+      </tr>
+      <tr>
+        <td data-i18n="s6.t.r4c1">Message "Valid-until date cannot be earlier than today"</td>
+        <td data-i18n="s6.t.r4c2">Pick today or a later date</td>
+      </tr>
+      <tr>
+        <td data-i18n="s6.t.r5c1">Forgot the admin password</td>
+        <td data-i18n="s6.t.r5c2">Key plaintext cannot be revealed; always remember the admin password and the keys</td>
+      </tr>
+      <tr>
+        <td data-i18n="s6.t.r6c1">OS change / reinstallation</td>
+        <td data-i18n="s6.t.r6c2">Local data (keys, devices, list) does not migrate automatically — plan backups in advance</td>
+      </tr>
+      <tr>
+        <td data-i18n="s6.t.r7c1">Data locations</td>
+        <td data-i18n="s6.t.r7c2">Config &amp; list data live in the local user-data directory; encrypted output lives in <code>EncryptVideo</code> under the install directory</td>
+      </tr>
+    </table>
+    <div class="note danger" data-i18n="s6.danger">Security reminder: the encryption key and authorization key are the only credentials for decryption — immutable and unrecoverable once set. Keep them safe.</div>
+  </section>
+
+  <footer data-i18n="footer">DPVR Video Encryptor · User Guide V2.0.0 · Works offline</footer>
+</div>
+
+<a id="langFab" href="/cn/docs/encryption/gui-user-manual.html">中文</a>
+
+
+</div>

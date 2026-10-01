@@ -1,0 +1,78 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Device Management · DPVR Developer Center</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/search-index.js"></script><script defer src="/assets/app.js"></script></head><body data-base="" data-language="en" data-product="rdc"><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><a class="brand" href="/en/index.html"><img src="/assets/logo.png" alt="DPVR"><span>DPVR DEVELOPER CENTER</span></a><button class="global-toggle" aria-label="Website navigation" aria-expanded="false" aria-controls="global-nav">☰</button><nav id="global-nav" class="global-nav"><a href="https://developer.dpvr.com/home.html">HOME</a><a href="https://developer.dpvr.com/sdk.html">SDK</a><details><summary>SOLUTIONS</summary><div><a href="https://developer.dpvr.com/solutions-DPVR-starLink.html">StarLink</a><a href="https://developer.dpvr.com/solutions-DPVR-remote-control.html">Remote Control</a></div></details><a aria-current="page" href="/en/index.html">RESOURCES</a><details><summary>ASSISTANT</summary><div><a href="https://product.dpvr.com/assistant/download.html">Assistant</a><a href="https://product.dpvr.com/assistant4">Assistant4</a></div></details></nav></header><div class="utility-bar"><a class="breadcrumb" href="/en/index.html">Developer resources</a><div class="utility-actions"><button class="search-open">Search docs <kbd>⌘ K</kbd></button><a class="language-link" hreflang="cn" href="/cn/docs/rdc/lib_dev/devicecontrol.html">简体中文</a><select class="theme" aria-label="Appearance"><option value="light">Light</option><option value="dark">Dark</option><option value="auto">System</option></select></div></div><div class="reader-controls"><button class="reader-menu" aria-controls="product-nav" aria-expanded="false">☰ Documentation</button><button class="toc-menu" aria-controls="page-toc" aria-expanded="false">On this page ☷</button></div><div class="reader-layout"><aside class="product-nav" id="product-nav"><h2>RDC Remote Device Control</h2><nav><a class="nav-overview" href="/en/resources/rdc.html">Overview & start</a><a href="/en/guides/rdc-csharp.html">Build an RDC controller in C#</a><a class="" href="/en/docs/rdc/dev_guide.html">Developer Recommendations</a><a class="" href="/en/docs/rdc/index.html">Introduction</a><details ><summary>Headset configuration</summary><ul><li><a class="" href="/en/docs/rdc/client_usage/device_usage.html">Client Usage</a></li><li><a class="" href="/en/docs/rdc/client_usage/normal_settings.html">Configure via Application</a></li><li><a class="" href="/en/docs/rdc/client_usage/setting_by_config.html">Configuration File Settings</a></li></ul></details><details open><summary>C# server development</summary><ul><li><a class="" href="/en/docs/rdc/lib_dev/RDCLib.html">Based on RDC Library for Server-side Development</a></li><li><a class="" href="/en/docs/rdc/lib_dev/clientmanager.html">Client Management</a></li><li><a class="" href="/en/docs/rdc/lib_dev/content.html">Content Distribution and Download</a></li><li><a class="active" href="/en/docs/rdc/lib_dev/devicecontrol.html">Device Management</a></li><li><a class="" href="/en/docs/rdc/lib_dev/devicefound.html">Device Discovery</a></li><li><a class="" href="/en/docs/rdc/lib_dev/init.html">Enabling, disabling and callback registration</a></li><li><a class="" href="/en/docs/rdc/lib_dev/message.html">Pass-through message</a></li><li><a class="" href="/en/docs/rdc/lib_dev/package.html">Application Control</a></li><li><a class="" href="/en/docs/rdc/lib_dev/video.html">Video Playback Control</a></li></ul></details><details ><summary>Custom app messaging</summary><ul><li><a class="" href="/en/docs/rdc/client_app/index.html">Client Application Development</a></li></ul></details><details ><summary>Communication protocol</summary><ul><li><a class="" href="/en/docs/rdc/server_dev/index.html">Server Development Based on Communication Protocol</a></li></ul></details></nav></aside><main id="main" class="article-main"><div class="breadcrumbs"><a href="/en/index.html">Resources</a> / <a href="/en/resources/rdc.html">RDC Remote Device Control</a></div><header class="article-header"><span class="eyebrow">Documentation</span><a href="https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/devicecontrol.html">Official source ↗</a></header><article class="article-body"><article role="main" id="furo-main-content">
+          <section id="device-management">
+<h1>Device Management<a class="headerlink" href="#device-management" title="Link to this heading">¶</a></h1>
+<section id="input-state-data-structure">
+<h2 id="section-0">Input State Data Structure:<a class="headerlink" href="#input-state-data-structure" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">InputState</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">HomeKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">PowerKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">TouchPadBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">VolumeKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">BackKeyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>bool HomeKeyBlock</cite>: Indicates whether the Home key (including the controller’s Home key short press) is blocked.</p>
+<p><cite>bool PowerKeyBlock</cite>: Indicates whether the Power key short press is blocked. Long press for 10 seconds to shut down cannot be blocked by this setting.</p>
+<p><cite>bool TouchPadBlock</cite>: Indicates whether the device’s touchpad is blocked.</p>
+<p><cite>bool VolumeKeyBlock</cite>: Indicates whether the volume keys are blocked.</p>
+<p><cite>bool BackKeyBlock</cite>: Indicates whether the Back key (including the controller’s Back key) is blocked.</p>
+</section>
+<section id="setting-and-clearing-input-state">
+<h2 id="section-1">Setting and Clearing Input State<a class="headerlink" href="#setting-and-clearing-input-state" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceSetInputState</span><span class="p">(</span><span class="n">InputState</span><span class="w"> </span><span class="n">states</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>InputState states</cite>: Specifies the desired input state.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional parameter to specify a list of clients for which the input state should be set. Default is null, meaning all clients.</p>
+</section>
+<section id="setting-volume">
+<h2 id="section-2">Setting Volume<a class="headerlink" href="#setting-volume" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceSetVolume</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>int value</cite>: Volume value, range 0-100.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional parameter to specify a list of clients for which the volume should be set. Default is null, meaning all clients.</p>
+</section>
+<section id="shutting-down-the-device">
+<h2 id="section-3">Shutting Down the Device<a class="headerlink" href="#shutting-down-the-device" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceShutdown</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional parameter to specify a list of clients for which the device should be shut down. Default is null, meaning all clients.</p>
+</section>
+<section id="rebooting-the-device">
+<h2 id="section-4">Rebooting the Device<a class="headerlink" href="#rebooting-the-device" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceReboot</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional parameter to specify a list of clients for which the device should be rebooted. Default is null, meaning all clients.</p>
+</section>
+<section id="recentering-the-device">
+<h2 id="section-5">Recentering the Device<a class="headerlink" href="#recentering-the-device" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceRecenter</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional parameter to specify a list of clients for which the device should be recentered. Default is null, meaning all clients.</p>
+</section>
+<section id="starting-dpvr-cast">
+<h2 id="section-6">Starting DPVR Cast<a class="headerlink" href="#starting-dpvr-cast" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceStartDpvrCast</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Sends message 1012 to the selected clients and requests the device-side DMS to start the DPVR Cast RTSP stream.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional list of clients. Default is null, meaning all clients.</p>
+</section>
+<section id="stopping-dpvr-cast">
+<h2 id="section-7">Stopping DPVR Cast<a class="headerlink" href="#stopping-dpvr-cast" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">DeviceStopDpvrCast</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Sends message 1013 to the selected clients and requests the device-side DMS to stop the DPVR Cast RTSP stream.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: Optional list of clients. Default is null, meaning all clients.</p>
+<p>Whether Cast is actually available must be determined from the client’s subsequent heartbeat <code class="docutils literal notranslate"><span class="pre">CastRtspUrl</span></code> value. An empty string means that no Cast address is currently available.</p>
+</section>
+</section>
+
+        </article><section class="source-downloads" data-editorial-note="true"><h2>Page downloads</h2><ul><li><a href="https://static.dpvr.com/apps/developer/rdc/v2/en/_sources/lib_dev/devicecontrol.rst.txt">View this page source</a></li></ul></section></article><nav class="page-turn"><a href="/en/docs/rdc/lib_dev/package.html"><small>Previous</small><span>Application Control</span></a><a href="/en/docs/rdc/lib_dev/content.html"><small>Next</small><span>Content Distribution and Download</span></a></nav></main><aside class="page-toc" id="page-toc"><h2>On this page</h2><nav></nav></aside></div><button class="drawer-scrim" aria-label="Close navigation"></button><footer class="site-footer"><p>© Copyright DPVR. All Rights Reserved</p><p>沪ICP备2022019614号-1 Shanghai Lexiang Technology Co. Ltd</p></footer><dialog class="search-dialog" aria-label="Search documentation"><form class="search-form"><input id="search-query" name="q" type="search" placeholder="Search a product, task or API…" aria-label="Search terms"><button type="button" class="search-close" aria-label="Close search">✕</button></form><div class="search-status" role="status"></div><div class="search-results"></div></dialog></body></html>

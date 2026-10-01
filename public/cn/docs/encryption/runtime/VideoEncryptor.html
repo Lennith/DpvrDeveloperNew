@@ -1,0 +1,85 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VideoEncryptor · DPVR Developer Center</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/search-index.js"></script><script defer src="/assets/app.js"></script></head><body data-base="" data-language="cn" data-product="encryption"><a class="skip-link" href="#main">跳至正文</a><header class="site-header"><a class="brand" href="/cn/index.html"><img src="/assets/logo.png" alt="DPVR"><span>DPVR DEVELOPER CENTER</span></a><button class="global-toggle" aria-label="官网导航" aria-expanded="false" aria-controls="global-nav">☰</button><nav id="global-nav" class="global-nav"><a href="https://developer.dpvr.com/home.html">HOME</a><a href="https://developer.dpvr.com/sdk.html">SDK</a><details><summary>SOLUTIONS</summary><div><a href="https://developer.dpvr.com/solutions-DPVR-starLink.html">StarLink</a><a href="https://developer.dpvr.com/solutions-DPVR-remote-control.html">Remote Control</a></div></details><a aria-current="page" href="/cn/index.html">RESOURCES</a><details><summary>ASSISTANT</summary><div><a href="https://product.dpvr.com/assistant/download.html">Assistant</a><a href="https://product.dpvr.com/assistant4">Assistant4</a></div></details></nav></header><div class="utility-bar"><a class="breadcrumb" href="/cn/index.html">开发者资源</a><div class="utility-actions"><button class="search-open">搜索文档 <kbd>⌘ K</kbd></button><a class="language-link" hreflang="en" href="/en/docs/encryption/runtime/VideoEncryptor.html">English</a><select class="theme" aria-label="外观"><option value="light">浅色</option><option value="dark">深色</option><option value="auto">跟随系统</option></select></div></div><div class="reader-controls"><button class="reader-menu" aria-controls="product-nav" aria-expanded="false">☰ 文档导航</button><button class="toc-menu" aria-controls="page-toc" aria-expanded="false">本页目录 ☷</button></div><div class="reader-layout"><aside class="product-nav" id="product-nav"><h2>视频加密与授权</h2><nav><a class="nav-overview" href="/cn/resources/encryption.html">用途与开始使用</a><details open><summary>命令行与开发参考</summary><ul><li><a class="" href="/cn/docs/encryption/cli-user-manual.html">DPVR Video Encryptor 使用说明</a></li><li><a class="" href="/cn/docs/encryption/runtime/ApkEncryptor.html">ApkEncryptor</a></li><li><a class="" href="/cn/docs/encryption/runtime/ReleaseNote.html">更新日志</a></li><li><a class="active" href="/cn/docs/encryption/runtime/VideoEncryptor.html">VideoEncryptor</a></li><li><a class="" href="/cn/docs/encryption/runtime/index.html">DPVR Encryptor documentation</a></li></ul></details><details ><summary>图形界面操作</summary><ul><li><a class="" href="/cn/docs/encryption/gui-user-manual.html">DPVR 视频加密工具 · 使用说明</a></li></ul></details><details ><summary>操作指南</summary><ul><li><a class="" href="/cn/docs/encryption/video-encryption.html">视频加密指南</a></li></ul></details></nav></aside><main id="main" class="article-main"><div class="breadcrumbs"><a href="/cn/index.html">资源</a> / <a href="/cn/resources/encryption.html">视频加密与授权</a></div><header class="article-header"><span class="eyebrow">技术文档</span><a href="https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=CLI%20Version%2Fruntime_tool_v3%2Fdoc%2Fcn%2FVideoEncryptor.html">官方来源 ↗</a></header><article class="article-body"><article role="main" id="furo-main-content">
+          <section id="videoencryptor">
+<h1>VideoEncryptor<a class="headerlink" href="#videoencryptor" title="Link to this heading">¶</a></h1>
+<p>本工具旨在帮助开发者对视频进行批处理加密，使用了Dpvr V3视频加密方式，提供相较传统AES加密流更好的性能。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>V3加密视频仅支持Dpvr VideoPlayer进行解密播放，且仅支持Mp4封装的视频。</p>
+</div>
+<p>如果需要对非MP4视频文件进行加密，可以使用 <a class="reference external" href="https://developer.dpvr.com/resources-list-5.html">DPVR视频加密工具V1</a> 进行加密。</p>
+<p>与V1版本相比，V3视频加密在播放时，进行解密消耗的资源更少，提供了与原片播放一致的性能表现。</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>V3加密的授权文件仅支持V3加密的视频，V1加密的授权文件仅支持V1加密的视频，两种加密方式在底层实现上是完全不同的。
+两种视频加密方式在非一体机端播放时，仅校验授权时间，不对设备进行校验。</p>
+</div>
+<section id="id1">
+<h2 id="section-0">功能<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>VideoEncryptor是一个控制台程序，提供以下三个功能：
+1. 对指定路径下的MP4视频进行加密，生成加密视频文件：dpve1和mp4文件，以及对应的授权文件dpvei。
+2. 对指定路径下的视频授权文件(.dpvei)进行更新，更新这些授权文件支持的设备SN和授权时间。
+3. 对指定路径下的Dpvr V1视频加密的授权文件.dat进行更新，生成新的v1版本加密授权文件。</p>
+<p><a class="reference external" href="https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip">点击这里下载视频加密工具。</a></p>
+<p>授权文件涵盖的认证方式包含：</p>
+<ol class="arabic simple">
+<li><p>根据设备序列号进行鉴权。</p></li>
+<li><p>根据授权日期进行授权。</p></li>
+</ol>
+<p>使用流程：</p>
+<ol class="arabic simple">
+<li><p>使用DpvrEncryptorUpdate.exe对指定路径下视频文件进行加密，生成加密视频文件dpve1和mp4，以及对应的授权文件dpvei。</p></li>
+<li><p>使用DpvrVideoPlayer，进行这3个文件进行视频播放。视频播放入口为后缀为dpvei1的文件。</p></li>
+</ol>
+</section>
+<section id="id3">
+<h2 id="section-1">命令行参数<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p><cite>-e &lt;Boolean&gt;</cite> 或 <cite>–encrypt_dpvr_v3 &lt;Boolean&gt;</cite></p>
+<p>选择工作模式，false：加密授权文件更新，true：进行视频进行加密，默认为false。</p>
+<p><cite>-b &lt;String&gt;</cite> 或 <cite>–encrypt_key &lt;String&gt;</cite></p>
+<p>16位字符串（仅英语字母与数字），V3加密相关功能限定参数，作为播放时解密的凭据，默认为DPVR20222023HHHH。</p>
+<p><cite>-c &lt;Date&gt;</cite> 或 <cite>-encrypt_effective_date &lt;Date&gt;</cite></p>
+<p>加密有效日期，格式为：2021/01/01，进行视频加密时，默认为2099/01/01。 进行授权文件更新时，默认为原加密文件的授权有效时间。</p>
+<p><cite>-i &lt;String&gt;</cite> 或 <cite>–input_dir &lt;String&gt;</cite></p>
+<p>输入文件夹。当加密模式时，该路径为输入的MP4文件路径。当更新模式时，该路径为输入的授权文件路径。</p>
+<p><cite>-o &lt;String&gt;</cite> 或 <cite>–output_dir &lt;String&gt;</cite></p>
+<p>输出文件夹。当加密模式时，该路径为输出加密视频文件和授权文件路径。当更新模式时，该路径为输出更新后的授权文件路径。</p>
+<p><cite>-d &lt;String&gt;</cite> 或 <cite>–device_list &lt;String&gt;</cite></p>
+<p>授权设备列表文件，授权的设备列表统一放置在一个文件中，文件格式为txt，每行一个设备序列号。</p>
+<p><cite>-y &lt;String&gt;</cite> 或 <cite>–output_vei_key &lt;String&gt;</cite></p>
+<p>输出的VEI_KEY。仅V3加密模式下有效，VEI_KEY用于对授权文件更新时使用，当进行视频加密时，默认为dpvr。当进行视频加密更新时，默认沿用之前的VEI_KEY。</p>
+<p><cite>-k &lt;String&gt;</cite> 或 <cite>–input_vei_key &lt;String&gt;</cite></p>
+<p>输入的VEI_KEY，在进行V3授权文件更新时使用，在进行V3视频加密授权文件信息更新时，会先校验该值与加密时的VEI_KEY是否一致，如果不一致，则不能进行授权文件升级。</p>
+<p><cite>-t &lt;String&gt;</cite> 或 <cite>–update_type &lt;String&gt;</cite></p>
+<p>可选dat或者vei。仅在升级模式下生效，选择输出的加密授权文件类型，默认为V3加密信息vei。</p>
+<p><cite>-h</cite> 或者 <cite>–help</cite></p>
+<p>显示命令行可选参数信息。</p>
+</section>
+<section id="id4">
+<h2 id="section-2">加密工具使用方法用例<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<section id="id5">
+<h3 id="section-3">加密<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="n">DpvrEncryptorUpdate</span><span class="p">.</span><span class="na">exe</span><span class="w"> </span><span class="o">--</span><span class="n">encrypt_dpvr_v3</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="o">--</span><span class="n">input_dir</span><span class="w"> </span><span class="n">d</span><span class="p">:</span><span class="err">\</span><span class="n">test</span><span class="w"> </span><span class="o">--</span><span class="n">output_dir</span><span class="w"> </span><span class="n">d</span><span class="p">:</span><span class="err">\</span><span class="n">testout</span>
+<span class="o">--</span><span class="n">device_list</span><span class="w"> </span><span class="n">d</span><span class="p">:</span><span class="err">\</span><span class="n">devicelist</span><span class="p">.</span><span class="na">txt</span><span class="w"> </span><span class="o">--</span><span class="n">output_vei_key</span><span class="w"> </span><span class="n">test</span>
+</pre></div>
+</div>
+<p>对指定路径下MP4文件进行V3加密，并在指定输出路径下输出。</p>
+</section>
+<section id="id6">
+<h3 id="section-4">授权文件更新<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<p>V3授权文件更新：</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="n">DpvrEncryptorUpdate</span><span class="p">.</span><span class="na">exe</span><span class="w"> </span><span class="o">--</span><span class="n">input_dir</span><span class="w"> </span><span class="n">d</span><span class="p">:</span><span class="err">\</span><span class="n">test</span><span class="w"> </span><span class="o">--</span><span class="n">output_dir</span><span class="w"> </span><span class="n">d</span><span class="p">:</span><span class="err">\</span><span class="n">testout</span><span class="w"> </span><span class="o">--</span><span class="n">update_type</span><span class="w"> </span><span class="n">vei</span>
+<span class="o">--</span><span class="n">device_list</span><span class="w"> </span><span class="n">d</span><span class="p">:</span><span class="err">\</span><span class="n">devicelist</span><span class="p">.</span><span class="na">txt</span><span class="w"> </span><span class="o">--</span><span class="n">input_vei_key</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="o">--</span><span class="n">output_vei_key</span><span class="w"> </span><span class="n">test</span>
+</pre></div>
+</div>
+<p>对指定文件夹下所有的授权文件（含V1和V3）进行加密授权更新，在输出路径下生成新的V3授权文件。</p>
+<p>V1授权文件更新：</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="n">DpvrEncryptorUpdate</span><span class="p">.</span><span class="na">exe</span><span class="w"> </span><span class="o">--</span><span class="n">input_dir</span><span class="w"> </span><span class="n">d</span><span class="p">:</span><span class="err">\</span><span class="n">test</span><span class="w"> </span><span class="o">--</span><span class="n">output_dir</span><span class="w"> </span><span class="n">d</span><span class="p">:</span><span class="err">\</span><span class="n">testout</span><span class="w"> </span><span class="o">--</span><span class="n">update_type</span><span class="w"> </span><span class="n">dat</span>
+<span class="o">--</span><span class="n">device_list</span><span class="w"> </span><span class="n">d</span><span class="p">:</span><span class="err">\</span><span class="n">devicelist</span><span class="p">.</span><span class="na">txt</span>
+</pre></div>
+</div>
+<p>对指定文件夹下所有的V1授权信息文件（.dat）进行加密授权更新，并在输出路径下生成新的V1授权文件。</p>
+</section>
+</section>
+</section>
+
+        <aside class="source-note" data-editorial-note="source_download_unavailable">原文引用的子工具文件未在已核查的官方 V3 工具包中找到。相应链接提供官方完整工具包入口，不代表该子文件可单独下载。</aside></article><section class="source-downloads" data-editorial-note="true"><h2>本页下载</h2><ul><li><a href="https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip">下载原始文档安装包</a></li></ul></section></article><nav class="page-turn"><a href="/cn/docs/encryption/runtime/ApkEncryptor.html"><small>上一篇</small><span>ApkEncryptor</span></a></nav></main><aside class="page-toc" id="page-toc"><h2>本页目录</h2><nav></nav></aside></div><button class="drawer-scrim" aria-label="关闭目录"></button><footer class="site-footer"><p>© Copyright DPVR. All Rights Reserved</p><p>沪ICP备2022019614号-1 Shanghai Lexiang Technology Co. Ltd</p></footer><dialog class="search-dialog" aria-label="搜索文档"><form class="search-form"><input id="search-query" name="q" type="search" placeholder="搜索产品、操作或接口…" aria-label="关键词"><button type="button" class="search-close" aria-label="关闭搜索">✕</button></form><div class="search-status" role="status"></div><div class="search-results"></div></dialog></body></html>

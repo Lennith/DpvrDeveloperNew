@@ -1,0 +1,289 @@
+<article role="main">
+          <section id="id1">
+<h1>使用流程<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h1>
+<ol class="arabic simple" start="0">
+<li><p>在项目中导入DeviceManagerService unitypackage文件。</p></li>
+<li><p>申明应用DeviceManager权限。</p></li>
+<li><p>绑定DeviceManagerService。</p></li>
+<li><p>实现IDeviceManagerResultListener用于监听Api调用结果，实现IDeviceManagerEventListener用于注册事件监听。</p></li>
+<li><p>进行DeviceManagerService API调用。</p></li>
+<li><p>进行API调用结果的处理。</p></li>
+<li><p>进行事件(Event)的处理。</p></li>
+</ol>
+<section id="id2">
+<h2>0.  <a class="reference external" href="https://docs.unity3d.com/Manual/AssetPackagesImport.html">unitypackage</a> 导入<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p><a class="reference external" href="https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/DpvrDeviceManager2.0.unitypackage">点击这里下载unitypackage文件，</a>
+打开unity项目，选择 Assets-&gt;Import Package-&gt;Custom Package。选中下载好的unitypackage后导入。。</p>
+<img alt="../../_images/unitypackageimport.png" class="align-center" src="/assets/media/bb4fa153a33f9a679adf.png">
+</section>
+<section id="id4">
+<h2>1. 权限申明<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h2>
+<p>DpvrDeviceManagerService每个接口都需要指定的权限才能进行调用。</p>
+<p>在本文档的Api部分，会标注每一个接口需要的具体权限。</p>
+<p>DpvrDeviceManagerService的权限分为4种：</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>权限级别</p></th>
+<th class="head"><p>需要授权</p></th>
+<th class="head"><p>权限说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NORMAL(0)</p></td>
+<td><p>否</p></td>
+<td><p>普通权限</p></td>
+</tr>
+<tr class="row-odd"><td><p>LAUNCHER(1)</p></td>
+<td><p>是</p></td>
+<td><p>常用的Launcher权限，可以获取系统设置</p></td>
+</tr>
+<tr class="row-even"><td><p>SYSTEM(2)</p></td>
+<td><p>是</p></td>
+<td><p>常用的系统权限，可以更改一些系统设置</p></td>
+</tr>
+<tr class="row-odd"><td><p>ADMIN(3)</p></td>
+<td><p>是</p></td>
+<td><p>最高权限，可以调用全部接口</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>DeviceManagerService的调用者需要在自己的应用AndroidManifest.xml的Application标签加入下列授权信息，来获得DeviceManangerService的授权。</p>
+<p><em>对于应用版本的授权：</em></p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;meta-data</span><span class="w"> </span><span class="na">android:name=</span><span class="s">"DeviceManagerKey"</span><span class="w"> </span><span class="na">android:value=</span><span class="s">"YOUR_KEY_HERE"</span><span class="nt">&gt;&lt;/meta-data&gt;</span>
+</pre></div>
+</div>
+<p>使用这种方式授权，将会对当前应用包名和版本号进行授权，该版本该应用可以运行于所有支持DeviceManangerService的设备上。</p>
+<p><em>对于指定渠道固件授权:</em></p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;meta-data</span><span class="w"> </span><span class="na">android:name=</span><span class="s">"DeviceManagerPlatformKey"</span><span class="w"> </span><span class="na">android:value=</span><span class="s">"YOUR_KEY_HERE"</span><span class="nt">&gt;&lt;/meta-data&gt;</span>
+</pre></div>
+</div>
+<p>使用这种方式授权，将会对应用包名在指定定制渠道固件上进行授权，而不对版本号进行校验。</p>
+<p>当两种授权方式同时存在时，会在对应系统上使用能获得的最高权限。</p>
+<p><em>目前，你需要通过联系DPVR的技术支持来获取NORMAL以上权限的DeviceManagerKey。</em></p>
+</section>
+<hr class="docutils">
+<section id="devicemanagerserivce">
+<h2>2. 绑定DeviceManagerSerivce<a class="headerlink" href="#devicemanagerserivce" title="Permalink to this heading">#</a></h2>
+<p>跟标准AIDL调用一样，首先我们需要绑定DeviceManagerSerice。</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Bind</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">AndroidJavaClass</span><span class="w"> </span><span class="n">jc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AndroidJavaClass</span><span class="p">(</span><span class="n">unityPlayerClass</span><span class="p">);</span>
+<span class="w">    </span><span class="n">AndroidJavaObject</span><span class="w"> </span><span class="n">activity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jc</span><span class="p">.</span><span class="n">GetStatic</span><span class="o">&lt;</span><span class="n">AndroidJavaObject</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"currentActivity"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">deviceManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AndroidJavaObject</span><span class="p">(</span><span class="s">"com.dpvr.devicemanagerclientjar.DeviceManagerBindMan"</span><span class="p">,</span><span class="w"> </span><span class="n">activity</span><span class="p">);</span>
+<span class="w">    </span><span class="n">SetCallbacks</span><span class="p">();</span>
+<span class="w">    </span><span class="n">deviceManager</span><span class="p">.</span><span class="n">Call</span><span class="p">(</span><span class="s">"SetBind"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils">
+<section id="apievent">
+<h2>3. 注册API调用回调和Event回调。<a class="headerlink" href="#apievent" title="Permalink to this heading">#</a></h2>
+<p>实现DeviceManagerBindMan$OnDeviceManagerResult，DeviceManagerBindMan$OnDeviceManagerEventResult用于处理Api调用回调。</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnResult</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogFormat</span><span class="p">(</span><span class="s">"onResult: {0}  {1}"</span><span class="p">,</span><span class="w"> </span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnEvent</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="kt">string</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogFormat</span><span class="p">(</span><span class="s">"onEvent: {0}  {1}"</span><span class="p">,</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">delegate</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnDeviceManagerResult</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">OnDeviceManagerResultListener</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AndroidJavaProxy</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">OnDeviceManagerResult</span><span class="w"> </span><span class="n">_handler</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">OnDeviceManagerResultListener</span><span class="p">(</span><span class="n">OnDeviceManagerResult</span><span class="w"> </span><span class="n">handler</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="s">"com.dpvr.devicemanagerclientjar.DeviceManagerBindMan$OnDeviceManagerResult"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_handler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">handler</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">void</span><span class="w"> </span><span class="nf">OnDeviceManager</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_handler</span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">delegate</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnDeviceManagerEvent</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">);</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">OnDeviceManagerEventListener</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AndroidJavaProxy</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">OnDeviceManagerEvent</span><span class="w"> </span><span class="n">_handler</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">OnDeviceManagerEventListener</span><span class="p">(</span><span class="n">OnDeviceManagerEvent</span><span class="w"> </span><span class="n">handler</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="s">"com.dpvr.devicemanagerclientjar.DeviceManagerBindMan$OnDeviceManagerEventResult"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_handler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">handler</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">void</span><span class="w"> </span><span class="nf">OnDeviceManagerEvent</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_handler</span><span class="p">(</span><span class="n">eventType</span><span class="p">,</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">SetCallbacks</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">deviceManager</span><span class="p">.</span><span class="n">Call</span><span class="p">(</span><span class="s">"SetDeviceManagerResultListener"</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OnDeviceManagerResultListener</span><span class="p">(</span><span class="n">OnResult</span><span class="p">));</span>
+<span class="w">    </span><span class="n">deviceManager</span><span class="p">.</span><span class="n">Call</span><span class="p">(</span><span class="s">"SetDeviceManagerEventListener"</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OnDeviceManagerEventListener</span><span class="p">(</span><span class="n">OnEvent</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><em>需要注意的是，每一个应用仅可以注册一个有效的ResultListener和EventListener。</em></p>
+</section>
+<hr class="docutils">
+<section id="api">
+<h2>4. 进行Api调用。<a class="headerlink" href="#api" title="Permalink to this heading">#</a></h2>
+<p>通过调用接口call来实现DeviceManager业务API的调用。</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">String</span><span class="w"> </span><span class="nf">call</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">jobCat</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">jobType</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">jobParams</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">callParams</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">RemoteException</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>参数定义如下：</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>jobCat</p></td>
+<td><p>需要调用的Api分类，对应Api文档内的1级内容，例如”activityJobs”</p></td>
+</tr>
+<tr class="row-even"><td><p>jobType</p></td>
+<td><p>调用的具体Api，例如”GetRunningPackages”</p></td>
+</tr>
+<tr class="row-odd"><td><p>jobParams</p></td>
+<td><p>调用的业务Api参数，可以通过对应Api文档中的Params获取，需要对该参数进行Json序列化，可为空。</p></td>
+</tr>
+<tr class="row-even"><td><p>callParams</p></td>
+<td><p>调用该Api时的调用参数，例如延迟调用、或者该接口需要依赖于另一个Api调用的完成，可为空。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>该接口的返回值是：</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">CallResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** 当调用出错时，用于表示错误的原因 */</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">errorDescription</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="cm">/** 该次任务调用的任务ID,与ResultListener中的jobID对应，当jobId&lt;0时表示调用失败 */</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobID</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>的序列化Json字符串。</p>
+<p>以 <code class="docutils literal notranslate"><span class="pre">packageJobs/CheckAppInstalled</span></code> 为例,我们来看一下如何调用DeviceManagerService接口。</p>
+<p>该Api的文档说明如下：</p>
+<img alt="../../_images/exampleApiDoc1.png" class="align-center" src="/assets/media/ce7970fa7fce2f2cda5e.png">
+<ol class="arabic simple">
+<li><p>通过Api文档知道，可知接口的jobCat是 <code class="docutils literal notranslate"><span class="pre">packageJobs</span></code>，jobType是 <code class="docutils literal notranslate"><span class="pre">CheckAppInstalled</span></code>。</p></li>
+<li><p>它的Api调用参数是一个String类型 <code class="docutils literal notranslate"><span class="pre">pacageName</span></code>。</p></li>
+<li><p>它的调用结果只有一个 <code class="docutils literal notranslate"><span class="pre">isExist</span></code> 属性。</p></li>
+</ol>
+<p>因此，我们可以这样进行接口调用，来进行对于 <code class="docutils literal notranslate"><span class="pre">com.dpvr.devicemanager</span></code> 是否安装的检测：</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">checkIsAppInstalledJobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">CheckIsAppInstalled</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">jobCat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"packageJobs"</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">jobType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CheckAppInstalled"</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">jobParams</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"{\"packageName\":\"com.dvpr.devicemanager\"}"</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">callParama</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"{\"delay\":2000}"</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deviceManager</span><span class="p">.</span><span class="n">Call</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"CallInterface"</span><span class="p">,</span><span class="w"> </span><span class="n">jobCat</span><span class="p">,</span><span class="w"> </span><span class="n">jobType</span><span class="p">,</span><span class="w"> </span><span class="n">jobParams</span><span class="p">,</span><span class="w"> </span><span class="n">callParams</span><span class="p">);</span>
+<span class="w">    </span><span class="n">JsonData</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonMapper</span><span class="p">.</span><span class="n">ToObject</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s">"jobID"</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogFormat</span><span class="p">(</span><span class="s">"Job error, for reason {0}"</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="s">"errorDescription"</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">checkIsAppInstalledJobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="s">"jobID"</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>在这里，我们对于CallResult进行了解析，并将该任务的id放在了checkIsAppInstalledJobId中,当调用出错时，我们打印它的原因。</p>
+</section>
+<hr class="docutils">
+<section id="id5">
+<h2>5. 处理Api调用结果。<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h2>
+<p>由于DeviceManagerService API都是异步调用，因此，在异步完成后，会触发在DeviceManagerSerice中注册``DeviceManagerBindMan$OnDeviceManagerResult``的接口:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnResult</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogFormat</span><span class="p">(</span><span class="s">"onResult: {0}  {1}"</span><span class="p">,</span><span class="w"> </span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>其中result是：</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">ApiFinishedResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** 完成的jobId */</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="cm">/** 完成情况，0 调用成功, -1 该任务被取消， -2 失败 */</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">returnCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="cm">/** Api调用结果,由调用的具体Api决定，对应Api文档中的Result */</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="cm">/** 当任务失败时，记录失败的原因 */</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">error</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>的序列化结果。</p>
+<p>这里，我们依然以上文中的例子，来对其Api调用结果进行处理，这里，我们对其进行打印：</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnResult</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">JsonData</span><span class="w"> </span><span class="n">apiResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonMapper</span><span class="p">.</span><span class="n">ToObject</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">jobId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">checkIsAppInstalledJobId</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">apiReult</span><span class="p">[</span><span class="s">"returnCode"</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogFormat</span><span class="p">(</span><span class="s">"check is app install successed"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">JsonData</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonMapper</span><span class="p">.</span><span class="n">ToObject</span><span class="p">(</span><span class="n">apiReult</span><span class="p">[</span><span class="s">"result"</span><span class="p">]);</span>
+<span class="w">            </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogFormat</span><span class="p">(</span><span class="s">"Is apk installed result: {0}"</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="s">"isExist"</span><span class="p">]);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogFormat</span><span class="p">(</span><span class="s">"Failed, reason {0}"</span><span class="p">,</span><span class="w"> </span><span class="n">apiResult</span><span class="p">[</span><span class="s">"error"</span><span class="p">]);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils">
+<section id="event">
+<h2>6. 进行事件(Event)的处理。<a class="headerlink" href="#event" title="Permalink to this heading">#</a></h2>
+<p>当触发Event时，会触发在DeviceManagerSerice中注册 <code class="docutils literal notranslate"><span class="pre">DeviceManagerBindMan$OnDeviceManagerEventResult</span></code> 中的接口:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnEvent</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="kt">string</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogFormat</span><span class="p">(</span><span class="s">"onEvent: {0}  {1}"</span><span class="p">,</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">eventType</span></code> 和 <code class="docutils literal notranslate"><span class="pre">eventInfo</span></code> 的定义可以在  <a class="reference internal" href="/cn/docs/dm/Events/index.html#event-index"><span class="std std-ref">Events</span></a> 中查看。</p>
+<p><strong>通常来说，我们不显式地提供具体某个事件的注册接口，通常事件的注册是与接口相关的，在API文档中会标注每个API相关的Event，其中，大部分Event监听会在API完成后自动释放。</strong></p>
+<p>这里，假设我们要监听 <a class="reference internal" href="/cn/docs/dm/Events/wifi_scan_result.html#event-wifi-scan-result"><span class="std std-ref">WIFI_SCAN_RESULT</span></a> 事件，并输出结果，可以通过下面这段代码实现：</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">EVENT_TYPE_WIFI_SCAN_RESULT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"wifi_scan_result"</span><span class="p">;</span>
+
+<span class="na">[Serializable]</span>
+<span class="k">private</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">WifiScanResult</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">cipherType</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">ssid</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">level</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">frequency</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="na">[Serializable]</span>
+<span class="k">private</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">WifiScanResultEvent</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">WifiScanResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">results</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnEvent</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="kt">string</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">eventType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">EVENT_TYPE_WIFI_SCAN_RESULT</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">WifiScanResultEvent</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonUtility</span><span class="p">.</span><span class="n">FromJson</span><span class="o">&lt;</span><span class="n">WifiScanResultEvent</span><span class="o">&gt;</span><span class="p">(</span><span class="n">info</span><span class="p">);</span>
+<span class="w">        </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="n">WifiScanResult</span><span class="w"> </span><span class="n">wifiScanResult</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">results</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogFormat</span><span class="p">(</span><span class="s">"On wifi scan result: {0}"</span><span class="p">,</span><span class="w"> </span><span class="n">wifiScanResult</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>

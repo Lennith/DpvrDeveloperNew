@@ -1,0 +1,165 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unity Player 插件集成指南 · DPVR Developer Center</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/search-index.js"></script><script defer src="/assets/app.js"></script></head><body data-base="" data-language="cn" data-product="player"><a class="skip-link" href="#main">跳至正文</a><header class="site-header"><a class="brand" href="/cn/index.html"><img src="/assets/logo.png" alt="DPVR"><span>DPVR DEVELOPER CENTER</span></a><button class="global-toggle" aria-label="官网导航" aria-expanded="false" aria-controls="global-nav">☰</button><nav id="global-nav" class="global-nav"><a href="https://developer.dpvr.com/home.html">HOME</a><a href="https://developer.dpvr.com/sdk.html">SDK</a><details><summary>SOLUTIONS</summary><div><a href="https://developer.dpvr.com/solutions-DPVR-starLink.html">StarLink</a><a href="https://developer.dpvr.com/solutions-DPVR-remote-control.html">Remote Control</a></div></details><a aria-current="page" href="/cn/index.html">RESOURCES</a><details><summary>ASSISTANT</summary><div><a href="https://product.dpvr.com/assistant/download.html">Assistant</a><a href="https://product.dpvr.com/assistant4">Assistant4</a></div></details></nav></header><div class="utility-bar"><a class="breadcrumb" href="/cn/index.html">开发者资源</a><div class="utility-actions"><button class="search-open">搜索文档 <kbd>⌘ K</kbd></button><a class="language-link" hreflang="en" href="/en/docs/player/unity-player-plugin-guide.html">English</a><select class="theme" aria-label="外观"><option value="light">浅色</option><option value="dark">深色</option><option value="auto">跟随系统</option></select></div></div><div class="reader-controls"><button class="reader-menu" aria-controls="product-nav" aria-expanded="false">☰ 文档导航</button><button class="toc-menu" aria-controls="page-toc" aria-expanded="false">本页目录 ☷</button></div><div class="reader-layout"><aside class="product-nav" id="product-nav"><h2>Unity 视频播放插件</h2><nav><a class="nav-overview" href="/cn/resources/player.html">用途与开始使用</a><details open><summary>操作指南</summary><ul><li><a class="active" href="/cn/docs/player/unity-player-plugin-guide.html">Unity Player 插件集成指南</a></li></ul></details></nav></aside><main id="main" class="article-main"><div class="breadcrumbs"><a href="/cn/index.html">资源</a> / <a href="/cn/resources/player.html">Unity 视频播放插件</a></div><header class="article-header"><span class="eyebrow">技术文档</span><a href="https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide">官方来源 ↗</a></header><article class="article-body"><div id="content-display" style="opacity: 1;">
+                <header class="header">
+                    <h1>Unity Player 插件集成指南</h1>
+                    <p>关于在 Unity 中集成 DPVR Player 插件的说明及 API 参考。</p>
+                </header>
+                
+            
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">01</span>
+                                <h2 class="step-title" id="section-0">项目设置</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <ul class="flush-list">
+                                <li>在 Unity 中使用时，必须取消勾选 Player Settings 中的 <span class="highlight">Multithreaded Rendering</span>（多线程渲染）。</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/efd338d614946e792196.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">02</span>
+                                <h2 class="step-title" id="section-1">SDK 注意事项</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <ul class="flush-list">
+                                <li>DPVR Unity SDK: 当使用 0.8.1 版本 SDK 时，不可勾选 <span class="highlight">Use SinglePass (Android)</span>。</li>
+                                <li>OpenXR SDK: 当使用 OpenXR SDK 时，Render Mode 只能选择 <span class="highlight">Multi-pass</span>，同样不能使用 <span class="highlight">SinglePass</span>。</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/6e298b813e441963546e.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">03</span>
+                                <h2 class="step-title" id="section-2">导入资源包</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <ul class="flush-list">
+                                <li>将 <span class="highlight">Player.unitypackage</span> 导入到您的 Unity 工程中。</li>
+                                <li>资源包已包含 ARM64 版本库。若使用 IL2CPP 脚本后端，请在打包时选择 64 位。</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/9c1c761f8c23cfb010e9.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">03</span>
+                                <h2 class="step-title" id="section-3">视频自动播放</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <ul class="flush-list">
+                                <li>勾选 <span class="highlight">AutoPlay</span>。设置 <span class="highlight">MediaUrl</span> 为视频地址，并将 <span class="highlight">VOuts</span> 设置为视频显示的载体。</li>
+                                <li>视频显示载体需要添加材质和 Shader。支持在 <span class="highlight">Plane</span> 或 <span class="highlight">RawImage</span> 上显示，但二者需要添加不同的 Shader。</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/5c4fb154108c8b7e6c1f.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">04</span>
+                                <h2 class="step-title" id="section-4">通过脚本控制播放</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <ul class="flush-list">
+                                <li>添加脚本及对应的视频载体。其配置方式与自动播放类似，只需在参数中取消勾选自动播放并填入相关信息。</li>
+                                <li>您可以新建脚本，在代码中动态控制视频的播放逻辑以及显示载体的添加。</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/11c28a5a2e01ecf61022.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">05</span>
+                                <h2 class="step-title" id="section-5">API 参考：控制与进度</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>使用以下接口控制视频播放并获取时长或进度：</p>
+                            <div class="settings-table-container">
+                                <table class="settings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>API 方法 / 属性</th>
+                                            <th>描述说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="feature-name">player.Play(videoUri, tim)</td>
+                                            <td>播放视频。<b>videoUri</b> 为地址，<b>tim</b> 为起播时间（默认 0）。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">OnPreparedCallback</td>
+                                            <td>视频准备完成后的回调函数。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">player.Duration</td>
+                                            <td>获取视频的总时长。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">player.Current</td>
+                                            <td>获取当前的视频播放进度。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">player.Pause()</td>
+                                            <td>暂停播放。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">player.Resume()</td>
+                                            <td>恢复播放。</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">player.Seek(tim)</td>
+                                            <td>调整进度。若 <b>tim=0</b>，视频将从头开始播放。</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    </div></article><nav class="page-turn"></nav></main><aside class="page-toc" id="page-toc"><h2>本页目录</h2><nav></nav></aside></div><button class="drawer-scrim" aria-label="关闭目录"></button><footer class="site-footer"><p>© Copyright DPVR. All Rights Reserved</p><p>沪ICP备2022019614号-1 Shanghai Lexiang Technology Co. Ltd</p></footer><dialog class="search-dialog" aria-label="搜索文档"><form class="search-form"><input id="search-query" name="q" type="search" placeholder="搜索产品、操作或接口…" aria-label="关键词"><button type="button" class="search-close" aria-label="关闭搜索">✕</button></form><div class="search-status" role="status"></div><div class="search-results"></div></dialog></body></html>

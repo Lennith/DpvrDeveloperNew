@@ -1,0 +1,45 @@
+<article role="main" id="furo-main-content">
+          <section id="configure-via-application">
+<h1>Configure via Application<a class="headerlink" href="#configure-via-application" title="Link to this heading">¶</a></h1>
+<section id="set-server-ip-and-port">
+<h2>Set Server IP and Port<a class="headerlink" href="#set-server-ip-and-port" title="Link to this heading">¶</a></h2>
+<p>Using the adb command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">adb shell am start com.deepoon.eggchair/.MainActivity</span>
+</pre></div>
+</div>
+<p>Open the server settings application.</p>
+<img alt="../_images/rc_set.png" class="align-center" src="/assets/media/739a112436a01c32378e.png">
+<p>Enter the server IP and port and click Confirm to apply the settings.</p>
+<p><strong>Once the server IP or port is set, the RDC service will start automatically.</strong></p>
+<p>If you need the service to start automatically at boot, check the <code class="docutils literal notranslate"><span class="pre">Start</span> <span class="pre">when</span> <span class="pre">boot</span></code> option.</p>
+<p>If you want the client to automatically find the server, check the <code class="docutils literal notranslate"><span class="pre">AUTO</span> <span class="pre">FIND</span></code> option. The set IP and port will be ignored, and the client will connect automatically when the server’s device discovery feature is enabled.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The device discovery feature requires the server and client to be on the same broadcast domain, and the router must allow LAN broadcasting.</p>
+</div>
+</section>
+<section id="start-the-rdc-client-service">
+<h2>Start the RDC Client Service<a class="headerlink" href="#start-the-rdc-client-service" title="Link to this heading">¶</a></h2>
+<p>The RDC service is a native Android service with the package name com.deepoon.eggchair. The service class is declared in the AndroidManifest as follows:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;service</span>
+<span class="w">    </span><span class="na">android:name=</span><span class="s">".LongchenClientService"</span>
+<span class="w">    </span><span class="na">android:enabled=</span><span class="s">"true"</span>
+<span class="w">    </span><span class="na">android:exported=</span><span class="s">"true"</span>
+<span class="w">    </span><span class="na">android:persistent=</span><span class="s">"true"</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;intent-filter</span><span class="w"> </span><span class="na">android:priority=</span><span class="s">"1000"</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;action</span><span class="w"> </span><span class="na">android:name=</span><span class="s">"com.deepoon.eggchair.LongchenClientService"</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/intent-filter&gt;</span>
+<span class="nt">&lt;/service&gt;</span>
+</pre></div>
+</div>
+<p>You can start the RDC service using the standard method for starting an Android Service.</p>
+<p>After the RDC service starts, it will automatically maintain the connection with the server and receive messages.</p>
+<p>You can also set it to run automatically at boot to keep the RDC service running continuously.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since the RDC service continuously attempts to connect to the server and does not stop working when the screen is off, enabling the RDC service may lead to increased power consumption.</p>
+</div>
+</section>
+</section>
+
+        </article>

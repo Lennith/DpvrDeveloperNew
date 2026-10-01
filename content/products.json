@@ -1,0 +1,1161 @@
+[
+  {
+    "id": "dm",
+    "title": {
+      "cn": "Device Manager V2 设备管理开发包",
+      "en": "Device Manager V2"
+    },
+    "summary": {
+      "cn": "在头显应用中调用网络、应用、文件、电源与系统播放器等设备能力。",
+      "en": "Call networking, application, storage, power and system-player functions from a headset app."
+    },
+    "kind": {
+      "cn": "设备内开发接口",
+      "en": "On-device SDK"
+    },
+    "tasks": [
+      "develop"
+    ],
+    "devices": [
+      "P1 Max",
+      "P2",
+      "P1 Ultra 4K",
+      "P1 Pro 4K",
+      "P1 Pro"
+    ],
+    "download": "https://dl.dpvr.com/resources/devicemanager/DeviceManagerV2.0.zip",
+    "prerequisites": {
+      "cn": [
+        "准备支持设备及其 DeviceManagerService。",
+        "先确定 Android 原生或 Unity 接入方式；按目标接口核对权限。"
+      ],
+      "en": [
+        "Use a supported headset with DeviceManagerService.",
+        "Choose Android or Unity integration and check the permissions of the required API."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "选择接入方式",
+          "body": "Android 原生项目导入 AIDL；Unity 项目导入对应 unitypackage。两种方式调用同一设备服务。",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Introduction.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Introduction.html"
+        },
+        {
+          "title": "配置接口权限",
+          "body": "NORMAL 接口无需额外授权；更高权限需要按文档配置应用版本 Key 或渠道固件 Key。",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html"
+        },
+        {
+          "title": "绑定服务并注册回调",
+          "body": "连接 DeviceManagerService，集中注册结果与事件监听，避免后注册的监听器覆盖已有处理。",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/introduction.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/introduction.html"
+        },
+        {
+          "title": "提交一项任务",
+          "body": "从具体接口页确认分类、名称、参数和权限，提交后保留 jobID。受理成功不等于业务完成。",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html"
+        },
+        {
+          "title": "处理结果和持续事件",
+          "body": "用 jobID 关联异步结果；电池、扫描等持续变化按对应事件说明订阅和释放。",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/introduction.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/introduction.html"
+        }
+      ],
+      "en": [
+        {
+          "title": "Choose an integration",
+          "body": "Import AIDL for Android, or the corresponding unitypackage for Unity. Both access the same device service.",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Introduction.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Introduction.html"
+        },
+        {
+          "title": "Configure permissions",
+          "body": "NORMAL APIs need no additional authorization. Higher levels require the documented application-version or firmware-channel key.",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html"
+        },
+        {
+          "title": "Bind the service and listeners",
+          "body": "Connect to DeviceManagerService and centralize result and event listeners so later registrations do not replace existing handlers.",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/introduction.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/introduction.html"
+        },
+        {
+          "title": "Submit one job",
+          "body": "Read the API category, name, parameters and permissions, then retain the returned jobID. Acceptance does not mean completion.",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html"
+        },
+        {
+          "title": "Handle results and events",
+          "body": "Match asynchronous results by jobID. Subscribe to and release ongoing battery or scan events as documented.",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/introduction.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/introduction.html"
+        }
+      ]
+    },
+    "troubleshooting": {
+      "cn": [
+        "没有结果时先检查服务绑定、权限和监听器是否被覆盖。",
+        "按具体 API 的版本、参数、结果和事件说明排查，不能只看资源页型号。"
+      ],
+      "en": [
+        "Check service binding, permissions and overwritten listeners when results are missing.",
+        "Check the individual API version, parameters, result and events; the model list alone is insufficient."
+      ]
+    },
+    "caution": {
+      "cn": "这是设备内服务接口，不是远程控制台；具体固件和接口权限决定可用能力。",
+      "en": "This is an on-device service interface, not a remote console. Firmware and API permissions determine availability."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resource.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/usage.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/usage.html"
+    ]
+  },
+  {
+    "id": "rdc",
+    "title": {
+      "cn": "RDC 远程设备控制",
+      "en": "RDC Remote Device Control"
+    },
+    "summary": {
+      "cn": "开发一个控制端，在局域网内管理多台头显，并与头显应用交换消息。",
+      "en": "Build a controller for multiple headsets on a local network and exchange messages with headset apps."
+    },
+    "kind": {
+      "cn": "远程控制协议与开发库",
+      "en": "Remote protocol and library"
+    },
+    "tasks": [
+      "develop",
+      "operate",
+      "deploy"
+    ],
+    "devices": [
+      "P1 Max",
+      "P2",
+      "P1 Ultra 4K",
+      "P1 Pro 4K",
+      "P1 Pro"
+    ],
+    "download": "https://dl.dpvr.com/resources/all_in_one_remote/All-in-one%20Remote.zip",
+    "prerequisites": {
+      "cn": [
+        "确认设备具备 RDC 服务，按功能检查播放器等附加服务。",
+        "准备局域网；自动发现还要求同一广播域并允许广播。"
+      ],
+      "en": [
+        "Confirm the RDC service and any additional services required by the selected features.",
+        "Prepare a LAN; automatic discovery also requires the same broadcast domain and permitted broadcasts."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "选择控制端路线",
+          "body": "Windows 64 位 .NET 7 项目可使用封装库；其他平台或需要直接接协议时阅读 TCP 消息协议。",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/dev_guide.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/dev_guide.html"
+        },
+        {
+          "title": "核对设备端服务",
+          "body": "检查 RDC、播放器及所需开机自启服务；缺少服务不能靠安装电脑端库解决。",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/device_usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/device_usage.html"
+        },
+        {
+          "title": "设置连接地址",
+          "body": "在设备端设置服务器 IP 和端口，或使用自动发现。开启自动发现后手填地址失效。",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/normal_settings.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/normal_settings.html"
+        },
+        {
+          "title": "启动服务端并识别设备",
+          "body": "注册连接及消息回调，启动监听，等待设备连接并上报 SN 后再选择控制对象。",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/init.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/init.html"
+        },
+        {
+          "title": "验证目标功能",
+          "body": "先核对单设备控制结果，再扩展多设备。分发内容时另外提供设备可访问的 HTTP/HTTPS 文件地址。",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/content.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/content.html"
+        }
+      ],
+      "en": [
+        {
+          "title": "Choose a controller route",
+          "body": "Use the .NET 7 Win64 library where appropriate, or implement the TCP protocol for other platforms or direct protocol access.",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/dev_guide.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/dev_guide.html"
+        },
+        {
+          "title": "Check headset services",
+          "body": "Verify RDC, the player and any required startup service. Installing a PC library does not add missing headset services.",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/device_usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/device_usage.html"
+        },
+        {
+          "title": "Configure the connection",
+          "body": "Set the server IP and port on the headset, or use automatic discovery. Automatic discovery overrides the manually entered address.",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/normal_settings.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/normal_settings.html"
+        },
+        {
+          "title": "Start the server and identify clients",
+          "body": "Register connection and message callbacks, start listening, and select a client after it connects and reports its serial number.",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/init.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/init.html"
+        },
+        {
+          "title": "Verify the required feature",
+          "body": "Check one device before scaling out. Content distribution additionally requires HTTP/HTTPS file URLs accessible to each headset.",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/content.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/content.html"
+        }
+      ]
+    },
+    "troubleshooting": {
+      "cn": [
+        "发现失败时检查广播域、路由器广播设置和设备配置。",
+        "控制命令发送成功不代表播放、投屏或下载已经完成，需读取对应状态。"
+      ],
+      "en": [
+        "If discovery fails, check the broadcast domain, router settings and headset configuration.",
+        "A sent command does not confirm playback, casting or download completion; inspect the relevant status."
+      ]
+    },
+    "caution": {
+      "cn": "RDC 发送内容清单，不代理文件；下载需要独立 HTTP 服务。库默认连接数不是性能保证。",
+      "en": "RDC sends content manifests and does not proxy files. Downloads require a separate HTTP service. Library defaults are not performance guarantees."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resource.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/dev_guide.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/device_usage.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/normal_settings.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/init.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/content.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/dev_guide.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/device_usage.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/normal_settings.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/init.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/content.html"
+    ]
+  },
+  {
+    "id": "go",
+    "title": {
+      "cn": "AIO GO 设备维护工具",
+      "en": "AIO GO"
+    },
+    "summary": {
+      "cn": "通过电脑查看一体机信息，安装应用并执行设备维护操作。",
+      "en": "Inspect headset information, install applications and perform maintenance from a PC."
+    },
+    "kind": {
+      "cn": "电脑端操作工具",
+      "en": "PC utility"
+    },
+    "tasks": [
+      "operate",
+      "deploy"
+    ],
+    "devices": [
+      "P2",
+      "P1 Ultra 4K",
+      "P1 Pro 4K",
+      "P1 Pro",
+      "P1"
+    ],
+    "download": "https://dl.dpvr.com/resources/aio_go/DPVR%20AIO%20GO.zip",
+    "prerequisites": {
+      "cn": [
+        "准备 Windows 10 电脑、支持头显及可传数据的 USB 线；这是官方操作手册给出的环境。",
+        "下载并解压官方安装包。"
+      ],
+      "en": [
+        "Prepare a Windows 10 PC, a supported headset and a USB data cable, as specified in the official guide.",
+        "Download and extract the official package."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "安装工具",
+          "body": "运行安装包内 Setup.exe，完成 AIO GO 安装。",
+          "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf"
+        },
+        {
+          "title": "通过 USB 连接头显",
+          "body": "开启头显并连接电脑，在工具中检查是否识别到设备。",
+          "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf"
+        },
+        {
+          "title": "核对设备信息",
+          "body": "先核对设备序列号和固件版本，确认当前操作对象。",
+          "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf"
+        },
+        {
+          "title": "选择所需操作",
+          "body": "根据任务选择应用安装、文件管理、截图、录屏或日志等功能；固件维护使用与设备匹配的文件。",
+          "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf"
+        }
+      ],
+      "en": [
+        {
+          "title": "Install the tool",
+          "body": "Run Setup.exe from the package to install AIO GO.",
+          "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf"
+        },
+        {
+          "title": "Connect over USB",
+          "body": "Power on the headset, connect it to the PC and check that the tool recognizes it.",
+          "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf"
+        },
+        {
+          "title": "Check device information",
+          "body": "Check the serial number and firmware version to confirm the selected device.",
+          "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf"
+        },
+        {
+          "title": "Choose the required operation",
+          "body": "Select app installation, file management, screenshots, recording or logs. Use device-matched files for firmware maintenance.",
+          "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf"
+        }
+      ]
+    },
+    "troubleshooting": {
+      "cn": [
+        "无法看到设备存储时，可查阅 USB 文件传输排障；它不等同于 ADB 授权排障。",
+        "现有资料未覆盖所有驱动、无线连接和固件兼容条件。",
+        "定制设备名称无法识别时，按官方 PDF 的 Device.config 说明处理。"
+      ],
+      "en": [
+        "Use the USB file-access guide when storage is unavailable; it is not an ADB authorization guide.",
+        "Available documentation does not establish every driver, wireless or firmware compatibility requirement.",
+        "For unrecognized custom device names, follow the Device.config instructions in the official PDF."
+      ]
+    },
+    "caution": {
+      "cn": "AIO GO 与 AIO GO 2 的支持型号不同，不能仅按名称数字替换；恢复出厂等操作需先了解其影响。",
+      "en": "AIO GO and AIO GO 2 support different model sets. Do not replace one solely because of its name; understand the effects of maintenance operations such as factory reset."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resource.html",
+      "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf",
+      "https://developer.dpvr.com/resource/img/aioscreen.png"
+    ]
+  },
+  {
+    "id": "go2",
+    "title": {
+      "cn": "AIO GO 2 设备操作工具",
+      "en": "AIO GO 2"
+    },
+    "summary": {
+      "cn": "免安装的 Windows 工具，用于画面镜像、录屏、文件传输和应用安装。",
+      "en": "A portable Windows utility for mirroring, recording, transferring files and installing apps."
+    },
+    "kind": {
+      "cn": "电脑端操作工具",
+      "en": "PC utility"
+    },
+    "tasks": [
+      "operate",
+      "deploy"
+    ],
+    "devices": [
+      "P1 Max",
+      "P2"
+    ],
+    "download": "https://dl.dpvr.com/resources/aio_go/DPVR%20AIO%20GO%202.zip",
+    "prerequisites": {
+      "cn": [
+        "使用 P1 Max 或 P2，准备 Windows 电脑和 USB 数据连接。",
+        "工具已集成 ADB 与 Scrcpy；不要把额外安装它们当作已证实的必需步骤。"
+      ],
+      "en": [
+        "Use a P1 Max or P2 with a Windows PC and a USB data connection.",
+        "ADB and Scrcpy are bundled; separate installation is not a documented prerequisite."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "解压并运行",
+          "body": "下载官方压缩包，解压后双击运行，无需安装。",
+          "source": "https://developer.dpvr.com/resource.html"
+        },
+        {
+          "title": "连接并识别设备",
+          "body": "开启头显并通过 USB 连接，等待工具读取型号、电量、SN 和系统信息。",
+          "source": "https://developer.dpvr.com/resource.html"
+        },
+        {
+          "title": "查看或记录画面",
+          "body": "按任务选择画面镜像、录屏、截图或日志采集。现有资料未说明全部输出位置。",
+          "source": "https://developer.dpvr.com/resource.html"
+        },
+        {
+          "title": "传输文件或安装应用",
+          "body": "使用文件区域传输内容；APK 区域会在传输后安装应用，先确认所选文件。",
+          "source": "https://developer.dpvr.com/resource.html"
+        }
+      ],
+      "en": [
+        {
+          "title": "Extract and run",
+          "body": "Download and extract the official package, then double-click to run without installation.",
+          "source": "https://developer.dpvr.com/resource.html"
+        },
+        {
+          "title": "Connect and identify the headset",
+          "body": "Power on the headset, connect it over USB and wait for model, battery, serial and system information.",
+          "source": "https://developer.dpvr.com/resource.html"
+        },
+        {
+          "title": "View or record the screen",
+          "body": "Choose mirroring, recording, screenshots or log capture. Documentation does not establish all output locations.",
+          "source": "https://developer.dpvr.com/resource.html"
+        },
+        {
+          "title": "Transfer content or install apps",
+          "body": "Transfer content through the file area. The APK area installs apps after transfer, so verify the selected file first.",
+          "source": "https://developer.dpvr.com/resource.html"
+        }
+      ]
+    },
+    "troubleshooting": {
+      "cn": [
+        "未识别设备时先确认头显开机和 USB 数据连接。",
+        "无线开关在原界面可见，但现有资料不足以提供完整无线配对教程。"
+      ],
+      "en": [
+        "If no device is detected, check headset power and the USB data connection.",
+        "A wireless switch is visible, but available sources do not provide a complete pairing procedure."
+      ]
+    },
+    "caution": {
+      "cn": "文件名 update.zip 在工具中有固件更新含义，不应当普通内容随意上传；固件适配需另行核对。",
+      "en": "The filename update.zip triggers firmware-related behavior and should not be uploaded as ordinary content. Verify firmware compatibility separately."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resource.html",
+      "https://developer.dpvr.com/resource/img/aio2screen.png"
+    ]
+  },
+  {
+    "id": "cast",
+    "title": {
+      "cn": "头显画面投屏",
+      "en": "Screen Cast"
+    },
+    "summary": {
+      "cn": "把头显实时画面显示到兼容接收设备，按接收端能力选择投屏方式。",
+      "en": "Display the live headset screen on a compatible receiver using the appropriate casting method."
+    },
+    "kind": {
+      "cn": "投屏操作与接收端应用",
+      "en": "Casting guide and receiver app"
+    },
+    "tasks": [
+      "operate"
+    ],
+    "devices": [
+      "P1 Max",
+      "P2",
+      "P1 Ultra 4K",
+      "P1 Pro 4K",
+      "P1 Pro"
+    ],
+    "download": "https://dl.dpvr.com/resources/DPVR%20Screen%20Cast/TV_Android_APP.zip",
+    "prerequisites": {
+      "cn": [
+        "先确认接收端使用 Miracast 还是 DPVR 无线投屏。",
+        "DPVR 无线投屏要求 Android 4.4+ 电视或平板、接收应用及相同 Wi-Fi。"
+      ],
+      "en": [
+        "Choose between Miracast and DPVR wireless casting based on the receiver.",
+        "DPVR wireless casting requires an Android 4.4+ TV or tablet, the receiver app and the same Wi-Fi network."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "打开头显投屏设置",
+          "body": "在头显主界面进入快捷设置，选择投屏。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#screen-casting",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#screen-casting"
+        },
+        {
+          "title": "选择接收方式",
+          "body": "接收设备支持 Miracast 时选 Android 投屏；使用 DPVR 接收应用时选无线投屏。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#screen-casting",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#screen-casting"
+        },
+        {
+          "title": "完成所选分支",
+          "body": "Miracast：启用系统投屏并选择目标。DPVR 无线：接收端安装并打开 TV_ScreenPlayer.apk，连接相同 Wi-Fi，点击开始投屏。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#screen-casting",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#screen-casting"
+        }
+      ],
+      "en": [
+        {
+          "title": "Open casting settings",
+          "body": "Open Quick Settings on the headset and select casting.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#screen-casting",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#screen-casting"
+        },
+        {
+          "title": "Choose the receiver method",
+          "body": "Choose Android casting for a Miracast receiver, or wireless casting for the DPVR receiver app.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#screen-casting",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#screen-casting"
+        },
+        {
+          "title": "Complete the selected branch",
+          "body": "Miracast: enable system casting and select the receiver. DPVR wireless: install and open TV_ScreenPlayer.apk on the receiver, use the same Wi-Fi and start casting.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#screen-casting",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#screen-casting"
+        }
+      ]
+    },
+    "troubleshooting": {
+      "cn": [
+        "无线方式先查接收应用是否打开、设备是否处于相同 Wi-Fi。",
+        "Miracast 接收端需支持该协议；不能把所有 Android 电视当作无条件兼容。"
+      ],
+      "en": [
+        "For wireless casting, check that the receiver app is open and both devices use the same Wi-Fi.",
+        "Miracast receivers must support the protocol; Android TV alone does not establish compatibility."
+      ]
+    },
+    "caution": {
+      "cn": "两种方式是分支，不需要顺次执行；本指南不承诺音频、延迟或多接收端效果。",
+      "en": "These are alternative routes, not consecutive steps. This guide does not establish audio, latency or multi-receiver behavior."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resource.html",
+      "https://developer.dpvr.com/resources/doc_cn.html#screen-casting",
+      "https://developer.dpvr.com/resources/doc_en.html#screen-casting"
+    ]
+  },
+  {
+    "id": "encryption",
+    "title": {
+      "cn": "视频加密与授权",
+      "en": "Video Encryption and Authorization"
+    },
+    "summary": {
+      "cn": "在电脑上把 MP4 制作为带设备 SN 和有效期授权的播放文件。",
+      "en": "Prepare MP4 content on a PC with headset serial-number and expiry-date authorization."
+    },
+    "kind": {
+      "cn": "内容制作工具",
+      "en": "Content preparation tool"
+    },
+    "tasks": [
+      "operate",
+      "deploy",
+      "develop"
+    ],
+    "devices": [
+      "P1 Max",
+      "P2",
+      "P1 Ultra 4K",
+      "P1 Pro 4K",
+      "P1 Pro"
+    ],
+    "download": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip",
+    "prerequisites": {
+      "cn": [
+        "准备 MP4、目标头显 SN、授权截止日期和足够磁盘空间。",
+        "GUI 使用 Windows 10/11 x64；妥善保存本地密钥、管理员密码和管理数据。"
+      ],
+      "en": [
+        "Prepare MP4 files, headset serial numbers, expiry dates and sufficient disk space.",
+        "The GUI requires Windows 10/11 x64. Retain local keys, the admin password and management data."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "选择图形界面或批处理",
+          "body": "日常内容与设备清单管理使用 GUI；配置驱动的自动化流程使用 CLI。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#video-encryption",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#video-encryption"
+        },
+        {
+          "title": "完成密钥和设备准备",
+          "body": "GUI 首次设置密钥与管理员密码，再录入或导入 SN；CLI 按对应手册填写 sn.txt 和 config.ini。",
+          "source": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html",
+          "docMatch": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html"
+        },
+        {
+          "title": "设置期限并加密",
+          "body": "GUI 选择 MP4、有效日期和授权设备后加密；CLI 将 MP4 放入 input_video，运行 encrypt.bat。",
+          "source": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html",
+          "docMatch": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html"
+        },
+        {
+          "title": "交付完整文件组",
+          "body": "从输出目录取得同名 .mp4、.dpve1、.dpvei，放到目标头显内部存储同一目录，使用支持的播放器验证。",
+          "source": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html",
+          "docMatch": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html"
+        },
+        {
+          "title": "按需更新授权",
+          "body": "CLI 的授权更新流程使用原 vei_key 更新 .dpvei，再覆盖设备旧授权；GUI 的保存并加密会重新加密并覆盖产物。",
+          "source": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=CLI%20Version%2FDPVR%20Video%20Encryptor%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.html",
+          "docMatch": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=CLI%20Version%2FDPVR%20Video%20Encryptor%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.html"
+        }
+      ],
+      "en": [
+        {
+          "title": "Choose GUI or batch processing",
+          "body": "Use the GUI for day-to-day content and device lists, or the CLI for configuration-driven automation.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#video-encryption",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#video-encryption"
+        },
+        {
+          "title": "Prepare keys and devices",
+          "body": "In the GUI, configure keys and the admin password before adding serial numbers. For the CLI, prepare sn.txt and config.ini as documented.",
+          "source": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html&language=en",
+          "docMatch": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html&language=en"
+        },
+        {
+          "title": "Set authorization and encrypt",
+          "body": "Select the MP4, expiry date and devices in the GUI, or put MP4 files in input_video and run encrypt.bat for the CLI.",
+          "source": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html&language=en",
+          "docMatch": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html&language=en"
+        },
+        {
+          "title": "Deploy the complete file set",
+          "body": "Place matching .mp4, .dpve1 and .dpvei files in the same internal-storage directory on the target headset and verify playback with a supported player.",
+          "source": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html&language=en",
+          "docMatch": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html&language=en"
+        },
+        {
+          "title": "Update authorization when needed",
+          "body": "The CLI authorization workflow updates .dpvei using the original vei_key. Replace the old authorization file. GUI Save & Encrypt re-encrypts and overwrites output.",
+          "source": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=CLI%20Version%2FDPVR%20Video%20Encryptor%20User%20Manual.html",
+          "docMatch": "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=CLI%20Version%2FDPVR%20Video%20Encryptor%20User%20Manual.html"
+        }
+      ]
+    },
+    "troubleshooting": {
+      "cn": [
+        "失败先检查 MP4 封装、磁盘空间、同名输出和所选 SN。",
+        "授权更新需要原 VEI_KEY；GUI 密钥保存后不可修改或恢复。"
+      ],
+      "en": [
+        "Check MP4 format, free space, duplicate output names and selected serial numbers.",
+        "Authorization updates require the original VEI_KEY. Saved GUI keys cannot be changed or recovered."
+      ]
+    },
+    "caution": {
+      "cn": "加密方案 V3 与 GUI 软件版本 2.0.0 是不同维度。GUI 与 CLI 的字段约束和默认值不同，勿混用；当前资料不足以承诺任意平台的 SN 验证行为。",
+      "en": "Encryption V3 and GUI version 2.0.0 describe different components. GUI and CLI constraints and defaults differ. Sources do not establish serial-number enforcement on every platform."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resource.html",
+      "https://developer.dpvr.com/resources/doc_cn.html#video-encryption",
+      "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html",
+      "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=CLI%20Version%2FDPVR%20Video%20Encryptor%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.html",
+      "https://developer.dpvr.com/resources/doc_en.html#video-encryption",
+      "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=GUI%20Version%2F%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E_User%20Manual.html&language=en",
+      "https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip#member=CLI%20Version%2FDPVR%20Video%20Encryptor%20User%20Manual.html"
+    ]
+  },
+  {
+    "id": "playback",
+    "title": {
+      "cn": "系统播放器配置",
+      "en": "System Player Configuration"
+    },
+    "summary": {
+      "cn": "用 JSON 指定自动播放的视频、画面格式、摘戴行为和播放菜单。",
+      "en": "Use JSON to configure the startup video, projection format, headset-wear behavior and player controls."
+    },
+    "kind": {
+      "cn": "设备端配置文件",
+      "en": "Headset configuration file"
+    },
+    "tasks": [
+      "operate",
+      "deploy"
+    ],
+    "devices": [
+      "P1 Max",
+      "P2",
+      "P1 Ultra 4K",
+      "P1 Pro 4K",
+      "P1 Pro"
+    ],
+    "download": "https://dl.dpvr.com/resources/DPVR%20Video%20Play%20Configuration/AutoPlayDisposition.zip",
+    "prerequisites": {
+      "cn": [
+        "先把视频部署到设备并确认绝对路径。",
+        "确认视频的平面、全景、立体等画面格式。"
+      ],
+      "en": [
+        "Deploy the video to the headset and confirm its absolute path.",
+        "Identify its flat, panoramic and stereoscopic layout."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "修改视频路径和格式",
+          "body": "在 AutoPlayDisposition.json 中填写 videoPath，并按视频实际布局选择 videoModel。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config"
+        },
+        {
+          "title": "选择播放体验",
+          "body": "设置自动播放、常亮或摘下熄屏、重播或续播，以及是否显示菜单。lockView 控制跟随头部或固定空间。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config"
+        },
+        {
+          "title": "放置配置文件",
+          "body": "在设备共享存储根目录创建 AutoVideoPlay 文件夹，将 JSON 放入其中。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config"
+        },
+        {
+          "title": "启动播放器核对",
+          "body": "播放器启动时读取配置；检查路径、画面格式、摘戴和菜单是否符合所选设置。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config"
+        }
+      ],
+      "en": [
+        {
+          "title": "Set the path and video format",
+          "body": "Set videoPath in AutoPlayDisposition.json and choose videoModel to match the actual layout.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config"
+        },
+        {
+          "title": "Choose playback behavior",
+          "body": "Configure autoplay, display-on or headset-removal behavior, restart or resume, and visible controls. lockView selects head-following or world-fixed placement.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config"
+        },
+        {
+          "title": "Place the configuration",
+          "body": "Create AutoVideoPlay at the root of shared storage and place the JSON file inside.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config"
+        },
+        {
+          "title": "Start the player and verify",
+          "body": "The player reads the file at startup. Check the path, projection, headset-removal behavior and controls.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config"
+        }
+      ]
+    },
+    "troubleshooting": {
+      "cn": [
+        "未播放时先核对文件名、AutoVideoPlay 位置和视频绝对路径。",
+        "distance 仅用于平面模式 0、1、4；范围的中英原文不一致，需按设备确认。"
+      ],
+      "en": [
+        "If playback does not start, check the filename, AutoVideoPlay location and absolute video path.",
+        "distance only applies to flat modes 0, 1 and 4. Published range descriptions differ by language and need device verification."
+      ]
+    },
+    "caution": {
+      "cn": "网页和下载样例的 lockView 值不同，均为合法配置示例，不是唯一默认值；此文件不负责生成视频授权。",
+      "en": "The web and downloadable examples use different valid lockView values, not a single mandatory default. This file does not generate video authorization."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resource.html",
+      "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config",
+      "https://developer.dpvr.com/resources/doc_en.html#videoplay-config"
+    ]
+  },
+  {
+    "id": "copy",
+    "title": {
+      "cn": "TF 卡部署工具",
+      "en": "TF Card Deployment Tool"
+    },
+    "summary": {
+      "cn": "在头显上读取任务清单，批量安装应用、解压资源或复制文件。",
+      "en": "Read a task list on the headset to install apps, unpack resources and copy files."
+    },
+    "kind": {
+      "cn": "设备端部署应用",
+      "en": "On-device deployment app"
+    },
+    "tasks": [
+      "operate",
+      "deploy"
+    ],
+    "devices": [
+      "P2",
+      "P1 Ultra 4K",
+      "P1 Pro 4K",
+      "P1 Pro"
+    ],
+    "download": "https://dl.dpvr.com/resources/DPVR%20TF%20Card%20Copy%20Tool/CopyTool.zip",
+    "prerequisites": {
+      "cn": [
+        "在支持头显安装 CopyTool.apk。",
+        "准备 TF 卡、配置引用的文件以及设备可用存储空间。"
+      ],
+      "en": [
+        "Install CopyTool.apk on a supported headset.",
+        "Prepare a TF card, the referenced source files and sufficient headset storage."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "定义任务清单",
+          "body": "创建 copy_config.json 数组，按目的选择 APK、ZIP_UNPACK、FILE、OBB、LANGUAGE_PACKAGE 或 OTA_PACKAGE。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide"
+        },
+        {
+          "title": "准备来源和目标",
+          "body": "填写 source、dist 和可选 name；${EXT_SD} 表示 TF 卡根目录，APK 任务忽略 dist。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide"
+        },
+        {
+          "title": "放置配置与内容",
+          "body": "把配置放在 TF 卡根目录，再按 source 路径放置待安装、复制或解压的内容。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide"
+        },
+        {
+          "title": "执行并检查任务",
+          "body": "插卡后打开工具，自动加载并执行。检查进度、成功与失败计数、日志和后续队列。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide"
+        },
+        {
+          "title": "按需清理临时缓存",
+          "body": "TF 卡上的 APK 和 ZIP 会先复制到本机临时目录；在后续队列区域按需清除缓存。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide"
+        }
+      ],
+      "en": [
+        {
+          "title": "Define the task list",
+          "body": "Create a copy_config.json array using APK, ZIP_UNPACK, FILE, OBB, LANGUAGE_PACKAGE or OTA_PACKAGE as required.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide"
+        },
+        {
+          "title": "Set sources and destinations",
+          "body": "Set source, dist and optional name. ${EXT_SD} means the TF card root; APK tasks ignore dist.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide"
+        },
+        {
+          "title": "Place the configuration and content",
+          "body": "Put the configuration at the TF card root and place each source file at its configured path.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide"
+        },
+        {
+          "title": "Run and inspect the tasks",
+          "body": "Insert the card and open the tool to load and execute tasks. Inspect progress, success and failure counts, logs and the post queue.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide"
+        },
+        {
+          "title": "Clear temporary data as needed",
+          "body": "APK and ZIP files from the card are first copied to local temporary storage. Clear the cache from the post-queue area when appropriate.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide"
+        }
+      ]
+    },
+    "troubleshooting": {
+      "cn": [
+        "找不到源文件时检查 ${EXT_SD} 与卡内实际目录。",
+        "安装或解压失败时查看日志及本机空间，而不只检查目标目录。"
+      ],
+      "en": [
+        "Check ${EXT_SD} and the actual card layout when a source is missing.",
+        "For installation or extraction failures, inspect logs and local free space as well as the destination."
+      ]
+    },
+    "caution": {
+      "cn": "此工具不是 TF 卡克隆软件。OTA_PACKAGE 只复制升级包，不会触发固件升级。",
+      "en": "This is not a TF-card cloning tool. OTA_PACKAGE copies an update package but does not start a firmware upgrade."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resource.html",
+      "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide",
+      "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide"
+    ]
+  },
+  {
+    "id": "player",
+    "title": {
+      "cn": "Unity 视频播放插件",
+      "en": "Unity Player Plug-in"
+    },
+    "summary": {
+      "cn": "在自己的 Unity 应用中显示视频，并接入播放、暂停和进度控制。",
+      "en": "Display video in your own Unity application with playback, pause and progress controls."
+    },
+    "kind": {
+      "cn": "Unity 开发插件",
+      "en": "Unity plug-in"
+    },
+    "tasks": [
+      "develop"
+    ],
+    "devices": [
+      "P1 Max",
+      "P2",
+      "P1 Ultra 4K",
+      "P1 Pro 4K",
+      "P1 Pro"
+    ],
+    "download": "https://dl.dpvr.com/resources/playerplugin/PlayerPlugin.zip",
+    "prerequisites": {
+      "cn": [
+        "关闭 Multithreaded Rendering。",
+        "DPVR Unity SDK 0.8.1 不启用 Use SinglePass；OpenXR 使用 Multi-pass。",
+        "按指南检查 IL2CPP 与 64 位架构设置。"
+      ],
+      "en": [
+        "Disable Multithreaded Rendering.",
+        "Do not enable Use SinglePass with DPVR Unity SDK 0.8.1; use Multi-pass with OpenXR.",
+        "Check IL2CPP and 64-bit architecture settings against the guide."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "导入当前插件包",
+          "body": "解压 PlayerPlugin.zip，导入当前实际文件 Player20260904.unitypackage。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide"
+        },
+        {
+          "title": "先跑通自动播放",
+          "body": "使用自动播放示例，勾选 AutoPlay，设置 MediaUrl，并把显示载体赋给 VOuts。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide"
+        },
+        {
+          "title": "匹配显示载体与材质",
+          "body": "Plane 使用 DPVR/PlainTextureYUV；RawImage 使用 DPVR/YUVTexture，按载体绑定对应材质。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide"
+        },
+        {
+          "title": "需要交互时改用脚本控制",
+          "body": "关闭自动播放，引用 IjkPlayer、媒体地址与载体；设置 VOuts 后调用 Play，并处理准备完成回调。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide"
+        },
+        {
+          "title": "接入播放状态",
+          "body": "使用 Duration、Current 显示状态，用 Pause、Resume、Seek 控制。时间单位未在简短指南中明确。",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide"
+        }
+      ],
+      "en": [
+        {
+          "title": "Import the current package",
+          "body": "Extract PlayerPlugin.zip and import its current file, Player20260904.unitypackage.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide"
+        },
+        {
+          "title": "Start with automatic playback",
+          "body": "Use the automatic example, enable AutoPlay, set MediaUrl and assign display targets to VOuts.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide"
+        },
+        {
+          "title": "Match targets and materials",
+          "body": "Use DPVR/PlainTextureYUV for a Plane and DPVR/YUVTexture for a RawImage, with the corresponding materials.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide"
+        },
+        {
+          "title": "Use scripted control when needed",
+          "body": "Disable automatic playback and reference IjkPlayer, the media URI and targets. Set VOuts before calling Play and handle the prepared callback.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide"
+        },
+        {
+          "title": "Connect playback state",
+          "body": "Use Duration and Current for state, and Pause, Resume and Seek for control. The short guide does not establish the time units.",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide"
+        }
+      ]
+    },
+    "troubleshooting": {
+      "cn": [
+        "无画面先检查渲染模式、载体、材质和媒体地址。",
+        "解密播放虽在资源页列为能力，但指南不足以提供完整 V3 密钥与 URI 接入示例。"
+      ],
+      "en": [
+        "If no picture appears, check rendering mode, targets, materials and the media URI.",
+        "Decryption is listed as a feature, but the guide does not provide a complete V3 key and URI integration example."
+      ]
+    },
+    "caution": {
+      "cn": "这是自有应用内播放器，不是系统播放器配置或投屏接收应用；当前未执行 Unity 或头显实测。",
+      "en": "This embeds playback in your app; it is not a system-player configuration or casting receiver. No Unity or headset execution test is claimed."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resource.html",
+      "https://developer.dpvr.com/resources/doc_cn.html#unity-player-plugin-guide",
+      "https://developer.dpvr.com/resources/doc_en.html#unity-player-plugin-guide"
+    ]
+  },
+  {
+    "id": "gesture",
+    "title": {
+      "cn": "Unity 手势识别插件",
+      "en": "Unity Gesture Plug-in"
+    },
+    "summary": {
+      "cn": "在支持相机的一体机上接入预览与手势回调，再映射到自己的场景交互。",
+      "en": "Integrate camera preview and gesture callbacks on the supported headset, then map results to scene interactions."
+    },
+    "kind": {
+      "cn": "Unity 开发插件",
+      "en": "Unity plug-in"
+    },
+    "tasks": [
+      "develop"
+    ],
+    "devices": [
+      "P1 Pro 4K Camera"
+    ],
+    "download": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip",
+    "prerequisites": {
+      "cn": [
+        "仅按官网适配 P1 Pro 4K Camera，不能省略 Camera 型号限定。",
+        "安装 Unity Android Build Support，切换 Android 平台，开启真机 USB 调试。",
+        "授予相机权限并关闭 Multithreaded Rendering。"
+      ],
+      "en": [
+        "Use the listed P1 Pro 4K Camera model; the Camera qualification matters.",
+        "Install Unity Android Build Support, switch to Android and enable USB debugging on the headset.",
+        "Grant camera permission and disable Multithreaded Rendering."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "导入完整插件",
+          "body": "从 GestureDemoPlugin.zip 导入 Gesture.unitypackage。当前包 AAR 实际位于 Assets/Plugins/Android，与旧手册路径不同。",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md"
+        },
+        {
+          "title": "在真机运行示例",
+          "body": "打开 Assets/GestureSdk/Scenes/SampleScene.unity，连接设备并 Build And Run；编辑器不能替代 Android Camera/AAR 链路。",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md"
+        },
+        {
+          "title": "确认预览与四种交互",
+          "body": "检查相机画面：V_SIGN 激活并定位球体一次，OPEN_PALM 放大，FIST 缩小，THUMBS_UP 换色。",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md"
+        },
+        {
+          "title": "接入自己的场景",
+          "body": "让 CameraManager 引用 RawImage；让 GestureTest 引用相机管理器、目标物体、预览 RectTransform 和渲染相机。",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md"
+        },
+        {
+          "title": "保留稳定参数再调整",
+          "body": "先用 tickFps=5、numHands=1、CCW_90、LETTERBOX、AUTO；位置先做 X 镜像，深度在相机空间计算。",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md"
+        }
+      ],
+      "en": [
+        {
+          "title": "Import the complete plug-in",
+          "body": "Import Gesture.unitypackage from GestureDemoPlugin.zip. The current AAR files are in Assets/Plugins/Android, unlike the old manual path.",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+        },
+        {
+          "title": "Run the sample on a device",
+          "body": "Open Assets/GestureSdk/Scenes/SampleScene.unity and Build And Run on the headset. The editor cannot replace the Android Camera/AAR pipeline.",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+        },
+        {
+          "title": "Check preview and four interactions",
+          "body": "Verify the preview: V_SIGN activates and positions the sphere once; OPEN_PALM enlarges it, FIST shrinks it and THUMBS_UP changes its color.",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+        },
+        {
+          "title": "Integrate your own scene",
+          "body": "Assign the RawImage to CameraManager. Bind GestureTest to the camera manager, target object, preview RectTransform and rendering camera.",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+        },
+        {
+          "title": "Keep stable settings before tuning",
+          "body": "Start with tickFps=5, numHands=1, CCW_90, LETTERBOX and AUTO. Apply horizontal mirroring and compute depth in camera space.",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+        }
+      ]
+    },
+    "troubleshooting": {
+      "cn": [
+        "无画面：检查真机、AAR、相机权限和多线程渲染设置。",
+        "有画面无手势：检查初始化、参数与连续 seq 日志。",
+        "位置错位：检查预览对象、镜像补偿、渲染相机和深度值。"
+      ],
+      "en": [
+        "No preview: check the device, AAR dependencies, camera permission and multithreaded-rendering setting.",
+        "Preview without gestures: check initialization, parameters and continuous seq logs.",
+        "Incorrect position: check the preview reference, mirroring, rendering camera and depth offset."
+      ]
+    },
+    "caution": {
+      "cn": "示例是手势分类与球体交互，不代表完整三维手骨骼追踪；关闭多线程渲染来自当前插件内入门说明。",
+      "en": "The sample demonstrates gesture classification and sphere interaction, not a complete 3D hand-skeleton system. The current bundled beginner guide explicitly requires disabling multithreaded rendering."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resource.html",
+      "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+      "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+    ]
+  }
+]

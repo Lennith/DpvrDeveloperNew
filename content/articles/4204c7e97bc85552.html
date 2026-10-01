@@ -1,0 +1,25 @@
+<article role="main">
+          <section id="apifinishedresult">
+<span id="type-apifinishedresult"></span><h1>ApiFinishedResult<a class="headerlink" href="#apifinishedresult" title="Permalink to this heading">#</a></h1>
+<p>Api执行结果。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">ApiFinishedResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">returnCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">error</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">jobId</span></code> : 该结果对应的 <cite>Call</cite> 的 <cite>jobId</cite> 。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">returnCode</span></code>: Api执行结果，0：成功执行 ，1：任务被取消，2：调用错误。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">result</span></code> : Api执行结果的Json序列化字符串，对应的是 Api文档中的Result 定义。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span></code> : 当Api调用失败时，用于显示错误原因。</p>
+</section>
+</section>
+
+        </article>

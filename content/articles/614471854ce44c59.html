@@ -1,0 +1,149 @@
+<article><h1>GestureSdk Beginner Guide (English)</h1>
+<h2>1. What this guide is for</h2>
+<p>This guide helps new Unity developers quickly run <code>GestureSdk</code> after importing the package:</p>
+<ul>
+<li>Camera preview</li>
+<li>Gesture callbacks</li>
+<li>Sphere interaction demo</li>
+</ul>
+<p>Scope:</p>
+<ul>
+<li><code>Assets/GestureSdk</code></li>
+</ul>
+<h2>2. Prerequisites</h2>
+<p>Before import:</p>
+<ol>
+<li>Unity has Android Build Support installed (SDK/NDK/OpenJDK).</li>
+<li>Target platform is switched to Android (<code>File -&gt; Build Settings -&gt; Android -&gt; Switch Platform</code>).</li>
+<li>Android device is connected with USB debugging enabled (<code>adb devices</code> works).</li>
+</ol>
+<h2>3. Import package</h2>
+<p>If you receive a <code>.unitypackage</code>:</p>
+<ol>
+<li>Open your Unity project.</li>
+<li>Click <code>Assets -&gt; Import Package -&gt; Custom Package...</code>.</li>
+<li>Select the package and import all files.</li>
+</ol>
+<p>After import, verify these folders exist:</p>
+<ul>
+<li><code>Assets/GestureSdk/Scripts</code></li>
+<li><code>Assets/GestureSdk/Scenes</code></li>
+<li><code>Assets/GestureSdk/Materials</code></li>
+<li><code>Assets/Plugins/Android</code></li>
+</ul>
+<h2>4. Fast start (recommended)</h2>
+<ol>
+<li>Open <code>Assets/GestureSdk/Scenes/SampleScene.unity</code>.</li>
+<li>Connect Android device.</li>
+<li><code>Build And Run</code>.</li>
+</ol>
+<p>Expected result:</p>
+<ul>
+<li>Camera preview is visible in scene.</li>
+<li>Gesture interactions are working (sphere show/scale/color/position).</li>
+</ul>
+<h2>5. Manual setup (from scratch)</h2>
+<p>If you integrate into your own scene:</p>
+<ol>
+<li>Create empty object <code>CameraManagerRoot</code>, attach <code>CameraManager.cs</code>.</li>
+<li>Create a UI <code>RawImage</code>, name it <code>CameraImage</code>.</li>
+<li>Assign <code>CameraImage</code> to <code>CameraManager.cam</code>.</li>
+<li>Create a sphere object, name it <code>GestureSphere</code>.</li>
+<li>Create empty object <code>GestureLogic</code>, attach <code>GestureTest.cs</code>.</li>
+<li>Assign references on <code>GestureTest</code>:
+<ul>
+<li><code>cameraManager</code> -&gt; scene <code>CameraManager</code></li>
+<li><code>sphereObject</code> -&gt; <code>GestureSphere</code></li>
+<li><code>cameraImageRect</code> -&gt; <code>CameraImage</code> <code>RectTransform</code></li>
+<li><code>sceneCamera</code> -&gt; rendering camera (<code>Camera.main</code> fallback if empty)</li>
+</ul>
+</li>
+</ol>
+<h2>6. Demo gesture behavior</h2>
+<p>Current demo logic:</p>
+<ol>
+<li><code>V_SIGN</code>
+<ul>
+<li>Activates sphere.</li>
+<li>Updates sphere position once using ROI center.</li>
+</ul>
+</li>
+<li><code>OPEN_PALM</code>
+<ul>
+<li>Scale up one step.</li>
+</ul>
+</li>
+<li><code>FIST</code>
+<ul>
+<li>Scale down one step.</li>
+</ul>
+</li>
+<li><code>THUMBS_UP</code>
+<ul>
+<li>Random sphere color.</li>
+</ul>
+</li>
+</ol>
+<h2>7. Important parameters</h2>
+<h3>7.1 CameraManager</h3>
+<p>Common fields:</p>
+<ul>
+<li><code>cameraWidth / cameraHeight / cameraFps</code></li>
+<li><code>gesturePreset</code></li>
+<li><code>tickFps</code></li>
+<li><code>numHands</code></li>
+<li><code>inputRotation</code></li>
+<li><code>inputScaleMode</code></li>
+<li><code>fenceMode</code></li>
+<li><code>fenceShortWaitMs</code></li>
+</ul>
+<p>Recommended stable defaults:</p>
+<ul>
+<li><code>tickFps = 5</code></li>
+<li><code>numHands = 1</code></li>
+<li><code>inputRotation = CCW_90</code></li>
+<li><code>inputScaleMode = LETTERBOX</code></li>
+<li><code>fenceMode = AUTO</code></li>
+<li><code>fenceShortWaitMs = 0</code></li>
+</ul>
+<h3>7.2 GestureTest</h3>
+<ul>
+<li><code>scaleStepFactor</code>: scale delta per trigger</li>
+<li><code>maxScaleSteps</code>: max scale steps</li>
+<li><code>gestureCooldownSeconds</code>: trigger cooldown</li>
+<li><code>zDistanceFromCameraImage</code>: sphere depth offset from <code>CameraImage</code> plane (camera-space)</li>
+</ul>
+<h2>8. Position mapping note (sphere)</h2>
+<p>Current mapping rule:</p>
+<ol>
+<li>Use <code>roi</code> center from gesture JSON.</li>
+<li>Apply X mirror compensation (<code>mappedX = 1 - centerX</code>).</li>
+<li>Keep Y in current scene direction (<code>mappedY = centerY</code>).</li>
+<li>Map to <code>CameraImage</code> local position and then world position.</li>
+<li>Compute final depth in camera space (move toward camera by <code>zDistanceFromCameraImage</code>), not by direct world <code>z</code> subtraction.</li>
+</ol>
+<h2>9. Troubleshooting</h2>
+<h3>9.1 No camera preview</h3>
+<p>Check:</p>
+<ol>
+<li>Running on Android device (not only in editor).</li>
+<li>AAR files exist under <code>Assets/Plugins/Android</code>.</li>
+<li>Camera permission is granted.</li>
+<li>Unity <code>Multithreaded Rendering</code> is disabled (<code>Player Settings &gt; Other Settings &gt; Rendering</code>).</li>
+</ol>
+<h3>9.2 Camera works but no gestures</h3>
+<p>Check:</p>
+<ol>
+<li><code>CameraManager</code> initialization is successful.</li>
+<li>Gesture parameters were not unintentionally changed.</li>
+<li>Callback logs contain continuous <code>seq</code>.</li>
+</ol>
+<h3>9.3 Sphere position is clearly off</h3>
+<p>Check:</p>
+<ol>
+<li><code>cameraImageRect</code> points to the actual preview image.</li>
+<li><code>sceneCamera</code> is the actual rendering camera.</li>
+<li><code>zDistanceFromCameraImage</code> is tuned for your scene scale.</li>
+</ol>
+<p>This guide is intended to help new teammates integrate and run <code>GestureSdk</code> quickly in existing Unity projects.</p>
+<aside class="source-note" data-editorial-note="source_difference">The sources describe zDistanceFromCameraImage depth and calculation differently. Their original descriptions are retained; no algorithm is silently changed.</aside></article>

@@ -1,0 +1,29 @@
+<article role="main">
+          <section id="bluetooth-state-changed">
+<span id="event-bluetooth-state-changed"></span><h1>BLUETOOTH_STATE_CHANGED<a class="headerlink" href="#bluetooth-state-changed" title="Permalink to this heading">#</a></h1>
+<p>蓝牙状态变化。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">BluetoothStateEvent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">state</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">bluetoothInfo</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="permission">
+<h2>Permission<a class="headerlink" href="#permission" title="Permalink to this heading">#</a></h2>
+<p>APP_PERMISSION_SYSTEM</p>
+</section>
+<section id="type-name">
+<h2>Type name<a class="headerlink" href="#type-name" title="Permalink to this heading">#</a></h2>
+<p>bluetooth_state_changed</p>
+</section>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">state</span></code>: 蓝牙状态。</p>
+<p><cite>Connected</cite>: 已连接。</p>
+<p><cite>Disconnected</cite>: 已断开连接。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">bluetoothInfo</span></code>: 变动后的蓝牙信息，  <a class="reference internal" href="/cn/docs/dm/Types/DpvrBluetoothDevice.html#type-dpvrbluetoothdevice"><span class="std std-ref">DpvrBluetoothDevice</span></a> 的Json序列化。</p>
+</section>
+</section>
+
+        </article>

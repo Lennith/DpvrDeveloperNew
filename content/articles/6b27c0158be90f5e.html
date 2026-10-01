@@ -1,0 +1,193 @@
+<article role="main">
+          <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">#</a></h1>
+<p>这里我们使用了数个Kotlin的Example来展示一些Api的基本使用。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/Examples/Messenger.html">Messenger</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/Examples/RemoteDeviceControl.html">RemoteDeviceControl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/Examples/Sensor.html">Sensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/Examples/WifiDisplay.html">WifiDisplay</a></li>
+</ul>
+</div>
+<p>Example中的 DeviceManager调用使用下面代码中的实现：</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nn">android.annotation.SuppressLint</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">android.app.Service</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">android.content.ComponentName</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">android.content.Context</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">android.content.Intent</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">android.content.ServiceConnection</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">android.os.IBinder</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">android.util.Log</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">com.dpvr.devicemanager.IDeviceManager</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">com.dpvr.devicemanager.IDeviceManagerEventListener</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">com.dpvr.devicemanager.IDeviceManagerResultListener</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">com.google.gson.Gson</span>
+<span class="k">import</span><span class="w"> </span><span class="nn">java.util.concurrent.LinkedBlockingDeque</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">TestDeviceManager</span><span class="w"> </span><span class="n">private</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mContext</span><span class="p">:</span><span class="w"> </span><span class="n">Context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">interface</span><span class="w"> </span><span class="nc">JobDoneCallback</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onJobDone</span><span class="p">(</span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span>
+
+<span class="w">        </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onJobFailed</span><span class="p">(</span><span class="n">code</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">interface</span><span class="w"> </span><span class="nc">EventCallback</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onEvent</span><span class="p">(</span><span class="n">eventInfo</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">internal</span><span class="w"> </span><span class="kd">inner</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">JobInfo</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">cat</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">type</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">params</span><span class="p">:</span><span class="w"> </span><span class="kt">Any?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">callParams</span><span class="p">:</span><span class="w"> </span><span class="n">CallParams? </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">callback</span><span class="p">:</span><span class="w"> </span><span class="n">JobDoneCallback? </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span><span class="w"> </span><span class="nc">CallParams</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">inner</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">ApiFinishedResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">returnCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">error</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">internal</span><span class="w"> </span><span class="kd">inner</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">CallResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">errorDescription</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">jobID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mJobCallbacks</span><span class="p">:</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="kt">Int?</span><span class="p">,</span><span class="w"> </span><span class="n">JobDoneCallback?&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HashMap</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mEventCallbacks</span><span class="p">:</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="kt">String?</span><span class="p">,</span><span class="w"> </span><span class="n">EventCallback?&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HashMap</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mRemainJobQueue</span><span class="p">:</span><span class="w"> </span><span class="n">LinkedBlockingDeque</span><span class="o">&lt;</span><span class="n">JobInfo?&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LinkedBlockingDeque</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mGson</span><span class="p">:</span><span class="w"> </span><span class="n">Gson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gson</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">gson</span><span class="p">:</span><span class="w"> </span><span class="n">Gson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mGson</span>
+<span class="w">        </span><span class="k">get</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mGson</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">mDeviceManager</span><span class="p">:</span><span class="w"> </span><span class="n">IDeviceManager? </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">mResultListener</span><span class="p">:</span><span class="w"> </span><span class="n">IDeviceManagerResultListener? </span><span class="o">=</span>
+<span class="w">        </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">IDeviceManagerResultListener</span><span class="p">.</span><span class="na">Stub</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onResult</span><span class="p">(</span><span class="n">jobId</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kd">val</span><span class="w"> </span><span class="nv">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mJobCallbacks</span><span class="o">[</span><span class="n">jobId</span><span class="o">]</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">callback</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="kd">val</span><span class="w"> </span><span class="nv">r</span><span class="p">:</span><span class="w"> </span><span class="n">ApiFinishedResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mGson</span><span class="p">.</span><span class="na">fromJson</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="n">ApiFinishedResult</span><span class="o">::</span><span class="n">class</span><span class="p">.</span><span class="na">java</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="na">returnCode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">callback</span><span class="p">.</span><span class="na">onJobDone</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="na">result</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">callback</span><span class="p">.</span><span class="na">onJobFailed</span><span class="p">(</span><span class="n">jobId</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="na">error</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="n">mJobCallbacks</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">jobId</span><span class="p">)</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">mEventListener</span><span class="p">:</span><span class="w"> </span><span class="n">IDeviceManagerEventListener? </span><span class="o">=</span>
+<span class="w">        </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">IDeviceManagerEventListener</span><span class="p">.</span><span class="na">Stub</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onEvent</span><span class="p">(</span><span class="n">eventType</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">,</span><span class="w"> </span><span class="n">eventInfo</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mEventCallbacks</span><span class="o">[</span><span class="n">eventType</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">mEventCallbacks</span><span class="o">[</span><span class="n">eventType</span><span class="o">]!!</span><span class="p">.</span><span class="na">onEvent</span><span class="p">(</span><span class="n">eventInfo</span><span class="p">)</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">connection</span><span class="p">:</span><span class="w"> </span><span class="n">ServiceConnection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">ServiceConnection</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onServiceConnected</span><span class="p">(</span><span class="n">componentName</span><span class="p">:</span><span class="w"> </span><span class="n">ComponentName</span><span class="p">,</span><span class="w"> </span><span class="n">iBinder</span><span class="p">:</span><span class="w"> </span><span class="n">IBinder</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Log</span><span class="p">.</span><span class="na">d</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"on service connected"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">componentName</span><span class="p">.</span><span class="na">className</span><span class="p">)</span>
+<span class="w">            </span><span class="n">mDeviceManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IDeviceManager</span><span class="p">.</span><span class="na">Stub</span><span class="p">.</span><span class="na">asInterface</span><span class="p">(</span><span class="n">iBinder</span><span class="p">)</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">mDeviceManager</span><span class="o">!!</span><span class="p">.</span><span class="na">setDeviceManagerEventListener</span><span class="p">(</span><span class="n">mEventListener</span><span class="p">)</span>
+<span class="w">                </span><span class="n">mDeviceManager</span><span class="o">!!</span><span class="p">.</span><span class="na">setDeviceManagerResultListener</span><span class="p">(</span><span class="n">mResultListener</span><span class="p">)</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">mRemainJobQueue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">addJob</span><span class="p">(</span><span class="n">job</span><span class="o">!!</span><span class="p">.</span><span class="na">cat</span><span class="p">,</span><span class="w"> </span><span class="n">job</span><span class="p">.</span><span class="na">type</span><span class="p">,</span><span class="w"> </span><span class="n">job</span><span class="p">.</span><span class="na">params</span><span class="p">,</span><span class="w"> </span><span class="n">job</span><span class="p">.</span><span class="na">callParams</span><span class="p">,</span><span class="w"> </span><span class="n">job</span><span class="p">.</span><span class="na">callback</span><span class="p">)</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">mRemainJobQueue</span><span class="p">.</span><span class="na">clear</span><span class="p">()</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="n">Exception</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">()</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onServiceDisconnected</span><span class="p">(</span><span class="n">componentName</span><span class="p">:</span><span class="w"> </span><span class="n">ComponentName</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Log</span><span class="p">.</span><span class="na">e</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"On dms service disconnect"</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">init</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">bindService</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">bindService</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">intent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Intent</span><span class="p">(</span><span class="s">"com.dpvr.devicemanager"</span><span class="p">)</span>
+<span class="w">        </span><span class="n">intent</span><span class="p">.</span><span class="na">setPackage</span><span class="p">(</span><span class="s">"com.dpvr.devicemanager"</span><span class="p">)</span>
+<span class="w">        </span><span class="n">mContext</span><span class="p">.</span><span class="na">bindService</span><span class="p">(</span><span class="n">intent</span><span class="p">,</span><span class="w"> </span><span class="n">connection</span><span class="p">,</span><span class="w"> </span><span class="n">Service</span><span class="p">.</span><span class="na">BIND_AUTO_CREATE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">unbindService</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">mContext</span><span class="p">.</span><span class="na">unbindService</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">fun</span><span class="w"> </span><span class="nf">release</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">unbindService</span><span class="p">()</span>
+<span class="w">        </span><span class="n">mJobCallbacks</span><span class="p">.</span><span class="na">clear</span><span class="p">()</span>
+<span class="w">        </span><span class="n">mEventCallbacks</span><span class="p">.</span><span class="na">clear</span><span class="p">()</span>
+<span class="w">        </span><span class="n">mEventListener</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="n">mRemainJobQueue</span><span class="p">.</span><span class="na">clear</span><span class="p">()</span>
+<span class="w">        </span><span class="n">mResultListener</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">fun</span><span class="w"> </span><span class="nf">addJob</span><span class="p">(</span>
+<span class="w">        </span><span class="n">cat</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">,</span>
+<span class="w">        </span><span class="n">type</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">,</span>
+<span class="w">        </span><span class="n">params</span><span class="p">:</span><span class="w"> </span><span class="kt">Any?</span><span class="p">,</span>
+<span class="w">        </span><span class="n">callParams</span><span class="p">:</span><span class="w"> </span><span class="n">CallParams?,</span>
+<span class="w">        </span><span class="n">callback</span><span class="p">:</span><span class="w"> </span><span class="n">JobDoneCallback?</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mDeviceManager</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">val</span><span class="w"> </span><span class="nv">jobInfo</span><span class="p">:</span><span class="w"> </span><span class="n">JobInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JobInfo</span><span class="p">()</span>
+<span class="w">            </span><span class="n">jobInfo</span><span class="p">.</span><span class="na">cat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cat</span>
+<span class="w">            </span><span class="n">jobInfo</span><span class="p">.</span><span class="na">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">params</span>
+<span class="w">            </span><span class="n">jobInfo</span><span class="p">.</span><span class="na">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">type</span>
+<span class="w">            </span><span class="n">jobInfo</span><span class="p">.</span><span class="na">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callback</span>
+<span class="w">            </span><span class="n">mRemainJobQueue</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">jobInfo</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kd">val</span><span class="w"> </span><span class="nv">apiParams</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">params</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="kt">String</span><span class="p">)</span><span class="w"> </span><span class="n">params</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">mGson</span><span class="p">.</span><span class="na">toJson</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="w">                </span><span class="kd">val</span><span class="w"> </span><span class="nv">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">mDeviceManager</span><span class="o">!!</span><span class="p">.</span><span class="na">call</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">apiParams</span><span class="p">,</span><span class="w"> </span><span class="n">mGson</span><span class="p">.</span><span class="na">toJson</span><span class="p">(</span><span class="n">callParams</span><span class="p">))</span>
+<span class="w">                </span><span class="kd">val</span><span class="w"> </span><span class="nv">cl</span><span class="p">:</span><span class="w"> </span><span class="n">CallResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mGson</span><span class="p">.</span><span class="na">fromJson</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="n">CallResult</span><span class="o">::</span><span class="n">class</span><span class="p">.</span><span class="na">java</span><span class="p">)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cl</span><span class="p">.</span><span class="na">jobID</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">mJobCallbacks</span><span class="o">[</span><span class="n">cl</span><span class="p">.</span><span class="na">jobID</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callback</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Log</span><span class="p">.</span><span class="na">e</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"add job failed "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"reason:"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cl</span><span class="p">.</span><span class="na">errorDescription</span><span class="p">)</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="n">Exception</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">()</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">fun</span><span class="w"> </span><span class="nf">setEventCallbacks</span><span class="p">(</span><span class="n">eventName</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">,</span><span class="w"> </span><span class="n">callback</span><span class="p">:</span><span class="w"> </span><span class="n">EventCallback</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">mEventCallbacks</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">eventName</span><span class="p">)</span>
+<span class="w">        </span><span class="n">mEventCallbacks</span><span class="o">[</span><span class="n">eventName</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callback</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@SuppressLint</span><span class="p">(</span><span class="s">"StaticFieldLeak"</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">companion</span><span class="w"> </span><span class="kd">object</span><span class="w"> </span><span class="nc">me</span><span class="p">{</span>
+<span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"QA-DMS"</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nv">instance</span><span class="p">:</span><span class="w"> </span><span class="n">TestDeviceManager? </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">            </span><span class="n">private</span><span class="w"> </span><span class="k">set</span>
+
+<span class="w">        </span><span class="nd">@Synchronized</span>
+<span class="w">        </span><span class="kd">fun</span><span class="w"> </span><span class="nf">createInstance</span><span class="p">(</span><span class="n">context</span><span class="p">:</span><span class="w"> </span><span class="n">Context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">instance</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">instance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TestDeviceManager</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+        </article>

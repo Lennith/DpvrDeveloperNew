@@ -1,0 +1,109 @@
+<div id="content-display" style="opacity: 1;">
+                <header class="header">
+                    <h1>Copy Tool Guide</h1>
+                    <p>This tool is used for batch execution of tasks such as copying files, installing APKs, unzipping ZIPs, and copying OBB/Language/OTA packages.</p>
+                </header>
+                
+            
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">01</span>
+                                <h2 class="step-title">Function Overview</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>This tool is designed for scenarios such as pre-installing applications, batch data copying, and updating resources.</p>
+                            <ul class="flush-list">
+                                <li><b>Task Sources:</b> Reads task configuration from an external TF card or internal storage.</li>
+                                <li><b>Supported Task Types:</b></li>
+                                    <ul class="task-list-list">
+                                        <li><b>APK:</b> Install application packages to your device (supports directories or files).</li>
+                                        <li><b>ZIP_UNPACK:</b> Unzip ZIP files to the target directory.</li>
+                                        <li><b>FILE:</b> Copy any directory or file to the target directory.</li>
+                                        <li><b>OBB:</b> Copy application OBB files to the target directory.</li>
+                                        <li><b>LANGUAGE_PACKAGE:</b> Copy language packages to the target directory.</li>
+                                        <li><b>OTA_PACKAGE:</b> Copy OTA upgrade packages to the target directory (copy only, does not trigger upgrade).</li>
+                                    </ul>
+                                
+                                <li><b>Smart Handling:</b> If the source is on a TF card, APK/ZIP files are first copied to a local temporary directory before installation/unzipping.</li>
+                                <li><b>UI Features:</b> Real-time display of running/completed tasks, failure logs, and Post Queue (pending install/unzip tasks). Supports one-click cache cleaning.</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">02</span>
+                                <h2 class="step-title">Json Configuration</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <div class="settings-table-container">
+                                <table class="settings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="feature-name">type</td>
+                                            <td>Task type: <b>APK</b>, <b>ZIP_UNPACK</b>, <b>FILE</b>, <b>OBB</b>, <b>LANGUAGE_PACKAGE</b>, <b>OTA_PACKAGE</b>.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">source</td>
+                                            <td>Source path. Use <b>${EXT_SD}</b> to represent the external TF card root directory.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">dist</td>
+                                            <td>Destination path (Automatically ignored for APK tasks).</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">name</td>
+                                            <td>Task name (Optional, used for UI display).</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style="margin-top:16px;"><b>Json Example:</b></p>
+                            <div class="note-container">
+<pre style="color: #a0aec0; font-size: 13px; font-family: monospace;">[
+  { "type":"APK", "source":"${EXT_SD}/AUTO_INSTALL_APPS", "name":"apps" },
+  { "type":"ZIP_UNPACK", "source":"${EXT_SD}/video.zip", "dist":"/sdcard/TargetDir", "name":"videounzip" },
+  { "type":"LANGUAGE_PACKAGE", "source":"${EXT_SD}/LANGUAGE", "dist":"/sdcard/Android/data", "name":"lang" },
+  { "type":"FILE", "source":"${EXT_SD}/InputDir", "dist":"/sdcard/OutputDir", "name":"assets" }
+]</pre>
+                            </div>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">03</span>
+                                <h2 class="step-title">Quick Start</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>Follow these steps to use the copy tool:</p>
+                            <ul class="manual-steps">
+                                <li><span class="step-num">1.</span> <div><b>Install Application:</b> Power on the device and connect it to your computer via data cable. Copy <span class="highlight">CopyTool.apk</span> to the device and complete the installation.</div></li>
+                                <li><span class="step-num">2.</span> <div><b>Prepare Configuration:</b> Create a file named <span class="highlight">copy_config.json</span>, configure it according to the required tasks, and then place it in the <span class="highlight">root directory of the TF card</span>.</div></li>
+                                <li><span class="step-num">3.</span> <div><b>Copy Content:</b> Place the content to be copied or installed onto the TF card according to the source path requirements in the <span class="highlight">copy_config.json</span> file.</div></li>
+								<li><span class="step-num">4.</span> <div><b>Insert the TF Card:</b> Insert the TF card into the device.</div></li>							
+								<li><span class="step-num">5.</span> <div><b>Start App:</b> Open the tool; it will automatically load the config and start tasks.</div></li>
+                                <li><span class="step-num">6.</span> <div><b>Check Progress:</b> Monitor the progress bar, success/fail counts, and any error messages on the main screen.</div></li>
+                                <li><span class="step-num">7.</span> <div><b>Clean Cache:</b> Click "Clean Cache" in the Post Queue area to remove temporary files.</div></li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    </div>

@@ -1,0 +1,123 @@
+<div id="content-display" style="opacity: 1;">
+                <header class="header">
+                    <h1>Video Play Configuration</h1>
+                    <p>This guide explains how to configure the <span class="highlight">AutoPlayDisposition.json</span> file to control video playback behavior.</p>
+                </header>
+                
+            
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">01</span>
+                                <h2 class="step-title">Configuration Parameters</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <div class="settings-table-container">
+                                <table class="settings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Key</th>
+                                            <th>Type</th>
+                                            <th>Values / Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="feature-name">isAutoPlay</td>
+                                            <td>Integer</td>
+                                            <td><b>1</b>: Enable auto-play.<br><b>0</b>: Disable.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">videoPath</td>
+                                            <td>String</td>
+                                            <td>Absolute path to the video (e.g., <b>"/sdcard/demo.mp4"</b>).</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">videoModel</td>
+                                            <td>Integer</td>
+                                            <td>Playback mode:<br><b>0</b>: Plane 2D   <b>1</b>: Plane 3D SBS   <b>4</b>: Plane 3D TAB.<br> <b>16</b>: Panoramic 360 2D   <b>17</b>: Panoramic 360 SBS   <b>20</b>: Panoramic 360 TAB.<br> <b>32</b>: Hemispheric 180 2D   <b>33</b>: Hemispheric 180 SBS   <b>36</b>: Hemispheric 180 TAB.<br> <b>64</b>: Fisheye 2D   <b>65</b>: Fisheye 3D SBS   <b>68</b>: Fisheye 3D TAB.<br> <b>128</b>: EAC 2D   <b>129</b>: EAC SBS   <b>1024</b>: Cubemap.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">isSteadyOn</td>
+                                            <td>Integer</td>
+                                            <td><b>1</b>: Screen stays on always.<br><b>0</b>: Screen turns off when headset is removed.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">sleepTimes</td>
+                                            <td>Integer</td>
+                                            <td>Seconds before triggering "restart from beginning" after screen-off.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">lockView</td>
+                                            <td>Boolean</td>
+                                            <td><b>true</b>: Follows head movement.<br><b>false</b>: Fixed in space.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">distance</td>
+                                            <td>Integer</td>
+                                            <td>Screen distance (<b>120</b> to <b>200</b>). Only enabled for playback modes (<b>0</b>, <b>1</b>, <b>4</b>). </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">isStartBeginning</td>
+                                            <td>Integer</td>
+                                            <td><b>1</b>: Always start from beginning.<br><b>0</b>: Resume from last position.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">showUI</td>
+                                            <td>Integer</td>
+                                            <td><b>1</b>: Show playback menu/UI.<br><b>0</b>: Hide UI.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">02</span>
+                                <h2 class="step-title">JSON Example</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>Here is a standard configuration example for <span class="highlight">AutoPlayDisposition.json</span>:</p>
+                            <div class="note-container">
+                                <pre style="color: #a0aec0; font-family: monospace;">{
+    "isAutoPlay": 1,
+    "videoPath": "/sdcard/demo.mp4",
+    "videoModel": 16,
+    "isSteadyOn": 0,
+    "sleepTimes": 10,
+    "lockView": false,
+    "distance": 0,
+    "isStartBeginning": 1,
+    "showUI": 0
+}</pre>
+                            </div>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">03</span>
+                                <h2 class="step-title">Import the AutoVideoPlay folder with json file</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>Place <span class="highlight">AutoPlayDisposition.json</span> file in the <span class="highlight">AutoVideoPlay folder in the device root directory</span> (create it if it doesn't exist). The player will read this configuration upon startup.</p>
+                        
+                                
+                            </div>
+                            
+                                <div class="image-placeholder">
+                                    <img src="/assets/media/19ef1a1baf09f5977ca6.png" alt="undefined" class="step-image">
+                                </div>
+                            
+                        </section>
+                    </div>

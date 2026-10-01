@@ -1,0 +1,43 @@
+<article role="main">
+          <section id="bluetoothscanresult">
+<span id="type-bluetoothscanresult"></span><h1>BluetoothScanResult<a class="headerlink" href="#bluetoothscanresult" title="Permalink to this heading">#</a></h1>
+<p>Bluetooth scan result.</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">BluetoothScanResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">name</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">address</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">deviceClass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">rssi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">name</span></code>: Bluetooth device name.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">address</span></code>: MAC address of the Bluetooth device.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">deviceClass</span></code>: Bluetooth device class constant.</p>
+<p><cite>0</cite>: Mixed device (MISC).</p>
+<p><cite>1024</cite>: Audio and video devices (AUDIO_VIDEO).</p>
+<p><cite>256</cite>: Computer devices (COMPUTER).</p>
+<p><cite>2304</cite>: Health monitoring devices (HEALTH).</p>
+<p><cite>1536</cite>: Imaging devices (IMAGING).</p>
+<p><cite>768</cite>: Networking devices (NETWORKING).</p>
+<p><cite>1280</cite>: Peripheral devices (PERIPHERAL).</p>
+<p><cite>512</cite>: Mobile devices (PHONE).</p>
+<p><cite>2048</cite>: Toy devices (TOY).</p>
+<p><cite>1792</cite>: Wearable devices (WEARABLE).</p>
+<p><cite>7936</cite>: Unclassified (UNCATEGORIZED).</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">rssi</span></code>: Bluetooth signal strength.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">type</span></code>: Bluetooth type.</p>
+<p><cite>0</cite>: Unknown type (DEVICE_TYPE_UNKNOWN).</p>
+<p><cite>1</cite>: Classic - BR / EDR devices (DEVICE_TYPE_CLASSIC).</p>
+<p><cite>2</cite>: Low energy - LE-only (DEVICE_TYPE_LE).</p>
+<p><cite>3</cite>: Dual mode - BR / EDR / LE (DEVICE_TYPE_DUAL).</p>
+</section>
+</section>
+
+        </article>

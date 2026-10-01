@@ -1,0 +1,624 @@
+[
+  {
+    "id": "video-deploy",
+    "title": {
+      "cn": "准备并部署头显视频",
+      "en": "Prepare and deploy headset video"
+    },
+    "summary": {
+      "cn": "先在一台头显配置普通视频播放，再按需要增加授权和批量分发。",
+      "en": "Configure ordinary playback on one headset first, then add authorization and bulk delivery if needed."
+    },
+    "products": [
+      "encryption",
+      "playback",
+      "copy"
+    ],
+    "prerequisites": {
+      "cn": [
+        "确认设备型号、视频格式和目标播放方式。",
+        "准备目标设备路径；只有需要内容授权时才使用加密工具。"
+      ],
+      "en": [
+        "Confirm the headset model, video layout and playback approach.",
+        "Choose the destination path. Use encryption only when content authorization is needed."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "先配置一个普通视频",
+          "body": "将一个已知格式的普通视频放到头显，确认绝对路径。在 AutoPlayDisposition.json 设置 videoPath 和匹配的 videoModel，不需要先接入加密。",
+          "product": "playback",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config"
+        },
+        {
+          "title": "确认系统播放器体验",
+          "body": "将 JSON 放入共享存储根目录 AutoVideoPlay，启动播放器。先看到正确视频和画面格式，再核对自动播放、摘戴后的重播/续播及菜单；路径或格式不对先在这里解决。",
+          "product": "playback",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config"
+        },
+        {
+          "title": "可选：为内容增加授权",
+          "body": "只有需要绑定设备 SN 与期限时，再选择 GUI 或 CLI 加密。生成完整同名三件套，并在目标设备上单独确认授权播放；普通视频无需执行此分支，现有资料不提供通用 V3 播放 URI 模板。",
+          "product": "encryption",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#video-encryption",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#video-encryption"
+        },
+        {
+          "title": "需要批量时再编排分发",
+          "body": "已在单设备确认内容与配置后，可手动复制或用 TF 工具 FILE/ZIP_UNPACK 任务分发。保持加密配套文件同名同目录，配置仍放 AutoVideoPlay。",
+          "product": "copy",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide"
+        },
+        {
+          "title": "逐台核对部署结果",
+          "body": "检查文件位置、JSON 视频路径和画面格式；如采用加密，再查授权 SN 与有效期。任务复制成功后仍需启动目标播放器验证，不能把分发完成当作解密和播放完成。",
+          "product": "playback",
+          "source": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config"
+        }
+      ],
+      "en": [
+        {
+          "title": "Configure one ordinary video",
+          "body": "Put an ordinary video of a known format on the headset and confirm its absolute path. Set videoPath and the matching videoModel in AutoPlayDisposition.json. Encryption is not a prerequisite.",
+          "product": "playback",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config"
+        },
+        {
+          "title": "Verify the system-player experience",
+          "body": "Put the JSON in AutoVideoPlay at the shared-storage root and start the player. First confirm the video and projection, then autoplay, restart/resume after removal and controls. Resolve path or format issues here.",
+          "product": "playback",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config"
+        },
+        {
+          "title": "Optional: add content authorization",
+          "body": "Only when device-SN and expiry controls are needed, choose GUI or CLI encryption. Generate the complete matching file set and separately verify authorized playback on the headset. Skip this branch for ordinary video; sources provide no universal V3 playback URI template.",
+          "product": "encryption",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#video-encryption",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#video-encryption"
+        },
+        {
+          "title": "Plan bulk delivery only when needed",
+          "body": "After verifying content and configuration on one device, transfer manually or use TF FILE/ZIP_UNPACK tasks. Keep encrypted companion files together with matching names and place configuration in AutoVideoPlay.",
+          "product": "copy",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide"
+        },
+        {
+          "title": "Check each deployed headset",
+          "body": "Verify file locations, the JSON video path and projection. If encrypted, also check authorized SNs and dates. Start the target player after copying; successful delivery does not confirm decryption or playback.",
+          "product": "playback",
+          "source": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config",
+          "docMatch": "https://developer.dpvr.com/resources/doc_en.html#videoplay-config"
+        }
+      ]
+    },
+    "caution": {
+      "cn": "这是依据工具能力整理的阅读与部署顺序，不是已经实测的联合模板。现有材料不足以提供通用 V3 播放 URI；请按对应播放器与设备验证。",
+      "en": "This is a workflow synthesis, not a tested combined template. Sources do not establish a universal V3 playback URI; verify the selected player and headset."
+    },
+    "sources": [
+      "https://developer.dpvr.com/resources/doc_cn.html#video-encryption",
+      "https://developer.dpvr.com/resources/doc_en.html#video-encryption",
+      "https://developer.dpvr.com/resources/doc_cn.html#videoplay-config",
+      "https://developer.dpvr.com/resources/doc_en.html#videoplay-config",
+      "https://developer.dpvr.com/resources/doc_cn.html#copy-tool-guide",
+      "https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide"
+    ]
+  },
+  {
+    "id": "gesture-start",
+    "title": {
+      "cn": "在真机跑通手势示例",
+      "en": "Run the gesture sample on a headset"
+    },
+    "summary": {
+      "cn": "先确认相机预览与四种示例反馈，再把回调接入自己的场景。",
+      "en": "Verify the camera preview and four sample responses before integrating callbacks into your scene."
+    },
+    "products": [
+      "gesture"
+    ],
+    "prerequisites": {
+      "cn": [
+        "使用 P1 Pro 4K Camera，安装 Android 构建支持并启用 USB 调试。",
+        "关闭 Multithreaded Rendering，准备授予相机权限。"
+      ],
+      "en": [
+        "Use P1 Pro 4K Camera with Android Build Support and USB debugging enabled.",
+        "Disable Multithreaded Rendering and grant camera permission."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "导入并检查依赖",
+          "body": "导入完整 Gesture.unitypackage；按当前包实际布局检查 Assets/Plugins/Android 中的 AAR。",
+          "product": "gesture",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md"
+        },
+        {
+          "title": "构建示例到真机",
+          "body": "打开 Assets/GestureSdk/Scenes/SampleScene.unity，选择 Android 并 Build And Run。",
+          "product": "gesture",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md"
+        },
+        {
+          "title": "验证预览和交互",
+          "body": "确认预览后依次试 V_SIGN、OPEN_PALM、FIST、THUMBS_UP，观察定位、缩放和变色。",
+          "product": "gesture",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md"
+        },
+        {
+          "title": "按症状排障后再集成",
+          "body": "无画面先查相机权限、AAR 和多线程设置；有画面无手势查初始化与 seq 日志。跑通后再绑定自己的预览、目标对象与相机。",
+          "product": "gesture",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md"
+        }
+      ],
+      "en": [
+        {
+          "title": "Import and check dependencies",
+          "body": "Import the complete Gesture.unitypackage and check the AAR files in the current package location, Assets/Plugins/Android.",
+          "product": "gesture",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+        },
+        {
+          "title": "Build the sample for the headset",
+          "body": "Open Assets/GestureSdk/Scenes/SampleScene.unity, select Android and Build And Run.",
+          "product": "gesture",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+        },
+        {
+          "title": "Verify preview and interaction",
+          "body": "After confirming the preview, try V_SIGN, OPEN_PALM, FIST and THUMBS_UP to check placement, scaling and color changes.",
+          "product": "gesture",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+        },
+        {
+          "title": "Troubleshoot before integration",
+          "body": "For no preview, check permission, AARs and multithreaded rendering. For no gestures, check initialization and seq logs. Then bind your own preview, targets and camera.",
+          "product": "gesture",
+          "source": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md",
+          "docMatch": "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+        }
+      ]
+    },
+    "caution": {
+      "cn": "编辑器不能验证 Android 相机链路；球体示例不等于完整三维手部追踪。依赖路径按当前包清单，新增多线程要求按插件内当前手册。",
+      "en": "The editor cannot validate the Android camera pipeline. The sphere sample is not full 3D hand tracking. Dependency paths follow the current package inventory and rendering requirements follow its bundled guide."
+    },
+    "sources": [
+      "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_%E5%BC%80%E5%8F%91%E8%AF%B4%E6%98%8E_%E6%96%B0%E6%89%8B%E7%89%88.md",
+      "https://dl.dpvr.com/resources/gesture/GestureDemoPlugin.zip#member=Gesture.unitypackage%21%2FAssets%2FGestureSdk%2FREADME_Beginner_EN.md"
+    ]
+  },
+  {
+    "id": "dms-android",
+    "title": {
+      "cn": "Android 接入设备管理",
+      "en": "Device Manager with Android"
+    },
+    "summary": {
+      "cn": "从服务检查到取得第一条 SN 结果，按阶段确认连接、权限和异步回调。",
+      "en": "Check the service, binding and callbacks until the first serial-number result arrives."
+    },
+    "products": [
+      "dm"
+    ],
+    "prerequisites": {
+      "cn": [
+        "准备支持头显、USB 数据线和可用 adb；设备应已授权调试连接。",
+        "准备 Android 原生工程，以下绑定片段需放入具备上下文的 Activity/组件。"
+      ],
+      "en": [
+        "Prepare a supported headset, USB data cable and working adb with device debugging authorized.",
+        "Prepare an Android project. Binding fragments belong in an Activity or component with the required context."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "先检查服务是否安装",
+          "body": "在 Windows 命令行连接头显后运行查询。看到 package:com.dpvr.devicemanager 才继续；无输出先确认设备连接和系统版本。包存在只通过安装检查，后续还需成功绑定服务。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/index.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/index.html",
+          "code": "adb shell pm list packages | findstr com.dpvr.devicemanager"
+        },
+        {
+          "title": "以 NORMAL 首调用开始",
+          "body": "GetSerialNo 要求 NORMAL，不需要额外 Key。以后调用 LAUNCHER、SYSTEM 或 ADMIN 接口时，再向 DPVR 获取授权，并在 AndroidManifest 的 application 中配置 DeviceManagerKey 或 DeviceManagerPlatformKey。前者绑定应用包名及版本，后者绑定包名及渠道固件。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html"
+        },
+        {
+          "title": "导入对应接入文件",
+          "body": "从 Android 使用流程下载 AIDL，在工程中创建 AIDL 目录并按包路径复制接口文件。先构建，确认 IDeviceManager 和监听器接口生成成功。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html"
+        },
+        {
+          "title": "绑定服务并先装好监听",
+          "body": "实现 ServiceConnection；在 onServiceConnected 中取得 IDeviceManager，随即注册结果与事件监听。先看到连接回调，再提交任务。每个应用只保留一套有效监听，避免后注册覆盖前注册。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html",
+          "code": "val intent = Intent(\"com.dpvr.devicemanager\")\nintent.component = ComponentName(\n    \"com.dpvr.devicemanager\",\n    \"com.dpvr.devicemanager.DeviceManagerService\"\n)\nbindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE)"
+        },
+        {
+          "title": "读取 SN 并等完成回调",
+          "body": "片段使用上一步的 deviceManager，不是独立程序。使用流程允许 jobParams/callParams 为空，GetSerialNo 无业务参数。先解析返回 jobID：负值读 errorDescription，否则保存。再等同 ID 完成回调，确认 returnCode=0，并解析嵌套 result 的 sn；看到 SN 才继续扩展业务。保留回调日志，避免后续任务覆盖尚未匹配的结果。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Apis/systemInfoJobs/GetSerialNo.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Apis/systemInfoJobs/GetSerialNo.html",
+          "code": "val acceptedJson = deviceManager!!.call(\n    \"systemInfoJobs\", \"GetSerialNo\", null, null\n)"
+        },
+        {
+          "title": "失败时回到对应阶段",
+          "body": "未绑定：检查服务组件和连接日志。受理失败：读 errorDescription。没有回调：检查监听器覆盖、生命周期和 jobID 匹配。完成失败：读 error。原文非零码说明存在差异，保留实际错误码排查，不以受理成功代替业务完成。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/introduction.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/introduction.html"
+        }
+      ],
+      "en": [
+        {
+          "title": "Check that the service package is installed",
+          "body": "Run this query in a Windows command prompt with the headset connected. Continue when package:com.dpvr.devicemanager appears; otherwise check the device connection and system version. Package presence only confirms installation; binding must still succeed.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/index.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/index.html",
+          "code": "adb shell pm list packages | findstr com.dpvr.devicemanager"
+        },
+        {
+          "title": "Start with a NORMAL-permission call",
+          "body": "GetSerialNo requires NORMAL and no additional key. For LAUNCHER, SYSTEM or ADMIN APIs, obtain authorization from DPVR and configure DeviceManagerKey or DeviceManagerPlatformKey in the manifest application element. The first binds package and app version; the second binds package and firmware channel.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html"
+        },
+        {
+          "title": "Import the integration files",
+          "body": "Download AIDL from the Android guide, create the AIDL folder and copy interfaces into their package paths. Build first and confirm that IDeviceManager and listener interfaces are generated.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html"
+        },
+        {
+          "title": "Bind and register listeners first",
+          "body": "Implement ServiceConnection, obtain IDeviceManager in onServiceConnected and immediately register result and event listeners. Wait for connection before submitting jobs. Keep one effective listener set to avoid replacement.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html",
+          "code": "val intent = Intent(\"com.dpvr.devicemanager\")\nintent.component = ComponentName(\n    \"com.dpvr.devicemanager\",\n    \"com.dpvr.devicemanager.DeviceManagerService\"\n)\nbindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE)"
+        },
+        {
+          "title": "Read the serial number and wait for completion",
+          "body": "This fragment uses deviceManager from the previous step; it is not standalone. The usage guide permits null jobParams/callParams and GetSerialNo has no business parameters. Parse jobID: read errorDescription if negative, otherwise retain it. Wait for the matching completion callback, require returnCode=0 and parse sn from the nested result. Continue only after receiving the serial number. Retain callback logs so later jobs do not overwrite unmatched results.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Apis/systemInfoJobs/GetSerialNo.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Apis/systemInfoJobs/GetSerialNo.html",
+          "code": "val acceptedJson = deviceManager!!.call(\n    \"systemInfoJobs\", \"GetSerialNo\", null, null\n)"
+        },
+        {
+          "title": "Return to the failing stage",
+          "body": "No binding: check the service component and connection logs. Rejection: read errorDescription. No callback: check listener replacement, lifetime and jobID matching. Completion failure: read error. Sources differ on nonzero codes; retain the actual code rather than treating acceptance as completion.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/introduction.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/introduction.html"
+        }
+      ]
+    },
+    "caution": {
+      "cn": "这些是按原接口整理的接入步骤与局部代码片段，仍需接入原文完整监听器和 JSON 类型；没有声称已在 Unity/Android 或实机运行。",
+      "en": "These are integration steps and focused code fragments based on documented interfaces. Add the full listeners and JSON types from the guide. No Unity, Android or hardware execution test is claimed."
+    },
+    "sources": [
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/usage.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/usage.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Apis/systemInfoJobs/GetSerialNo.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Apis/systemInfoJobs/GetSerialNo.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/android/introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/android/introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/index.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/index.html"
+    ]
+  },
+  {
+    "id": "dms-unity",
+    "title": {
+      "cn": "Unity 接入设备管理",
+      "en": "Device Manager with Unity"
+    },
+    "summary": {
+      "cn": "从服务检查到取得第一条 SN 结果，按阶段确认连接、权限和异步回调。",
+      "en": "Check the service, binding and callbacks until the first serial-number result arrives."
+    },
+    "products": [
+      "dm"
+    ],
+    "prerequisites": {
+      "cn": [
+        "准备支持头显、USB 数据线和可用 adb；设备应已授权调试连接。",
+        "Unity 项目切到 Android，并准备在真机执行。"
+      ],
+      "en": [
+        "Prepare a supported headset, USB data cable and working adb with device debugging authorized.",
+        "Switch the Unity project to Android and run it on a headset."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "先检查服务是否安装",
+          "body": "在 Windows 命令行连接头显后运行查询。看到 package:com.dpvr.devicemanager 才继续；无输出先确认设备连接和系统版本。包存在只通过安装检查，后续还需成功绑定服务。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/index.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/index.html",
+          "code": "adb shell pm list packages | findstr com.dpvr.devicemanager"
+        },
+        {
+          "title": "以 NORMAL 首调用开始",
+          "body": "GetSerialNo 要求 NORMAL，不需要额外 Key。以后调用 LAUNCHER、SYSTEM 或 ADMIN 接口时，再向 DPVR 获取授权，并在 AndroidManifest 的 application 中配置 DeviceManagerKey 或 DeviceManagerPlatformKey。前者绑定应用包名及版本，后者绑定包名及渠道固件。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/usage.html"
+        },
+        {
+          "title": "导入对应接入文件",
+          "body": "从 Unity 使用流程下载 DpvrDeviceManager2.0.unitypackage，通过 Assets → Import Package → Custom Package 导入。完成 Android 构建且桥接类可加载后再继续。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/usage.html"
+        },
+        {
+          "title": "绑定服务并先装好监听",
+          "body": "按 Unity 示例用 currentActivity 创建 DeviceManagerBindMan，注册两个 AndroidJavaProxy 监听后 SetBind。保留监听器引用，在服务已连接后再提交任务；仅 SetBind 返回并不能证明业务调用成功。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/usage.html",
+          "code": "deviceManager = new AndroidJavaObject(\n    \"com.dpvr.devicemanagerclientjar.DeviceManagerBindMan\", activity);\nSetCallbacks();\ndeviceManager.Call(\"SetBind\");"
+        },
+        {
+          "title": "读取 SN 并等完成回调",
+          "body": "片段使用上一步的 deviceManager，不是独立程序。使用流程允许 jobParams/callParams 为空，GetSerialNo 无业务参数。先解析返回 jobID：负值读 errorDescription，否则保存。再等同 ID 完成回调，确认 returnCode=0，并解析嵌套 result 的 sn；看到 SN 才继续扩展业务。保留回调日志，避免后续任务覆盖尚未匹配的结果。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Apis/systemInfoJobs/GetSerialNo.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Apis/systemInfoJobs/GetSerialNo.html",
+          "code": "string acceptedJson = deviceManager.Call<string>(\n    \"CallInterface\", \"systemInfoJobs\", \"GetSerialNo\", null, null);"
+        },
+        {
+          "title": "失败时回到对应阶段",
+          "body": "未绑定：检查服务组件和连接日志。受理失败：读 errorDescription。没有回调：检查监听器覆盖、生命周期和 jobID 匹配。完成失败：读 error。原文非零码说明存在差异，保留实际错误码排查，不以受理成功代替业务完成。",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/introduction.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/introduction.html"
+        }
+      ],
+      "en": [
+        {
+          "title": "Check that the service package is installed",
+          "body": "Run this query in a Windows command prompt with the headset connected. Continue when package:com.dpvr.devicemanager appears; otherwise check the device connection and system version. Package presence only confirms installation; binding must still succeed.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/index.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/index.html",
+          "code": "adb shell pm list packages | findstr com.dpvr.devicemanager"
+        },
+        {
+          "title": "Start with a NORMAL-permission call",
+          "body": "GetSerialNo requires NORMAL and no additional key. For LAUNCHER, SYSTEM or ADMIN APIs, obtain authorization from DPVR and configure DeviceManagerKey or DeviceManagerPlatformKey in the manifest application element. The first binds package and app version; the second binds package and firmware channel.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/usage.html"
+        },
+        {
+          "title": "Import the integration files",
+          "body": "Download DpvrDeviceManager2.0.unitypackage from the Unity guide and use Assets → Import Package → Custom Package. Continue after an Android build can load the bridge classes.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/usage.html"
+        },
+        {
+          "title": "Bind and register listeners first",
+          "body": "Following the Unity guide, create DeviceManagerBindMan with currentActivity, register both AndroidJavaProxy listeners, then call SetBind. Retain listener references and submit jobs only after connection. Returning from SetBind alone does not verify a business call.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/usage.html",
+          "code": "deviceManager = new AndroidJavaObject(\n    \"com.dpvr.devicemanagerclientjar.DeviceManagerBindMan\", activity);\nSetCallbacks();\ndeviceManager.Call(\"SetBind\");"
+        },
+        {
+          "title": "Read the serial number and wait for completion",
+          "body": "This fragment uses deviceManager from the previous step; it is not standalone. The usage guide permits null jobParams/callParams and GetSerialNo has no business parameters. Parse jobID: read errorDescription if negative, otherwise retain it. Wait for the matching completion callback, require returnCode=0 and parse sn from the nested result. Continue only after receiving the serial number. Retain callback logs so later jobs do not overwrite unmatched results.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Apis/systemInfoJobs/GetSerialNo.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Apis/systemInfoJobs/GetSerialNo.html",
+          "code": "string acceptedJson = deviceManager.Call<string>(\n    \"CallInterface\", \"systemInfoJobs\", \"GetSerialNo\", null, null);"
+        },
+        {
+          "title": "Return to the failing stage",
+          "body": "No binding: check the service component and connection logs. Rejection: read errorDescription. No callback: check listener replacement, lifetime and jobID matching. Completion failure: read error. Sources differ on nonzero codes; retain the actual code rather than treating acceptance as completion.",
+          "product": "dm",
+          "source": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/introduction.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/introduction.html"
+        }
+      ]
+    },
+    "caution": {
+      "cn": "这些是按原接口整理的接入步骤与局部代码片段，仍需接入原文完整监听器和 JSON 类型；没有声称已在 Unity/Android 或实机运行。",
+      "en": "These are integration steps and focused code fragments based on documented interfaces. Add the full listeners and JSON types from the guide. No Unity, Android or hardware execution test is claimed."
+    },
+    "sources": [
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/usage.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/usage.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/Apis/systemInfoJobs/GetSerialNo.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/Apis/systemInfoJobs/GetSerialNo.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/unity/introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/unity/introduction.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/cn/GettingStarted/index.html",
+      "https://static.dpvr.com/apps/developer/devicemanager/V2/en/GettingStarted/index.html"
+    ]
+  },
+  {
+    "id": "rdc-csharp",
+    "title": {
+      "cn": "用 C# 建立一个 RDC 控制端",
+      "en": "Build an RDC controller in C#"
+    },
+    "summary": {
+      "cn": "先让一台头显连接并上报身份，再发送单设备指令、检查实际状态。",
+      "en": "Connect one headset and receive its identity before sending a targeted command and checking the outcome."
+    },
+    "products": [
+      "rdc"
+    ],
+    "prerequisites": {
+      "cn": [
+        "准备 Windows 64 位 .NET 7 开发环境及官方 RDC 库或示例。",
+        "准备支持头显与同一局域网；USB/adb 用于检查系统包，不是 RDC 正式连接通道。"
+      ],
+      "en": [
+        "Prepare a Win64 .NET 7 development environment and the official RDC library or sample.",
+        "Prepare a supported headset on the LAN. USB/adb checks system packages; it is not the RDC transport."
+      ]
+    },
+    "steps": {
+      "cn": [
+        {
+          "title": "核对设备端服务",
+          "body": "第一条应输出 com.deepoon.eggchair；缺少时按文档检查系统版本。只有要控制视频或开机自启时才分别要求后两项。看到必要包后再进行网络配置，电脑 DLL 不能补齐头显系统服务。",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/device_usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/device_usage.html",
+          "code": "adb shell pm list packages com.deepoon.eggchair\nadb shell pm list packages com.dpvr.videoplayer\nadb shell pm list packages com.dpvr.daemonservice"
+        },
+        {
+          "title": "设置网络与设备连接目标",
+          "body": "初次可手填控制端局域网 IP 和端口；保证控制端监听该地址且设备可达。选择 AUTO FIND 时，控制端还须开启发现功能、双方同一广播域且路由器允许广播；启用后手填地址不生效，同名 Wi-Fi 不保证满足条件。",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/normal_settings.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/normal_settings.html"
+        },
+        {
+          "title": "选择匹配的 C# 库",
+          "body": "使用当前在线文档链接的 .NET 7 Win64 库与示例，引用 DPVR 命名空间。目标电脑缺少 .NET 7 Runtime 时核对附运行时包。先让项目成功编译，不要混入旧归档中的同名 DLL。",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/RDCLib.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/RDCLib.html"
+        },
+        {
+          "title": "先注册监听再启动服务器",
+          "body": "片段需放在已引用官方库的应用中，并保持 mServer 存活。回调 state=1 表示已连接且设备已上报 SN；打印 SN/IP 后再启用指令。Start 默认端口 10086，要与设备设置一致。",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/init.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/init.html",
+          "code": "var mServer = new DPVR.DpvrRDCServer();\nmServer.OnConnectStateChangedEvent += (client, state) =>\n    System.Console.WriteLine($\"state={state} SN={client.SN} IP={client.IP}\");\nmServer.OnMessageEvent += (client, message) =>\n    System.Console.WriteLine($\"SN={client.SN} from={message.fromPackage}: {message.content}\");\nmServer.Start();"
+        },
+        {
+          "title": "明确目标后发送一条指令",
+          "body": "以下为控制台局部片段，与上一步使用同一个存活的 mServer。输入连接回调已经打印的头显 SN；仅在找到客户端且 ConnectState=1 时发音量指令。显式传单设备列表，避免省略目标而作用于全部设备。实际音量变化留到下一步核对。",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/devicecontrol.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/devicecontrol.html",
+          "code": "System.Console.WriteLine(\"Enter the connected headset SN:\");\nvar targetSerialNo = System.Console.ReadLine();\nvar client = string.IsNullOrWhiteSpace(targetSerialNo)\n    ? null : mServer.GetClient(targetSerialNo);\nif (client != null && client.ConnectState == 1)\n{\n    mServer.DeviceSetVolume(20,\n        new System.Collections.Generic.List<DPVR.DpvrRDCServer.Client> { client });\n}"
+        },
+        {
+          "title": "检查状态再扩展业务",
+          "body": "读取客户端的 SN、IP、ConnectState、电量和前台应用，确认心跳状态持续更新，并在测试头显核对音量实际变化；这些状态不等于逐条命令成功应答。断连先查地址、端口和网络。以后做 HTTP 内容分发还须独立托管文件：RDC 只发送清单，设备 DownloadService 才下载文件。",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/clientmanager.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/clientmanager.html"
+        }
+      ],
+      "en": [
+        {
+          "title": "Check headset services",
+          "body": "The first query should return com.deepoon.eggchair. If missing, check the system version. The other packages are needed for video playback and automatic startup respectively. Check required packages before network setup; a PC DLL cannot add headset services.",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/device_usage.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/device_usage.html",
+          "code": "adb shell pm list packages com.deepoon.eggchair\nadb shell pm list packages com.dpvr.videoplayer\nadb shell pm list packages com.dpvr.daemonservice"
+        },
+        {
+          "title": "Configure network and server address",
+          "body": "For an initial connection, enter the controller LAN IP and port and ensure it listens on a reachable address. AUTO FIND additionally requires server-side discovery, the same broadcast domain and allowed broadcasts. It overrides the manual address; an identical Wi-Fi name is insufficient.",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/normal_settings.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/normal_settings.html"
+        },
+        {
+          "title": "Choose the matching C# library",
+          "body": "Use the .NET 7 Win64 library and sample linked by the current documentation and reference namespace DPVR. Check the bundled-runtime option if .NET 7 Runtime is absent. Build successfully before proceeding; do not substitute an older same-named DLL.",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/RDCLib.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/RDCLib.html"
+        },
+        {
+          "title": "Register callbacks before starting",
+          "body": "Use this fragment inside an application referencing the official library and keep mServer alive. state=1 means connected after the headset reports its SN. Wait for SN/IP output before enabling commands. The default port is 10086 and must match the headset.",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/init.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/init.html",
+          "code": "var mServer = new DPVR.DpvrRDCServer();\nmServer.OnConnectStateChangedEvent += (client, state) =>\n    System.Console.WriteLine($\"state={state} SN={client.SN} IP={client.IP}\");\nmServer.OnMessageEvent += (client, message) =>\n    System.Console.WriteLine($\"SN={client.SN} from={message.fromPackage}: {message.content}\");\nmServer.Start();"
+        },
+        {
+          "title": "Send one explicitly targeted command",
+          "body": "This console fragment uses the same live mServer as the previous step. Enter the SN printed by the connection callback. Send the volume command only when a client is found with ConnectState=1. Pass an explicit single-client list so an omitted target cannot affect every device. Check the actual volume next.",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/devicecontrol.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/devicecontrol.html",
+          "code": "System.Console.WriteLine(\"Enter the connected headset SN:\");\nvar targetSerialNo = System.Console.ReadLine();\nvar client = string.IsNullOrWhiteSpace(targetSerialNo)\n    ? null : mServer.GetClient(targetSerialNo);\nif (client != null && client.ConnectState == 1)\n{\n    mServer.DeviceSetVolume(20,\n        new System.Collections.Generic.List<DPVR.DpvrRDCServer.Client> { client });\n}"
+        },
+        {
+          "title": "Inspect status before expanding",
+          "body": "Inspect SN, IP, ConnectState, battery and foreground application, confirm ongoing heartbeat updates, and check the actual volume on the test headset. These fields are not per-command acknowledgements. For disconnections, check addresses, ports and networking. HTTP content distribution additionally needs separately hosted files: RDC sends manifests and the headset DownloadService downloads them.",
+          "product": "rdc",
+          "source": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/clientmanager.html",
+          "docMatch": "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/clientmanager.html"
+        }
+      ]
+    },
+    "caution": {
+      "cn": "本路线先验证连接、状态与单设备控制；不把发送成功当执行完成，也不把默认 maxClient=64 当性能保证。多设备同步和 HTTP 分发需再读专门章节。",
+      "en": "This route verifies connection, status and one targeted operation. Sending does not prove execution, and default maxClient=64 is not a performance guarantee. Read the dedicated chapters before synchronized playback or HTTP distribution."
+    },
+    "sources": [
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/device_usage.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/device_usage.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/client_usage/normal_settings.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/client_usage/normal_settings.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/RDCLib.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/RDCLib.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/init.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/init.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/devicecontrol.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/devicecontrol.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/clientmanager.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/clientmanager.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/devicefound.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/content.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/devicefound.html",
+      "https://static.dpvr.com/apps/developer/rdc/v2/en/lib_dev/content.html"
+    ]
+  }
+]

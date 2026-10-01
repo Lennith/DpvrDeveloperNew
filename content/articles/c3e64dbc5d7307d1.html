@@ -1,0 +1,59 @@
+<article role="main">
+          <section id="video-play-status">
+<span id="event-video-play-status"></span><h1>VIDEO_PLAY_STATUS<a class="headerlink" href="#video-play-status" title="Permalink to this heading">#</a></h1>
+<p>DPVR独立播放器的播放状态。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">VideoPlayStatusEvent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">time</span><span class="p">:</span><span class="w"> </span><span class="kt">Float?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.0f</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">videoName</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">videoPath</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">videoDisplayType</span><span class="p">:</span><span class="w"> </span><span class="kt">Int?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="m">1</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">state</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STOPED"</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">duration</span><span class="p">:</span><span class="w"> </span><span class="kt">Float?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.0f</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="permission">
+<h2>Permission<a class="headerlink" href="#permission" title="Permalink to this heading">#</a></h2>
+<p>APP_PERMISSION_NORMAL</p>
+</section>
+<section id="type-name">
+<h2>Type name<a class="headerlink" href="#type-name" title="Permalink to this heading">#</a></h2>
+<p>video_player_status</p>
+</section>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Float</span> <span class="pre">time</span></code>: 视频播放进度（单位：s）。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">VideoName</span></code>: 视频文件名。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">VideoPath</span></code>: 视频文件路径。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">Int</span> <span class="pre">videoDisplayType</span></code>: 视频显示类型。</p>
+<p><cite>0</cite>:  普通2D。</p>
+<p><cite>1</cite>:  3D左右。</p>
+<p><cite>4</cite>:  3D上下。</p>
+<p><cite>16</cite>:  全景2D。</p>
+<p><cite>17</cite>:  全景左右3D。</p>
+<p><cite>20</cite>:  全景上下3D。</p>
+<p><cite>32</cite>:  180度2D。</p>
+<p><cite>33</cite>:  180度左右3D。</p>
+<p><cite>36</cite>:  180度上下3D。</p>
+<p><cite>64</cite>:  鱼眼2D。</p>
+<p><cite>65</cite>:  鱼眼左右3D。</p>
+<p><cite>68</cite>:  鱼眼上下3D。</p>
+<p><cite>128</cite>:  EAC 2D。</p>
+<p><cite>129</cite>:  EAC 左右3D。</p>
+<p><cite>1024</cite>: Cubemap。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">state</span></code>: 视频播放状态。</p>
+<p><cite>“PREPARED”</cite>:  准备播放。</p>
+<p><cite>“BUFFERING”</cite>:  正在加载缓存。</p>
+<p><cite>“PLAYING”</cite>:  正在播放。</p>
+<p><cite>“PAUSE”</cite>:  暂停播放。</p>
+<p><cite>“STOPED”</cite>:  停止播放。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">Float</span> <span class="pre">duration</span></code>: 视频总时长（单位：s）。</p>
+</section>
+</section>
+
+        </article>

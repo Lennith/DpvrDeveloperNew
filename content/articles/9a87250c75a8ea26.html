@@ -1,0 +1,38 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>客户端应用开发<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<p>客户端应用开指开发者基于RDC透传消息，使用RDC通信链路，与服务器进行通信。</p>
+<p>开发者有两种方法可以使应用接入RDC透传。</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>由于RDC的AIDL的监听仅支持一个绑定的Listener，因此，下文两种接入方式无法同时工作。</p>
+</div>
+<section id="id2">
+<h2>1. <a class="reference external" href="https://developer.android.google.cn/guide/components/aidl">AIDL</a> 接入<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://static.dpvr.com/apps/developer/rdc/v2/resources/aidl.zip">点击这里下载AIDL文件。</a></p>
+<p>AIDL接口如下：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">interface</span> <span class="nc">IRemoteControllService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** 发送透传消息给服务器，fromPackage 发送消息的包名，message 发送的消息内容 */</span>
+<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">sendMessageToServer</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fromPackage</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/** 获取当前服务器连接状态 */</span>
+<span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isServerConnected</span><span class="p">();</span>
+
+<span class="w">    </span><span class="cm">/** 注册服务端透传消息监听 */</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">registerServerMessageListener</span><span class="p">(</span><span class="n">IRemoteControllerServerMessageListener</span><span class="w"> </span><span class="n">listener</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">interface</span> <span class="nc">IRemoteControllerServerMessageListener</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** 收到服务器透传消息，timeStamp 发送消息的UTC时间， toPackage 接收透传的应用包名， message 透传内容。*/</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">onMessage</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">timeStamp</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">toPackage</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="dms">
+<h2>2.DMS接口收发<a class="headerlink" href="#dms" title="Link to this heading">¶</a></h2>
+<p>DpvrDeviceManagerService提供了AIDL调用后的封装 <a class="reference external" href="/cn/docs/dm/Apis/remotecontrolJobs/index.html">API</a> ，方便开发者快速接入.</p>
+</section>
+</section>
+
+        </article>

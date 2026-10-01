@@ -1,0 +1,112 @@
+<article role="main">
+          <section id="remotedevicecontrol">
+<h1>RemoteDeviceControl<a class="headerlink" href="#remotedevicecontrol" title="Permalink to this heading">#</a></h1>
+<p>Here is an example of the usage of an RDC interface, which periodically sends a message and prints the received server information after detecting a connection established between the RDC and the server.</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">ApiTest</span><span class="w"> </span><span class="p">{</span>
+<span class="kd">companion</span><span class="w"> </span><span class="kd">object</span><span class="w"> </span><span class="nc">RDCTestStatic</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">TAG</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"DMST-RDC"</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">EVENT_NAME_SERVER_MESSAGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"rcs_server_message"</span>
+<span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">mIsConnected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="kd">private</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">messageCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+
+
+<span class="kd">inner</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">CheckConnectionResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">isConnected</span><span class="p">:</span><span class="w"> </span><span class="kt">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+
+<span class="kd">inner</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">SendServerMessageParams</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">message</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+
+<span class="kd">inner</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">RCSServerMessageEvent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Expose</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">message</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mServerMessageReceivedHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">TestDeviceManager</span><span class="p">.</span><span class="na">EventCallback</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onEvent</span><span class="p">(</span><span class="n">eventInfo</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">GlobalInstances</span><span class="p">.</span><span class="na">gsonOnlyExposed</span><span class="p">.</span><span class="na">fromJson</span><span class="p">(</span>
+<span class="w">                </span><span class="n">eventInfo</span><span class="p">,</span>
+<span class="w">                </span><span class="n">RCSServerMessageEvent</span><span class="o">::</span><span class="n">class</span><span class="p">.</span><span class="na">java</span>
+<span class="w">            </span><span class="p">)</span><span class="o">?.</span><span class="na">let</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"Received msg </span><span class="si">${</span><span class="nb">it</span><span class="p">.</span><span class="na">message</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="n">Exception</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">()</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">mCheckConnectionCallback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nc">TestDeviceManager</span><span class="p">.</span><span class="na">JobDoneCallback</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onJobDone</span><span class="p">(</span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">GlobalInstances</span><span class="p">.</span><span class="na">gsonAll</span><span class="p">.</span><span class="na">fromJson</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="n">CheckConnectionResult</span><span class="o">::</span><span class="n">class</span><span class="p">.</span><span class="na">java</span><span class="p">).</span><span class="na">let</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"Connection state: </span><span class="si">${</span><span class="nb">it</span><span class="p">.</span><span class="na">isConnected</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="w">                </span><span class="n">mIsConnected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">it</span><span class="p">.</span><span class="na">isConnected</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="n">Exception</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">()</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onJobFailed</span><span class="p">(</span><span class="n">code</span><span class="p">:</span><span class="w"> </span><span class="kt">Int</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Log</span><span class="p">.</span><span class="na">e</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="w"> </span><span class="s">"Check connection failed </span><span class="si">$</span><span class="n">reason</span><span class="s">"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">CheckServerConnection</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"remotecontrolJobs"</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"IsServerConnected"</span>
+<span class="w">    </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="n">mCheckConnectionCallback</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">sendTestMessage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"remotecontrolJobs"</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"SendMessageToServer"</span>
+<span class="w">    </span><span class="n">SendServerMessageParams</span><span class="p">().</span><span class="na">apply</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"this is a test message </span><span class="si">${</span><span class="n">messageCount</span><span class="o">++</span><span class="si">}</span><span class="s">"</span>
+<span class="w">    </span><span class="p">}.</span><span class="na">let</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="nb">it</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">startReceiveServerMessage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"remotecontrolJobs"</span>
+<span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"RegisterServerMessageListener"</span>
+<span class="w">    </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">?.</span><span class="na">addJob</span><span class="p">(</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">startCheckConnection</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">GlobalScope</span><span class="p">.</span><span class="na">launch</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">CheckServerConnection</span><span class="p">()</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mIsConnected</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">sendTestMessage</span><span class="p">()</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">delay</span><span class="p">(</span><span class="m">3000L</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">registerEventCallback</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">TestDeviceManager</span><span class="p">.</span><span class="na">instance</span><span class="o">!!</span><span class="p">.</span><span class="na">setEventCallbacks</span><span class="p">(</span>
+<span class="w">        </span><span class="n">EVENT_NAME_SERVER_MESSAGE</span><span class="p">,</span>
+<span class="w">        </span><span class="n">mServerMessageReceivedHandler</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">fun</span><span class="w"> </span><span class="nf">run</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">registerEventCallback</span><span class="p">()</span>
+<span class="w">    </span><span class="n">startReceiveServerMessage</span><span class="p">()</span>
+<span class="w">    </span><span class="n">startCheckConnection</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>}</p>
+</section>
+
+        </article>

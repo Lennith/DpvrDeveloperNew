@@ -1,0 +1,25 @@
+<article role="main" id="furo-main-content">
+          <section id="device-discovery">
+<h1>Device Discovery<a class="headerlink" href="#device-discovery" title="Link to this heading">¶</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Device discovery only takes effect when the client has not specified a server IP and port. When the client sets server IP and port information, it will connect to the server based on the configured information.</p>
+<p>When device discovery is enabled, the client will automatically connect to the server.</p>
+<p>To ensure device discovery functionality, the server and client must be in the same broadcast domain, and the router must allow local network broadcasts.</p>
+<p>If devices with different SSIDs (due to mixed-frequency Wi-Fi or topology-based multiple routers) are not in the same broadcast domain, device discovery may not work properly.</p>
+</div>
+<section id="enable-device-discovery">
+<h2>Enable Device Discovery<a class="headerlink" href="#enable-device-discovery" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">StartSendServerInfo</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="disable-device-discovery">
+<h2>Disable Device Discovery<a class="headerlink" href="#disable-device-discovery" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">StopSendServerInfo</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>

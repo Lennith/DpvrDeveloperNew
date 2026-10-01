@@ -1,0 +1,27 @@
+<article role="main" id="furo-main-content">
+          <section id="application-control">
+<h1>Application Control<a class="headerlink" href="#application-control" title="Link to this heading">¶</a></h1>
+<section id="start-application">
+<h2>Start Application<a class="headerlink" href="#start-application" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">ActivityStart</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">packageName</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">activityName</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>string packageName</cite>: Package name of the application to start.</p>
+<p><cite>string activityName</cite>: Name of the activity within the application to start.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: List of clients for which to start the application. Default is empty, indicating all clients.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The application started will be reflected in the TopPackage value of the Client.</p>
+</div>
+</section>
+<section id="stop-application">
+<h2>Stop Application<a class="headerlink" href="#stop-application" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">ActivityStop</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">packageName</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>string packageName</cite>: Package name of the application to stop.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: List of clients for which to stop the application. Default is empty, indicating all clients.</p>
+</section>
+</section>
+
+        </article>

@@ -1,0 +1,87 @@
+<article role="main" id="furo-main-content">
+          <section id="apkencryptor">
+<h1>ApkEncryptor<a class="headerlink" href="#apkencryptor" title="Link to this heading">¶</a></h1>
+<p>本工具旨在帮助开发者快速完成应用鉴权功能的开发。
+提供了应用授权文件生成工具，他提供以下两个功能：</p>
+<ol class="arabic simple">
+<li><p>通过APK文件和授权设备列表生成授权文件(.dpaei)。</p></li>
+<li><p>对已有授权文件(.dpaei)进行更新。</p></li>
+</ol>
+<p><a class="reference external" href="https://dl.dpvr.com/resources/videoencryptiontool/DPVR%20Video%20Encryption%20Tool%20V3.zip">点击这里下载授权文件生成工具。</a></p>
+<p>授权文件涵盖的认证方式包含：</p>
+<ol class="arabic simple">
+<li><p>根据设备序列号进行鉴权。</p></li>
+<li><p>根据授权日期进行授权。</p></li>
+</ol>
+<section id="id2">
+<h2>使用流程<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>使用ApkEncryptor，生成授权文件，并记录生成授权文件时输入Encryptor_Key。</p></li>
+<li><p>将授权文件放入机身内指定位置，作为设备的授权凭证。</p></li>
+<li><p>调用DeviceManager的鉴权接口，传入生成的授权文件和Encryptor_Key，进行校验。</p></li>
+<li><p>鉴权成功后，应用可以正常使用。</p></li>
+<li><p>对于已有的.dpaei进行授权更新时，需要使用生成授权文件时的Encryptor_Key进行验证。</p></li>
+</ol>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>在应用内未调用DeviceManager鉴权接口时，应用不会被系统进行鉴权的检测。</p>
+</div>
+</section>
+<section id="id3">
+<h2>加密工具使用方法<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<p>授权生成：</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="n">DpvrApkEncryptor</span><span class="p">.</span><span class="na">exe</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="n">encrypt</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="n">input_apks_dir</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="o">&lt;</span><span class="n">output_dpaei_dir</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="n">encryptor_key</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="o">&lt;</span><span class="n">device_list_file</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">c</span><span class="w"> </span><span class="o">&lt;</span><span class="n">effective_date</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><cite>-m</cite>： encrypt：生成授权文件。</p>
+<p><cite>-i</cite>： 输入APK文件目录。</p>
+<p><cite>-o</cite>： 输出授权文件目录。</p>
+<p><cite>-k</cite>： 生成授权文件时输入的Encryptor_Key。</p>
+<p><cite>-d</cite>： 授权设备列表文件，授权的设备列表统一放置在一个文件中，文件格式为txt，每行一个设备序列号。</p>
+<p><cite>-c</cite>： 授权文件的有效期，形式为： 2021/01/01。</p>
+<p>授权更新：</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="n">DpvrApkEncryptor</span><span class="p">.</span><span class="na">exe</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="n">input_dpaei_dir</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="o">&lt;</span><span class="n">output_dpaei_file</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="n">encryptor_key</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="o">&lt;</span><span class="n">device_list_file</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><cite>-m</cite>： update：更新授权文件。</p>
+<p><cite>-i</cite>： 输入授权文件dpaei目录。</p>
+<p><cite>-o</cite>： 输出授权文件目录。</p>
+<p><cite>-d</cite>： 授权设备列表文件，授权的设备列表统一放置在一个文件中，文件格式为txt，每行一个设备序列号。</p>
+<p><cite>-c</cite>： 授权文件的有效期，形式为： 2021/01/01。</p>
+</section>
+<section id="id4">
+<h2>设备端认证<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<p>将生成的授权文件放入机身内指定位置，作为设备的授权凭证。
+通过DeviceManager接口调用 <cite>packageJobs/CheckApplicationAuthority</cite> 进行鉴权，返回True时为通过。具体请参考 <a class="reference external" href="/cn/docs/dm/Apis/packageJobs/CheckApplicationAuthority.html">DeviceManager文档</a>。</p>
+<p>参考调用（Kotlin）：</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">ParamsAuthority</span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 是否自动杀死应用，仅当调用者与被检测包名一致时才会自动关闭，默认为false。</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">autoKill</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="c1">// 需要检测授权的应用包名，默认为调用者包名。</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">packageName</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="o">?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="c1">//加密时使用的encryptor_key</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"dpvr"</span>
+<span class="w">    </span><span class="c1">//授权文件路径，默认为/sdcard/applicationAuthority/&lt;packageName&gt;.dpaei</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">keyFilePath</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">String</span><span class="o">?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+
+<span class="n">fun</span><span class="w"> </span><span class="nf">testAuthority</span><span class="p">(){</span>
+<span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="n">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ParamsAuthority</span><span class="p">().</span><span class="na">apply</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">packageName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"com.dpvr.qatool"</span>
+<span class="w">        </span><span class="n">keyFilePath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/sdcard/applicationAuthority/com_dpvr_qatool.dpaei"</span>
+<span class="w">        </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"dpvr"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="n">cat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"packageJobs"</span>
+<span class="w">    </span><span class="n">val</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CheckApplicationAuthority"</span>
+<span class="w">    </span><span class="n">call</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">params</span><span class="p">,</span><span class="kc">null</span><span class="p">,</span><span class="n">object</span><span class="w"> </span><span class="p">:</span><span class="n">ResultCallback</span><span class="p">{</span>
+<span class="w">        </span><span class="n">override</span><span class="w"> </span><span class="n">fun</span><span class="w"> </span><span class="nf">onResult</span><span class="p">(</span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="n">BinderEntities</span><span class="p">.</span><span class="na">ApiFinishedResult</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Log</span><span class="p">.</span><span class="na">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span><span class="s">"result"</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        <aside class="source-note" data-editorial-note="source_download_unavailable">原文引用的子工具文件未在已核查的官方 V3 工具包中找到。相应链接提供官方完整工具包入口，不代表该子文件可单独下载。</aside></article>

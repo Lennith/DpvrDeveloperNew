@@ -1,0 +1,36 @@
+<article role="main">
+          <section id="wifi-state-changed">
+<span id="event-wifi-state-changed"></span><h1>WIFI_STATE_CHANGED<a class="headerlink" href="#wifi-state-changed" title="Permalink to this heading">#</a></h1>
+<p>Wifi status change.</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">WifiStateChangedEvent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">state</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">changedWifiInfo</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">reason</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="permission">
+<h2>Permission<a class="headerlink" href="#permission" title="Permalink to this heading">#</a></h2>
+<p>APP_PERMISSION_SYSTEM</p>
+</section>
+<section id="type-name">
+<h2>Type name<a class="headerlink" href="#type-name" title="Permalink to this heading">#</a></h2>
+<p>wifi_state_changed</p>
+</section>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">state</span></code>: Status of Wifi after the change.</p>
+<p><cite>“CONNECTING”</cite> : Connecting.</p>
+<p><cite>“CONNECTED”</cite> : Connected.</p>
+<p><cite>“SUSPENDED”</cite> : Suspended.</p>
+<p><cite>“DISCONNECTING”</cite> : Disconnecting.</p>
+<p><cite>“DISCONNECTED”</cite> : Disconnected.</p>
+<p><cite>“UNKNOWN”</cite> :  Unknown.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">changedWifiInfo</span></code> :  Wifi information after the change. Json serialization of <a class="reference internal" href="/en/docs/dm/Types/WifiInfo.html#type-wifiinfo"><span class="std std-ref">WifiInfo</span></a></p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">reason</span></code> : If disconnected, the reason for disconnection.</p>
+</section>
+</section>
+
+        </article>

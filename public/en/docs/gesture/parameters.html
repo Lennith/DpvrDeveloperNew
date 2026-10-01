@@ -1,0 +1,223 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GestureSdk Parameters and Notes (Updated) · DPVR Developer Center</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/search-index.js"></script><script defer src="/assets/app.js"></script></head><body data-base="" data-language="en" data-product="gesture"><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><a class="brand" href="/en/index.html"><img src="/assets/logo.png" alt="DPVR"><span>DPVR DEVELOPER CENTER</span></a><button class="global-toggle" aria-label="Website navigation" aria-expanded="false" aria-controls="global-nav">☰</button><nav id="global-nav" class="global-nav"><a href="https://developer.dpvr.com/home.html">HOME</a><a href="https://developer.dpvr.com/sdk.html">SDK</a><details><summary>SOLUTIONS</summary><div><a href="https://developer.dpvr.com/solutions-DPVR-starLink.html">StarLink</a><a href="https://developer.dpvr.com/solutions-DPVR-remote-control.html">Remote Control</a></div></details><a aria-current="page" href="/en/index.html">RESOURCES</a><details><summary>ASSISTANT</summary><div><a href="https://product.dpvr.com/assistant/download.html">Assistant</a><a href="https://product.dpvr.com/assistant4">Assistant4</a></div></details></nav></header><div class="utility-bar"><a class="breadcrumb" href="/en/index.html">Developer resources</a><div class="utility-actions"><button class="search-open">Search docs <kbd>⌘ K</kbd></button><a class="language-link" hreflang="cn" href="/cn/docs/gesture/parameters.html">简体中文</a><select class="theme" aria-label="Appearance"><option value="light">Light</option><option value="dark">Dark</option><option value="auto">System</option></select></div></div><div class="reader-controls"><button class="reader-menu" aria-controls="product-nav" aria-expanded="false">☰ Documentation</button><button class="toc-menu" aria-controls="page-toc" aria-expanded="false">On this page ☷</button></div><div class="reader-layout"><aside class="product-nav" id="product-nav"><h2>Unity Gesture Plug-in</h2><nav><a class="nav-overview" href="/en/resources/gesture.html">Overview & start</a><a href="/en/guides/gesture-start.html">Run the gesture sample on a headset</a><a class="active" href="/en/docs/gesture/parameters.html">GestureSdk Parameters and Notes (Updated)</a><details ><summary>Getting started</summary><ul><li><a class="" href="/en/docs/gesture/beginner.html">GestureSdk Beginner Guide (English)</a></li></ul></details></nav></aside><main id="main" class="article-main"><div class="breadcrumbs"><a href="/en/index.html">Resources</a> / <a href="/en/resources/gesture.html">Unity Gesture Plug-in</a></div><header class="article-header"><span class="eyebrow">Documentation</span><a href="https://dl.dpvr.com/resources/gesture/doc_en.zip#member=README_PARAMETERS_AND_NOTES.md">Official source ↗</a></header><article class="article-body"><article><h1>GestureSdk Parameters and Notes (Updated)</h1>
+<h2 id="section-0">1. Purpose</h2>
+<p>This document summarizes the current runtime parameters and practical integration notes under <code>Assets/GestureSdk</code>.</p>
+<h2 id="section-1">2. Core Scripts</h2>
+<ul>
+<li><code>Assets/GestureSdk/Scripts/CameraManager.cs</code></li>
+<li><code>Assets/GestureSdk/Scenes/GestureTest.cs</code></li>
+</ul>
+<h2 id="section-2">3. CameraManager Parameters</h2>
+<h3 id="section-3">3.1 Camera</h3>
+<ul>
+<li><code>cameraWidth</code> / <code>cameraHeight</code> / <code>cameraFps</code>
+<ul>
+<li>Controls camera preview resolution and FPS.</li>
+<li>Keep defaults first, then tune if needed.</li>
+</ul>
+</li>
+</ul>
+<h3 id="section-4">3.2 Gesture</h3>
+<ul>
+<li><code>gesturePreset</code>
+<ul>
+<li>Preset mode (<code>DEFAULT / PERFORMANCE / ACCURACY</code>).</li>
+</ul>
+</li>
+<li><code>tickFps</code>
+<ul>
+<li>Gesture processing tick rate.</li>
+<li>Recommended: <code>5</code>.</li>
+</ul>
+</li>
+<li><code>numHands</code>
+<ul>
+<li>Max number of tracked hands.</li>
+<li>Recommended: <code>1</code>.</li>
+</ul>
+</li>
+<li><code>modelComplexity</code>
+<ul>
+<li>Gesture model complexity level.</li>
+</ul>
+</li>
+<li><code>inputRotation</code>
+<ul>
+<li>Input rotation, recommended: <code>CCW_90</code>.</li>
+</ul>
+</li>
+<li><code>inputScaleMode</code>
+<ul>
+<li>Input scale mode, recommended: <code>LETTERBOX</code>.</li>
+</ul>
+</li>
+<li><code>stabilityFrames</code>
+<ul>
+<li>Number of stable frames before committing result.</li>
+</ul>
+</li>
+<li><code>hysteresisEnterScale</code> / <code>hysteresisExitScale</code>
+<ul>
+<li>Hysteresis thresholds for stable switching.</li>
+</ul>
+</li>
+<li><code>fenceMode</code>
+<ul>
+<li>Sync strategy, recommended: <code>AUTO</code>.</li>
+</ul>
+</li>
+<li><code>fenceShortWaitMs</code>
+<ul>
+<li>Short wait in ms, recommended: <code>0</code>.</li>
+</ul>
+</li>
+<li><code>classificationMode</code>
+<ul>
+<li>Classification mode (default <code>BUILTIN</code>).</li>
+</ul>
+</li>
+<li><code>emitLandmarks</code> / <code>includeLandmarkInJson</code>
+<ul>
+<li>Landmark emission and JSON payload options.</li>
+</ul>
+</li>
+</ul>
+<h3 id="section-5">3.3 Diagnostics</h3>
+<ul>
+<li><code>enableDiagnosticLogging</code>
+<ul>
+<li>Enables verbose runtime logs for debugging.</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-6">4. GestureTest Parameters</h2>
+<ul>
+<li><code>cameraManager</code>
+<ul>
+<li>Reference to <code>CameraManager</code>.</li>
+</ul>
+</li>
+<li><code>sphereObject</code>
+<ul>
+<li>Sphere object for visual interaction.</li>
+</ul>
+</li>
+<li><code>cameraImageRect</code>
+<ul>
+<li><code>RectTransform</code> of preview image used for coordinate mapping.</li>
+</ul>
+</li>
+<li><code>sceneCamera</code>
+<ul>
+<li>Scene camera reference (<code>Camera.main</code> fallback).</li>
+</ul>
+</li>
+<li><code>scaleStepFactor</code>
+<ul>
+<li>Scale delta per gesture trigger.</li>
+</ul>
+</li>
+<li><code>maxScaleSteps</code>
+<ul>
+<li>Max scale step count.</li>
+</ul>
+</li>
+<li><code>zDistanceFromCameraImage</code>
+<ul>
+<li>Sphere depth offset from the <code>CameraImage</code> plane, computed in camera space.</li>
+</ul>
+</li>
+<li><code>gestureCooldownSeconds</code>
+<ul>
+<li>Cooldown per gesture type.</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-7">5. Current Demo Gesture Behavior</h2>
+<ul>
+<li><code>V_SIGN</code>
+<ul>
+<li>Activates sphere.</li>
+<li>Updates sphere position once using gesture ROI center.</li>
+</ul>
+</li>
+<li><code>OPEN_PALM</code>
+<ul>
+<li>Scales sphere up one step.</li>
+</ul>
+</li>
+<li><code>FIST</code>
+<ul>
+<li>Scales sphere down one step.</li>
+</ul>
+</li>
+<li><code>THUMBS_UP</code>
+<ul>
+<li>Randomizes sphere color.</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-8">6. Coordinate and Depth Rules</h2>
+<p>Current position mapping in <code>GestureTest</code>:</p>
+<ol>
+<li>ROI center:
+<ul>
+<li><code>centerX = (left + right) / 2</code></li>
+<li><code>centerY = (top + bottom) / 2</code></li>
+</ul>
+</li>
+<li>Horizontal compensation:
+<ul>
+<li><code>mappedX = 1 - centerX</code></li>
+</ul>
+</li>
+<li>Vertical mapping:
+<ul>
+<li><code>mappedY = centerY</code></li>
+</ul>
+</li>
+<li>Convert <code>mappedX/mappedY</code> to local coordinates on <code>cameraImageRect</code>, then to world coordinates.</li>
+<li>Depth handling:
+<ul>
+<li>Convert the world point on <code>CameraImage</code> into camera space.</li>
+<li>Move toward camera by <code>zDistanceFromCameraImage</code>.</li>
+<li>Convert back to world space.</li>
+</ul>
+</li>
+</ol>
+<p>This keeps screen alignment stable while preserving expected depth behavior.</p>
+<h2 id="section-9">7. Recommended Stable Defaults</h2>
+<ul>
+<li><code>tickFps = 5</code></li>
+<li><code>numHands = 1</code></li>
+<li><code>inputRotation = CCW_90</code></li>
+<li><code>inputScaleMode = LETTERBOX</code></li>
+<li><code>fenceMode = AUTO</code></li>
+<li><code>fenceShortWaitMs = 0</code></li>
+</ul>
+<h2 id="section-10">8. Practical Notes</h2>
+<h3 id="section-11">8.1 Preview works but no gesture callbacks</h3>
+<p>Check:</p>
+<ul>
+<li>Required AARs exist under <code>Assets/Plugins/Android</code>.</li>
+<li><code>CameraManager</code> is initialized and preview started.</li>
+<li>Gesture callback logs show continuous sequence updates.</li>
+</ul>
+<h3 id="section-12">8.2 Hand appears on right, sphere appears on left</h3>
+<p>Check:</p>
+<ul>
+<li><code>mappedX = 1 - centerX</code> is still present in <code>GestureTest</code>.</li>
+<li><code>cameraImageRect</code> points to the actual preview object in scene.</li>
+</ul>
+<h3 id="section-13">8.3 Vertical direction mismatch</h3>
+<p>Check:</p>
+<ul>
+<li>Current <code>mappedY</code> rule in <code>GestureTest</code>.</li>
+<li>Preview shader flip setup if it was changed.</li>
+</ul>
+<h3 id="section-14">8.4 Depth feels wrong</h3>
+<p>Check:</p>
+<ul>
+<li><code>sceneCamera</code> points to the rendering camera.</li>
+<li><code>zDistanceFromCameraImage</code> is tuned for the scene scale.</li>
+</ul>
+<aside class="source-note" data-editorial-note="source_difference">The sources describe zDistanceFromCameraImage depth and calculation differently. Their original descriptions are retained; no algorithm is silently changed.</aside></article><section class="source-downloads" data-editorial-note="true"><h2>Page downloads</h2><ul><li><a href="https://dl.dpvr.com/resources/gesture/doc_en.zip">Download official package</a></li></ul></section></article><nav class="page-turn"></nav></main><aside class="page-toc" id="page-toc"><h2>On this page</h2><nav></nav></aside></div><button class="drawer-scrim" aria-label="Close navigation"></button><footer class="site-footer"><p>© Copyright DPVR. All Rights Reserved</p><p>沪ICP备2022019614号-1 Shanghai Lexiang Technology Co. Ltd</p></footer><dialog class="search-dialog" aria-label="Search documentation"><form class="search-form"><input id="search-query" name="q" type="search" placeholder="Search a product, task or API…" aria-label="Search terms"><button type="button" class="search-close" aria-label="Close search">✕</button></form><div class="search-status" role="status"></div><div class="search-results"></div></dialog></body></html>

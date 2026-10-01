@@ -1,0 +1,42 @@
+<article role="main">
+          <section id="wifiinfo">
+<span id="type-wifiinfo"></span><h1>WifiInfo<a class="headerlink" href="#wifiinfo" title="Permalink to this heading">#</a></h1>
+<p>Wifi信息结构。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">WifiInfo</span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">SSID</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">cipherType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WifiManagerModule</span><span class="p">.</span><span class="na">WIFI_CIPHER_WPA</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WifiManagerModule</span><span class="p">.</span><span class="na">WIFI_FREQUENCY_2400</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"0.0.0.0"</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NetworkInfo</span><span class="p">.</span><span class="na">State</span><span class="p">.</span><span class="na">UNKNOWN</span><span class="p">.</span><span class="na">name</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">SSID</span></code> : Wifi的SSID。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">cipherType</span></code>: Wifi加密类型
+<cite>“WEP”</cite>: WEP加密。</p>
+<p><cite>“WPA”</cite>: WPA加密。</p>
+<p><cite>“NO_CIPHER”</cite>：未加密。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">frequency</span></code>: Wifi频段
+<cite>“2.4g”</cite> : 2.4g频段。</p>
+<p><cite>“5g”</cite> : 5g频段。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">ip</span></code>: ip地址，仅在连接成功后有效。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">level</span></code> : Wifi强度。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">state</span></code> : 当前状态。</p>
+<p><cite>“CONNECTING”</cite> : 连接中。</p>
+<p><cite>“CONNECTED”</cite> : 已连接。</p>
+<p><cite>“SUSPENDED”</cite> : 挂起。</p>
+<p><cite>“DISCONNECTING”</cite> ： 断开连接中。</p>
+<p><cite>“DISCONNECTED”</cite> ： 已断开连接。</p>
+<p><cite>“UNKNOWN”</cite> ： 未知。</p>
+</section>
+</section>
+
+        </article>

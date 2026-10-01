@@ -1,0 +1,30 @@
+<article role="main">
+          <section id="wifiscanresult">
+<span id="type-wifiscanresult"></span><h1>WifiScanResult<a class="headerlink" href="#wifiscanresult" title="Permalink to this heading">#</a></h1>
+<p>WIFI扫描结果。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">WifiScanResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">cipherType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WifiManagerModule</span><span class="p">.</span><span class="na">WIFI_CIPHER_NO_CIPHER</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">ssid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">level</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WifiManagerModule</span><span class="p">.</span><span class="na">WIFI_FREQUENCY_2400</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">cipherType</span></code>: Wifi加密类型。</p>
+<p><cite>“WEP”</cite>: WEP加密。</p>
+<p><cite>“WPA”</cite>: WPA加密。</p>
+<p><cite>“NO_CIPHER”</cite>：未加密。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">ssid</span></code>: Wifi名称。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">level</span></code>: Wifi强度。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">frequency</span></code>: Wifi频段</p>
+<p><cite>“2.4g”</cite> : 2.4g频段。</p>
+<p><cite>“5g”</cite> : 5g频段。</p>
+</section>
+</section>
+
+        </article>

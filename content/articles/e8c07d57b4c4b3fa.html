@@ -1,0 +1,57 @@
+<article role="main">
+          <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h1>
+<section id="id1">
+<h2>系统要求<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<p>DpvrDeviceManager2需要在已经安装了DpvrDeviceManagerSerivce的平台上才能够实现其API功能。</p>
+<p>你可以通过adb指令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">adb shell pm list packages| findstr com.dpvr.devicemanager</span>
+</pre></div>
+</div>
+<p>来查看是否系统中是否已经包含DeviceManagerService。如果命令行输出包含了com.dpvr.devicemanager，则已经具备了devicemanager功能。如果返回为空，请更新系统版本。</p>
+</section>
+<section id="id2">
+<h2>应用权限<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
+<p>DpvrDeviceManager2在提供了系统功能的同时，也对调用者进行了校验，每一个接口都有其不同的权限要求，以防止被滥用。</p>
+<p>DeviceManager2的调用者需要在自己的应用AndroidManifest.xml的Application标签加入下列授权信息，来获得DeviceManangerService的授权。</p>
+<p><em>对于应用版本的授权：</em></p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;meta-data</span><span class="w"> </span><span class="na">android:name=</span><span class="s">"DeviceManagerKey"</span><span class="w"> </span><span class="na">android:value=</span><span class="s">"YOUR_KEY_HERE"</span><span class="nt">&gt;&lt;/meta-data&gt;</span>
+</pre></div>
+</div>
+<p>使用这种方式授权，将会对当前应用包名和版本号进行授权，该版本该应用可以运行于所有支持DeviceMananger的设备上。</p>
+<p><em>对于指定渠道固件授权:</em></p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;meta-data</span><span class="w"> </span><span class="na">android:name=</span><span class="s">"DeviceManagerPlatformKey"</span><span class="w"> </span><span class="na">android:value=</span><span class="s">"YOUR_KEY_HERE"</span><span class="nt">&gt;&lt;/meta-data&gt;</span>
+</pre></div>
+</div>
+<p>使用这种方式授权，将会对应用包名在指定定制渠道固件上进行授权，而不对版本号进行校验。</p>
+<p>当两种授权方式同时存在时，会在对应系统上使用能获得的最高权限。</p>
+<p><em>目前，你需要通过联系DPVR的项目经理来获取普通以上权限的DeviceManagerKey。</em></p>
+</section>
+<section id="id3">
+<h2>本文档说明<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h2>
+<p>DpvrDeviceManager2的接口分为两部分：</p>
+<p>第一部分为的非具体业务功能接口，用于初始化应用与DeviceManager的连接，以及回调设置，可以在下文 <em>SDK平台</em> 文档中说明。</p>
+<p>第二部分为DeviceManager提供的功能接口。查看 <a class="reference internal" href="/cn/docs/dm/Apis/index.html"><span class="doc">api list</span></a>。</p>
+</section>
+<section id="sdk">
+<h2>SDK平台<a class="headerlink" href="#sdk" title="Permalink to this heading">#</a></h2>
+<p>DpvrDeviceManager2提供了针对Unity和Android原生应用的两套SDK，其中UnitySDK是对于Android原生SDK的Unity封装。他们的使用方式相似。</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/GettingStarted/android.html">Android Developer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="/cn/docs/dm/GettingStarted/android/introduction.html">基础概念</a></li>
+<li class="toctree-l2"><a class="reference internal" href="/cn/docs/dm/GettingStarted/android/usage.html">使用流程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="/cn/docs/dm/GettingStarted/android/javaExample.html">Java示例封装</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="/cn/docs/dm/GettingStarted/unity.html">Unity Developer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="/cn/docs/dm/GettingStarted/unity/introduction.html">基础概念</a></li>
+<li class="toctree-l2"><a class="reference internal" href="/cn/docs/dm/GettingStarted/unity/usage.html">使用流程</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+        </article>

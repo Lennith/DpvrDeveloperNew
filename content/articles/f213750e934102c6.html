@@ -1,0 +1,32 @@
+<article role="main">
+          <section id="battery-state-changed">
+<span id="event-battery-state-changed"></span><h1>BATTERY_STATE_CHANGED<a class="headerlink" href="#battery-state-changed" title="Permalink to this heading">#</a></h1>
+<p>Battery status change.</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">BatteryStateEvent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">level</span><span class="p">:</span><span class="w"> </span><span class="kt">Int?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">state</span><span class="p">:</span><span class="w"> </span><span class="kt">Int?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="permission">
+<h2>Permission<a class="headerlink" href="#permission" title="Permalink to this heading">#</a></h2>
+<p>APP_PERMISSION_SYSTEM</p>
+</section>
+<section id="type-name">
+<h2>Type name<a class="headerlink" href="#type-name" title="Permalink to this heading">#</a></h2>
+<p>battery_state_changed</p>
+</section>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Int</span> <span class="pre">level</span></code>: Battery level.</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">Int</span> <span class="pre">state</span></code>: Battery status.</p>
+<p><cite>1</cite>: Unknown status (BATTERY_STATUS_UNKNOWN).</p>
+<p><cite>2</cite>: Charging (BATTERY_STATUS_CHARGING).</p>
+<p><cite>3</cite>: Discharging (BATTERY_STATUS_DISCHARGING).</p>
+<p><cite>4</cite>: Not charging (BATTERY_STATUS_NOT_CHARGING).</p>
+<p><cite>5</cite>: Fully charged (BATTERY_STATUS_FULL).</p>
+</section>
+</section>
+
+        </article>

@@ -1,0 +1,39 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>透传消息<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<p>透传消息的作用是通过RDC的通信链路直接给一个指定应用发送一条消息，或者一体机端应用给服务端发送一条消息，用于开发者实现自定义功能，目前单条消息的长度不能超过1000个字节。</p>
+<section id="id2">
+<h2>服务端发送<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">MessengerSendToClient</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">toPackage</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>string toPackage</cite>：客户端接收消息的应用。</p>
+<p><cite>string content</cite>：消息内容。</p>
+<p><cite>List&lt;Client&gt; clientList</cite>：接收的客户端列表，为空时所有连接的客户端会接收到消息。</p>
+</section>
+<section id="id3">
+<h2>服务端收到客户端消息回调<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">delegate</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnMessageFromClient</span><span class="p">(</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">ClientMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>客户端应用透传消息回调。</p>
+<p><cite>Client client</cite>：发生状态改变的客户端。</p>
+<p><cite>ClientMessage msg</cite>：客户端透传消息。</p>
+<p>其中，ClientMessage结构体定义如下：</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ClientMessage</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">fromPackage</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>string fromPackage</cite>：发送透传的应用包名。</p>
+<p><cite>string content</cite>：透传消息内容。</p>
+</section>
+<section id="id4">
+<h2>客户端透传消息使用方式<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<p>DpvrDeviceManagerService提供了AIDL调用后的封装 <a class="reference external" href="/cn/docs/dm/Apis/remotecontrolJobs/index.html">API</a> ，方便开发者快速接入.</p>
+</section>
+</section>
+
+        </article>

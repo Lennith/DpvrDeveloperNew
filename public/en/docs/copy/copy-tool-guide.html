@@ -1,0 +1,109 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Copy Tool Guide · DPVR Developer Center</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/search-index.js"></script><script defer src="/assets/app.js"></script></head><body data-base="" data-language="en" data-product="copy"><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><a class="brand" href="/en/index.html"><img src="/assets/logo.png" alt="DPVR"><span>DPVR DEVELOPER CENTER</span></a><button class="global-toggle" aria-label="Website navigation" aria-expanded="false" aria-controls="global-nav">☰</button><nav id="global-nav" class="global-nav"><a href="https://developer.dpvr.com/home.html">HOME</a><a href="https://developer.dpvr.com/sdk.html">SDK</a><details><summary>SOLUTIONS</summary><div><a href="https://developer.dpvr.com/solutions-DPVR-starLink.html">StarLink</a><a href="https://developer.dpvr.com/solutions-DPVR-remote-control.html">Remote Control</a></div></details><a aria-current="page" href="/en/index.html">RESOURCES</a><details><summary>ASSISTANT</summary><div><a href="https://product.dpvr.com/assistant/download.html">Assistant</a><a href="https://product.dpvr.com/assistant4">Assistant4</a></div></details></nav></header><div class="utility-bar"><a class="breadcrumb" href="/en/index.html">Developer resources</a><div class="utility-actions"><button class="search-open">Search docs <kbd>⌘ K</kbd></button><a class="language-link" hreflang="cn" href="/cn/docs/copy/copy-tool-guide.html">简体中文</a><select class="theme" aria-label="Appearance"><option value="light">Light</option><option value="dark">Dark</option><option value="auto">System</option></select></div></div><div class="reader-controls"><button class="reader-menu" aria-controls="product-nav" aria-expanded="false">☰ Documentation</button><button class="toc-menu" aria-controls="page-toc" aria-expanded="false">On this page ☷</button></div><div class="reader-layout"><aside class="product-nav" id="product-nav"><h2>TF Card Deployment Tool</h2><nav><a class="nav-overview" href="/en/resources/copy.html">Overview & start</a><a class="" href="/en/docs/copy/configuration-example.html">copy_config.json</a><details open><summary>Guides</summary><ul><li><a class="active" href="/en/docs/copy/copy-tool-guide.html">Copy Tool Guide</a></li></ul></details></nav></aside><main id="main" class="article-main"><div class="breadcrumbs"><a href="/en/index.html">Resources</a> / <a href="/en/resources/copy.html">TF Card Deployment Tool</a></div><header class="article-header"><span class="eyebrow">Documentation</span><a href="https://developer.dpvr.com/resources/doc_en.html#copy-tool-guide">Official source ↗</a></header><article class="article-body"><div id="content-display" style="opacity: 1;">
+                <header class="header">
+                    <h1>Copy Tool Guide</h1>
+                    <p>This tool is used for batch execution of tasks such as copying files, installing APKs, unzipping ZIPs, and copying OBB/Language/OTA packages.</p>
+                </header>
+                
+            
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">01</span>
+                                <h2 class="step-title" id="section-0">Function Overview</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>This tool is designed for scenarios such as pre-installing applications, batch data copying, and updating resources.</p>
+                            <ul class="flush-list">
+                                <li><b>Task Sources:</b> Reads task configuration from an external TF card or internal storage.</li>
+                                <li><b>Supported Task Types:</b></li>
+                                    <ul class="task-list-list">
+                                        <li><b>APK:</b> Install application packages to your device (supports directories or files).</li>
+                                        <li><b>ZIP_UNPACK:</b> Unzip ZIP files to the target directory.</li>
+                                        <li><b>FILE:</b> Copy any directory or file to the target directory.</li>
+                                        <li><b>OBB:</b> Copy application OBB files to the target directory.</li>
+                                        <li><b>LANGUAGE_PACKAGE:</b> Copy language packages to the target directory.</li>
+                                        <li><b>OTA_PACKAGE:</b> Copy OTA upgrade packages to the target directory (copy only, does not trigger upgrade).</li>
+                                    </ul>
+                                
+                                <li><b>Smart Handling:</b> If the source is on a TF card, APK/ZIP files are first copied to a local temporary directory before installation/unzipping.</li>
+                                <li><b>UI Features:</b> Real-time display of running/completed tasks, failure logs, and Post Queue (pending install/unzip tasks). Supports one-click cache cleaning.</li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">02</span>
+                                <h2 class="step-title" id="section-1">Json Configuration</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <div class="settings-table-container">
+                                <table class="settings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="feature-name">type</td>
+                                            <td>Task type: <b>APK</b>, <b>ZIP_UNPACK</b>, <b>FILE</b>, <b>OBB</b>, <b>LANGUAGE_PACKAGE</b>, <b>OTA_PACKAGE</b>.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">source</td>
+                                            <td>Source path. Use <b>${EXT_SD}</b> to represent the external TF card root directory.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">dist</td>
+                                            <td>Destination path (Automatically ignored for APK tasks).</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">name</td>
+                                            <td>Task name (Optional, used for UI display).</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style="margin-top:16px;"><b>Json Example:</b></p>
+                            <div class="note-container">
+<pre style="color: #a0aec0; font-size: 13px; font-family: monospace;">[
+  { "type":"APK", "source":"${EXT_SD}/AUTO_INSTALL_APPS", "name":"apps" },
+  { "type":"ZIP_UNPACK", "source":"${EXT_SD}/video.zip", "dist":"/sdcard/TargetDir", "name":"videounzip" },
+  { "type":"LANGUAGE_PACKAGE", "source":"${EXT_SD}/LANGUAGE", "dist":"/sdcard/Android/data", "name":"lang" },
+  { "type":"FILE", "source":"${EXT_SD}/InputDir", "dist":"/sdcard/OutputDir", "name":"assets" }
+]</pre>
+                            </div>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    
+                        <section class="step-section">
+                            <div class="step-header">
+                                <span class="step-number-large">03</span>
+                                <h2 class="step-title" id="section-2">Quick Start</h2>
+                            </div>
+                            <div class="step-description">
+                                
+                            <p>Follow these steps to use the copy tool:</p>
+                            <ul class="manual-steps">
+                                <li><span class="step-num">1.</span> <div><b>Install Application:</b> Power on the device and connect it to your computer via data cable. Copy <span class="highlight">CopyTool.apk</span> to the device and complete the installation.</div></li>
+                                <li><span class="step-num">2.</span> <div><b>Prepare Configuration:</b> Create a file named <span class="highlight">copy_config.json</span>, configure it according to the required tasks, and then place it in the <span class="highlight">root directory of the TF card</span>.</div></li>
+                                <li><span class="step-num">3.</span> <div><b>Copy Content:</b> Place the content to be copied or installed onto the TF card according to the source path requirements in the <span class="highlight">copy_config.json</span> file.</div></li>
+								<li><span class="step-num">4.</span> <div><b>Insert the TF Card:</b> Insert the TF card into the device.</div></li>							
+								<li><span class="step-num">5.</span> <div><b>Start App:</b> Open the tool; it will automatically load the config and start tasks.</div></li>
+                                <li><span class="step-num">6.</span> <div><b>Check Progress:</b> Monitor the progress bar, success/fail counts, and any error messages on the main screen.</div></li>
+                                <li><span class="step-num">7.</span> <div><b>Clean Cache:</b> Click "Clean Cache" in the Post Queue area to remove temporary files.</div></li>
+                            </ul>
+                        
+                                
+                            </div>
+                            
+                        </section>
+                    </div></article><nav class="page-turn"></nav></main><aside class="page-toc" id="page-toc"><h2>On this page</h2><nav></nav></aside></div><button class="drawer-scrim" aria-label="Close navigation"></button><footer class="site-footer"><p>© Copyright DPVR. All Rights Reserved</p><p>沪ICP备2022019614号-1 Shanghai Lexiang Technology Co. Ltd</p></footer><dialog class="search-dialog" aria-label="Search documentation"><form class="search-form"><input id="search-query" name="q" type="search" placeholder="Search a product, task or API…" aria-label="Search terms"><button type="button" class="search-close" aria-label="Close search">✕</button></form><div class="search-status" role="status"></div><div class="search-results"></div></dialog></body></html>

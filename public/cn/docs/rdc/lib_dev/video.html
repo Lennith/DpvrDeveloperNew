@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>视频播放控制 · DPVR Developer Center</title><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/search-index.js"></script><script defer src="/assets/app.js"></script></head><body data-base="" data-language="cn" data-product="rdc"><a class="skip-link" href="#main">跳至正文</a><header class="site-header"><a class="brand" href="/cn/index.html"><img src="/assets/logo.png" alt="DPVR"><span>DPVR DEVELOPER CENTER</span></a><button class="global-toggle" aria-label="官网导航" aria-expanded="false" aria-controls="global-nav">☰</button><nav id="global-nav" class="global-nav"><a href="https://developer.dpvr.com/home.html">HOME</a><a href="https://developer.dpvr.com/sdk.html">SDK</a><details><summary>SOLUTIONS</summary><div><a href="https://developer.dpvr.com/solutions-DPVR-starLink.html">StarLink</a><a href="https://developer.dpvr.com/solutions-DPVR-remote-control.html">Remote Control</a></div></details><a aria-current="page" href="/cn/index.html">RESOURCES</a><details><summary>ASSISTANT</summary><div><a href="https://product.dpvr.com/assistant/download.html">Assistant</a><a href="https://product.dpvr.com/assistant4">Assistant4</a></div></details></nav></header><div class="utility-bar"><a class="breadcrumb" href="/cn/index.html">开发者资源</a><div class="utility-actions"><button class="search-open">搜索文档 <kbd>⌘ K</kbd></button><a class="language-link" hreflang="en" href="/en/docs/rdc/lib_dev/video.html">English</a><select class="theme" aria-label="外观"><option value="light">浅色</option><option value="dark">深色</option><option value="auto">跟随系统</option></select></div></div><div class="reader-controls"><button class="reader-menu" aria-controls="product-nav" aria-expanded="false">☰ 文档导航</button><button class="toc-menu" aria-controls="page-toc" aria-expanded="false">本页目录 ☷</button></div><div class="reader-layout"><aside class="product-nav" id="product-nav"><h2>RDC 远程设备控制</h2><nav><a class="nav-overview" href="/cn/resources/rdc.html">用途与开始使用</a><a href="/cn/guides/rdc-csharp.html">用 C# 建立一个 RDC 控制端</a><a class="" href="/cn/docs/rdc/dev_guide.html">开发者建议</a><a class="" href="/cn/docs/rdc/index.html">简介</a><details ><summary>头显端设置</summary><ul><li><a class="" href="/cn/docs/rdc/client_usage/device_usage.html">客户端使用</a></li><li><a class="" href="/cn/docs/rdc/client_usage/normal_settings.html">通过应用配置</a></li><li><a class="" href="/cn/docs/rdc/client_usage/setting_by_config.html">配置文件设置</a></li></ul></details><details open><summary>C# 服务端开发</summary><ul><li><a class="" href="/cn/docs/rdc/lib_dev/RDCLib.html">基于RDC库的服务端开发</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/clientmanager.html">客户端管理</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/content.html">内容分发与下载</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/devicecontrol.html">设备管理</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/devicefound.html">设备发现</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/init.html">开启、关闭与回调注册</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/message.html">透传消息</a></li><li><a class="" href="/cn/docs/rdc/lib_dev/package.html">应用控制</a></li><li><a class="active" href="/cn/docs/rdc/lib_dev/video.html">视频播放控制</a></li></ul></details><details ><summary>自定义应用透传</summary><ul><li><a class="" href="/cn/docs/rdc/client_app/index.html">客户端应用开发</a></li></ul></details><details ><summary>通信协议</summary><ul><li><a class="" href="/cn/docs/rdc/server_dev/index.html">基于通信协议的服务端开发</a></li></ul></details></nav></aside><main id="main" class="article-main"><div class="breadcrumbs"><a href="/cn/index.html">资源</a> / <a href="/cn/resources/rdc.html">RDC 远程设备控制</a></div><header class="article-header"><span class="eyebrow">技术文档</span><a href="https://static.dpvr.com/apps/developer/rdc/v2/cn/lib_dev/video.html">官方来源 ↗</a></header><article class="article-body"><article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>视频播放控制<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<section id="id2">
+<h2 id="section-0">视频渲染格式类型<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">VideoRenderType</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NORMAL_2D</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NORMAL_3D_LEFT_RIGHT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NORMAL_3D_UP_DOWN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_180_2D</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_180_3D_LEFT_RIGHT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_180_3D_UP_DOWN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_360_2D</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_360_3D_LEFT_RIGHT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">VR_360_3D_UP_DOWN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>NORMAL_2D</cite>：标准2D视频。</p>
+<p><cite>NORMAL_3D_LEFT_RIGHT</cite>：左右3D视频。</p>
+<p><cite>NORMAL_3D_UP_DOWN</cite>：上下3D视频。</p>
+<p><cite>VR_180_2D</cite>：180度VR视频。</p>
+<p><cite>VR_180_3D_LEFT_RIGHT</cite>：左右180度VR视频。</p>
+<p><cite>VR_180_3D_UP_DOWN</cite>：上下180度VR视频。</p>
+<p><cite>VR_360_2D</cite>：360度VR视频。</p>
+<p><cite>VR_360_3D_LEFT_RIGHT</cite>：360度左右3DVR视频。</p>
+<p><cite>VR_360_3D_UP_DOWN</cite>：360度上下3DVR视频。</p>
+</section>
+<section id="id3">
+<h2 id="section-1">开始播放<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">VideoStart</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">filePath</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">startWhenPrepared</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>string filePath</cite>：视频地址。</p>
+<p><cite>int mode</cite>：渲染格式，对应上文的渲染格式，默认为自动选取。</p>
+<p><cite>bool startWhenPrepared</cite>：完成加载后自动播放，默认为false，需要恢复播放需要调用VideoResume接口。</p>
+<p><cite>List&lt;Client&gt; clientList</cite>：指定播放的客户端列表，默认为null，表示所有客户端。</p>
+</section>
+<section id="id4">
+<h2 id="section-2">停止播放<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">VideoStop</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>：指定停止播放的客户端列表，默认为null，表示所有客户端。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>客户端按最近一次 1002 播放消息选择停止路由：使用 DPVR 播放器时向 <code class="docutils literal notranslate"><span class="pre">com.dpvr.videoplayer.VIDEOPLAYERCONTROLLER</span></code> 发送停止指令，回落到 DpnLauncher 时向 <code class="docutils literal notranslate"><span class="pre">com.deepoon.dpnlauncher.PLAY_CONTROL</span></code> 发送 <code class="docutils literal notranslate"><span class="pre">controltype=playcommand</span></code>、<code class="docutils literal notranslate"><span class="pre">operation=stop</span></code>。该接口不影响 RDC 连接；停止后是否退出播放器界面由播放器应用自身决定。</p>
+</div>
+</section>
+<section id="id5">
+<h2 id="section-3">暂停播放<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">VideoPause</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>List&lt;Client&gt; clientList</cite>：指定暂停播放的客户端列表，默认为null，表示所有客户端。</p>
+</section>
+<section id="id6">
+<h2 id="section-4">恢复播放<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">VideoResume</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>int delay</cite>：恢复播放的延迟时间，单位为秒，默认为0。服务端会将该值加到当前时间，换算为统一起播时刻（<code class="docutils literal notranslate"><span class="pre">PlayTime</span></code>，格式 <code class="docutils literal notranslate"><span class="pre">yyyy-MM-dd-HH-mm-ss</span></code>）下发，所有设备在该时刻同时恢复播放；设备当前时间已过该时刻时收到命令会立即播放。使用定时恢复时，请确保设备系统时间与服务端一致，多设备同步精度约为 ±1 秒。</p>
+<p><cite>List&lt;Client&gt; clientList</cite>：指定恢复播放的客户端列表，默认为null，表示所有客户端。</p>
+</section>
+<section id="id7">
+<h2 id="section-5">跳转播放<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">VideoSeek</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">time</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>int time</cite>：跳转播放的位置，单位为秒。</p>
+<p><cite>List&lt;Client&gt; clientList</cite>：指定跳转播放的客户端列表，默认为null，表示所有客户端。</p>
+</section>
+</section>
+
+        </article><section class="source-downloads" data-editorial-note="true"><h2>本页下载</h2><ul><li><a href="https://static.dpvr.com/apps/developer/rdc/v2/cn/_sources/lib_dev/video.rst.txt">View this page source</a></li></ul></section></article><nav class="page-turn"><a href="/cn/docs/rdc/lib_dev/clientmanager.html"><small>上一篇</small><span>客户端管理</span></a><a href="/cn/docs/rdc/lib_dev/package.html"><small>下一篇</small><span>应用控制</span></a></nav></main><aside class="page-toc" id="page-toc"><h2>本页目录</h2><nav></nav></aside></div><button class="drawer-scrim" aria-label="关闭目录"></button><footer class="site-footer"><p>© Copyright DPVR. All Rights Reserved</p><p>沪ICP备2022019614号-1 Shanghai Lexiang Technology Co. Ltd</p></footer><dialog class="search-dialog" aria-label="搜索文档"><form class="search-form"><input id="search-query" name="q" type="search" placeholder="搜索产品、操作或接口…" aria-label="关键词"><button type="button" class="search-close" aria-label="关闭搜索">✕</button></form><div class="search-status" role="status"></div><div class="search-results"></div></dialog></body></html>

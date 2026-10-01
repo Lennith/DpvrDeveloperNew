@@ -1,0 +1,287 @@
+{
+  "id": "go-start",
+  "title": {
+    "cn": "安装 AIO GO 并完成设备维护",
+    "en": "Set up AIO GO and maintain a headset"
+  },
+  "summary": {
+    "cn": "先通过 USB 识别设备，再选择需要的功能。开机动画替换和定制型号识别是两条可选操作。",
+    "en": "Identify the headset over USB before selecting a function. Boot-animation replacement and custom-model recognition are optional tasks."
+  },
+  "products": [
+    "go"
+  ],
+  "prerequisites": {
+    "cn": [
+      "准备 Windows 10 电脑、支持型号的头显及 USB 数据线。",
+      "下载并解压官方 AIO GO 安装包。只有需要更换动画时才准备图片和 ZIP 工具。"
+    ],
+    "en": [
+      "Prepare a Windows 10 PC, a supported headset and a USB data cable.",
+      "Download and extract the official AIO GO package. Prepare images and a ZIP utility only if replacing the boot animation."
+    ]
+  },
+  "steps": {
+    "cn": [
+      {
+        "title": "安装并启动",
+        "body": "在 Windows 10 运行 DPVR AIO GO Setup.exe，完成安装后打开工具。未连接设备时显示“未找到设备”；这时先继续 USB 连接，不要直接操作维护功能。",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=1",
+        "sourcePages": [
+          1
+        ]
+      },
+      {
+        "title": "通过 USB 确认识别结果",
+        "body": "开启头显，用 USB 数据线连接电脑。等待界面显示设备型号、序列号、固件版本和 IP，再核对是否为本次要操作的设备。若仍未识别，官方界面提供驱动和连接手册入口；先排查连接，定制名称问题另见最后两步。",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=1",
+        "sourcePages": [
+          1
+        ],
+        "image": "assets/media/go-connected.png",
+        "imageAlt": "官方手册中的已连接设备及功能入口",
+        "imageSource": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=1"
+      },
+      {
+        "title": "按目的进入功能",
+        "body": "按界面图标选择应用安装、文件管理、截图、录屏、日志记录或 Android 设置，并跟随该功能提示。界面还提供固件更新、恢复出厂和开机动画替换；此 PDF 未展开前两项的全部步骤，不能把它们当作连接测试。无需动画或定制型号操作时，本入门流程到此完成。",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=1",
+        "sourcePages": [
+          1
+        ]
+      },
+      {
+        "title": "可选：准备静态或动态动画图片",
+        "body": "静态效果：按手册制作 960×280 的 PNG 位图，手册要求 32 位 PNG，并把单图命名为 0.1.png。动态效果：准备同尺寸、同格式的 PNG 序列，按文件名顺序编号；手册建议时长 3–5 秒。选择一种效果，不需要把静态和动态流程依次执行。原文背景色表述不够清晰，不另立强制颜色规则。",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=2",
+        "sourcePages": [
+          2,
+          5,
+          6
+        ]
+      },
+      {
+        "title": "组织图片与动画描述",
+        "body": "把选定图片或序列放入与 desc.txt 引用一致的两个阶段目录。下例采用原 desc 截图和 ZIP 目录截图中的 part1、part2；两目录内放置相应图片。原正文另写 part0、part1，不能把那组目录与下例混用。第一阶段循环一次，第二阶段循环；960、280 是画面尺寸，60 是手册示例的播放速率设置。",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=2",
+        "sourcePages": [
+          2,
+          3,
+          6,
+          7
+        ],
+        "code": "bootanimation.zip\n├── part1/\n├── part2/\n└── desc.txt"
+      },
+      {
+        "title": "保存 desc.txt 并检查空行",
+        "body": "创建 desc.txt，按下例填写。用 ANSI 编码保存，前三行是数据，第四行必须为空。第二、三行的末项必须与实际图片文件夹名一致；完成后再次用文本编辑器打开检查。",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=2",
+        "sourcePages": [
+          2,
+          6
+        ],
+        "code": "960 280 60\np 1 0 part1\np 0 0 part2\n\n"
+      },
+      {
+        "title": "使用存储方式制作 ZIP",
+        "body": "直接选择两个阶段目录和 desc.txt，压缩为 ZIP，方法选择“存储”，不要使用默认“标准”；ZIP 根目录不能多包一层 bootanimation 文件夹。使用 bootanimation.zip 这一名称，与压缩截图和文件选择窗口一致；正文出现的 booanimation.zip 为另一写法。压缩后检查目录与方法，原工具属性示例显示压缩率 100%。",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=3",
+        "sourcePages": [
+          3,
+          4,
+          7,
+          8
+        ],
+        "image": "assets/media/go-zip-settings.png",
+        "imageAlt": "原手册中 ZIP 格式、存储方式及根目录结构",
+        "imageSource": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=3"
+      },
+      {
+        "title": "替换动画，或恢复原动画",
+        "body": "确认 USB 已连接，在 AIO GO 打开“开机动画替换”，点击“开始替换”，选择并打开已检查的 ZIP，按工具提示完成。需要回到原动画时，在同一功能内点击“恢复初始化”；这里恢复的是动画，不是设备恢复出厂。静态和动态效果都使用这一入口。",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=4",
+        "sourcePages": [
+          4,
+          5,
+          8,
+          9
+        ]
+      },
+      {
+        "title": "仅定制名称无法识别时：打开配置",
+        "body": "若设备改变了型号名称，右键 AIO GO 快捷方式，选择“打开文件所在位置”。进入 Config 文件夹，用 VS Code、Notepad++ 或记事本打开 Device.config。这个操作用于名称匹配，不用于给不支持的硬件增加功能。",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=10",
+        "sourcePages": [
+          10,
+          11
+        ]
+      },
+      {
+        "title": "在对应设备类型追加名称",
+        "body": "找到实际设备所属类型的行，在已有名称后追加定制名称，并保留末尾竖线 |，再保存退出。官方示例：真实类型是 P1Pro、定制名称是 Windows，则该行为 P1Pro:P1Pro|Windows|。这是格式示例，不要求所有设备都添加 Windows；返回工具检查能否显示正确设备。",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=11",
+        "sourcePages": [
+          11
+        ],
+        "code": "P1Pro:P1Pro|Windows|",
+        "image": "assets/media/go-device-config.png",
+        "imageAlt": "原手册 Device.config 定制名称追加示例",
+        "imageSource": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=11"
+      }
+    ],
+    "en": [
+      {
+        "title": "Install and start",
+        "body": "Run DPVR AIO GO Setup.exe on Windows 10, then open the installed tool. No Device Found is expected before connection. Connect the headset before attempting maintenance.",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=1",
+        "sourcePages": [
+          1
+        ]
+      },
+      {
+        "title": "Confirm recognition over USB",
+        "body": "Power on the headset and connect it with a USB data cable. Wait for the model, serial number, firmware version and IP, then verify the intended device. If not found, use the driver and connection-manual entries shown in the tool. Check connectivity first; custom names are addressed in the final two steps.",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=1",
+        "sourcePages": [
+          1
+        ],
+        "image": "assets/media/go-connected.png",
+        "imageAlt": "Connected headset and function entries in the official guide",
+        "imageSource": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=1"
+      },
+      {
+        "title": "Open the required function",
+        "body": "Select app installation, file management, screenshots, recording, logs or Android settings and follow that function’s prompts. Firmware update, factory reset and boot-animation replacement are also listed. This PDF does not detail the first two operations, so do not use them as connection tests. Stop here unless you need animation replacement or custom-model recognition.",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=1",
+        "sourcePages": [
+          1
+        ]
+      },
+      {
+        "title": "Optional: prepare static or animated images",
+        "body": "For a static effect, prepare a 960×280 PNG bitmap; the guide specifies 32-bit PNG and names the single image 0.1.png. For animation, prepare consistently sized and formatted PNG frames with sequential filenames; the guide recommends 3–5 seconds. Choose one route rather than completing both. The source’s background-color wording is unclear, so no mandatory color rule is added.",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=2",
+        "sourcePages": [
+          2,
+          5,
+          6
+        ]
+      },
+      {
+        "title": "Organize frames and the descriptor",
+        "body": "Place the selected image or sequence in the two stage folders referenced by desc.txt. This example uses part1 and part2, matching the descriptor and ZIP screenshots. Populate both stage folders. Other prose says part0 and part1; do not mix those names with this descriptor. The first stage runs once and the second loops. 960 and 280 are dimensions; 60 is the example playback-rate setting.",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=2",
+        "sourcePages": [
+          2,
+          3,
+          6,
+          7
+        ],
+        "code": "bootanimation.zip\n├── part1/\n├── part2/\n└── desc.txt"
+      },
+      {
+        "title": "Save desc.txt and check the empty line",
+        "body": "Create desc.txt with the following content and save it as ANSI. The first three lines contain data and the fourth must be empty. The final entries on lines two and three must match the actual frame folders. Reopen the saved file to check it.",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=2",
+        "sourcePages": [
+          2,
+          6
+        ],
+        "code": "960 280 60\np 1 0 part1\np 0 0 part2\n\n"
+      },
+      {
+        "title": "Create a ZIP using Store",
+        "body": "Select both stage folders and desc.txt directly. Choose ZIP format and Store instead of the default Standard method. Do not add an enclosing bootanimation folder. Use bootanimation.zip, matching the archive screenshot and file dialog; the prose also contains booanimation.zip. Inspect the structure and compression method; the guide’s utility shows a 100% size ratio.",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=3",
+        "sourcePages": [
+          3,
+          4,
+          7,
+          8
+        ],
+        "image": "assets/media/go-zip-settings.png",
+        "imageAlt": "ZIP format, Store method and root layout in the original guide",
+        "imageSource": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=3"
+      },
+      {
+        "title": "Replace or restore the animation",
+        "body": "With USB connected, open Boot Animation Replacement, choose Start Replacement, select the checked ZIP and follow the tool’s prompts. To restore the original animation, use Restore initialization in the same feature. This restores the animation, not factory settings. Static and animated packages use the same entry.",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=4",
+        "sourcePages": [
+          4,
+          5,
+          8,
+          9
+        ]
+      },
+      {
+        "title": "Only for an unrecognized custom name: open configuration",
+        "body": "If the headset’s model name was customized, right-click the AIO GO shortcut and select Open file location. Open Config, then edit Device.config with VS Code, Notepad++ or Notepad. This changes name matching; it does not add support for incompatible hardware.",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=10",
+        "sourcePages": [
+          10,
+          11
+        ]
+      },
+      {
+        "title": "Append the name to the correct device type",
+        "body": "Find the line for the actual device type, append the custom name after existing names and retain a trailing |, then save and close. In the official example, a P1Pro named Windows becomes P1Pro:P1Pro|Windows|. This illustrates the format; do not add Windows to every device. Return to the tool and check recognition.",
+        "product": "go",
+        "source": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=11",
+        "sourcePages": [
+          11
+        ],
+        "code": "P1Pro:P1Pro|Windows|",
+        "image": "assets/media/go-device-config.png",
+        "imageAlt": "Original Device.config example with an appended custom name",
+        "imageSource": "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf#page=11"
+      }
+    ]
+  },
+  "caution": {
+    "cn": "本指南依据已逐页阅读的官方英文 PDF 重组，未进行设备实测。动画目录和 ZIP 文件名在原文正文、截图间不一致，下面明确采用与 desc.txt 及文件选择窗口一致的写法；制作后先核对包结构。",
+    "en": "This guide reorganizes the official English PDF after page-by-page review; it does not claim hardware testing. Animation folder and ZIP names differ between its prose and screenshots. The steps identify the spelling consistent with desc.txt and the file dialog; check the resulting archive structure."
+  },
+  "sources": [
+    "https://public.dpvr.com/developer/aio_go/en/DPVR%20AIO%20GO%20Instructions%20for%20Use.pdf",
+    "https://dl.dpvr.com/resources/aio_go/DPVR%20AIO%20GO.zip"
+  ],
+  "evidence": {
+    "document": "DPVR AIO GO Instructions for Use",
+    "pagesReviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "method": "pdftoppm rendering and visual inspection of every page; text extraction used only as supplementary evidence",
+    "sourceLanguage": "en",
+    "localPdfBundled": false
+  }
+}

@@ -1,0 +1,32 @@
+<article role="main">
+          <section id="dpvrbluetoothdevice">
+<span id="type-dpvrbluetoothdevice"></span><h1>DpvrBluetoothDevice<a class="headerlink" href="#dpvrbluetoothdevice" title="Permalink to this heading">#</a></h1>
+<p>蓝牙设备信息。</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">DpvrBluetoothDevice</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">name</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">address</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">name</span></code>:蓝牙设备的名称。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">address</span></code>:蓝牙设备的mac地址。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">type</span></code>: 蓝牙类型。</p>
+<p><cite>0</cite> : 未知类型（DEVICE_TYPE_UNKNOWN）。</p>
+<p><cite>1</cite> : 经典 - BR / EDR设备（DEVICE_TYPE_CLASSIC）。</p>
+<p><cite>2</cite> : 低能耗 - LE-only（DEVICE_TYPE_LE）。</p>
+<p><cite>3</cite> : 双模式 - BR / EDR / LE（DEVICE_TYPE_DUAL）。</p>
+<hr class="docutils">
+<p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">state</span></code> : 蓝牙配对状态。</p>
+<p><cite>10</cite> : 未配对。</p>
+<p><cite>11</cite> : 正在配对。</p>
+<p><cite>12</cite> : 已配对。</p>
+</section>
+</section>
+
+        </article>

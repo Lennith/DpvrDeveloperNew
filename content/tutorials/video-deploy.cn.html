@@ -1,0 +1,34 @@
+<h1>让头显启动后播放指定视频</h1>
+<p class="lead">先在一台设备上验证普通视频的自动播放，再按需要增加授权或批量分发。这里使用系统播放器，不需要编写Unity应用。</p>
+<h2 id="prepare">1. 准备视频和设备</h2>
+<p>官网列明适用P1 Max、P2、P1 Ultra 4K、P1 Pro 4K、P1 Pro。先准备能由设备播放器正常播放的视频，并确认它的画面格式。以下示例用360°单目视频；普通平面2D视频应把<code>videoModel</code>改为<code>0</code>。</p>
+<p>用USB数据线连接电脑，把视频放在设备共享存储根目录，命名为<code>demo.mp4</code>，其设备绝对路径为<code>/sdcard/demo.mp4</code>。先在设备上手动打开它，确认画面与声音正常。电脑看不到磁盘时，查阅<a href="/cn/docs/troubleshooting/connection-issue.html">P1 Max的Windows MTP排障</a>；这不是ADB连接教程。</p>
+<h2 id="configuration">2. 建立完整配置文件</h2>
+<p>新建UTF-8文本文件<code>AutoPlayDisposition.json</code>，粘贴以下完整JSON。确认文件扩展名不是<code>.json.txt</code>。</p>
+<pre><code>{
+  "isAutoPlay": 1,
+  "videoPath": "/sdcard/demo.mp4",
+  "videoModel": 16,
+  "isSteadyOn": 0,
+  "sleepTimes": 10,
+  "lockView": false,
+  "distance": 0,
+  "isStartBeginning": 1,
+  "showUI": 0
+}</code></pre>
+<p>这个示例表示：自动播放<code>demo.mp4</code>；采用360°单目模式；摘下时熄屏；总是从头播放；隐藏菜单。<code>lockView=false</code>让画面固定在空间中。它是线上指南的示例选择，不是所有设备的默认值。</p>
+<table><thead><tr><th>你的目标</th><th>修改哪一项</th></tr></thead><tbody><tr><td>换视频</td><td><code>videoPath</code>填写实际存在的设备绝对路径</td></tr><tr><td>普通平面2D视频</td><td><code>videoModel: 0</code></td></tr><tr><td>保留播放菜单便于调试</td><td><code>showUI: 1</code></td></tr><tr><td>从上次位置续播</td><td><code>isStartBeginning: 0</code></td></tr><tr><td>佩戴者摘下仍保持常亮</td><td><code>isSteadyOn: 1</code></td></tr></tbody></table>
+<aside class="editorial-note"><strong>一个尚未核实的字段范围：</strong><code>distance</code>仅对平面模式0、1、4生效。中文文档写-120～200，英文写120～200，两份示例为0，准确范围待设备或实现确认；本例模式16不使用该字段。官网下载示例的<code>lockView=true</code>与本例不同，两者都是合法配置选择。</aside>
+<h2 id="place">3. 放到播放器读取的位置</h2>
+<p>在共享存储根目录建立<code>AutoVideoPlay</code>文件夹，把JSON放进去。视频仍放在前面设置的路径，不要把电脑盘符路径写入JSON。</p>
+<pre><code>/sdcard/
+├── demo.mp4
+└── AutoVideoPlay/
+    └── AutoPlayDisposition.json</code></pre>
+<p>退出并重新启动系统播放器。官方说明是“播放器启动时读取配置”，没有承诺编辑文件后立即热更新。</p>
+<h2 id="verify">4. 在这一台头显确认最小成功结果</h2>
+<ol><li>重新启动播放器后，确认它自动打开指定视频。</li><li>检查画面模式是否符合源视频；图像不对时先核对<code>videoModel</code>，不要先修改授权或SDK。</li><li>检查菜单显示、摘戴熄屏和从头播放是否符合需求；需要排查时先把<code>showUI</code>设为1，再重新启动播放器。</li><li>若没有播放，按顺序检查文件名、JSON语法、文件夹位置、<code>videoPath</code>和视频能否手动播放。把当前配置保留下来再改下一项。</li></ol>
+<h2 id="optional">5. 需要时再增加授权或批量分发</h2>
+<p><strong>限制播放设备或有效期：</strong>使用<a href="/cn/resources/encryption.html">视频加密工具</a>生成同名<code>.mp4</code>、<code>.dpve1</code>、<code>.dpvei</code>三件套，同目录部署并使用支持解密的DPVR播放器验证。普通视频不要求先加密。GUI编辑授权会重新加密；CLI有仅更新授权文件的流程。</p>
+<p><strong>离线部署到多台设备：</strong>可用<a href="/cn/resources/copy.html">TF卡部署工具</a>的FILE或ZIP_UNPACK任务，把视频与配置送到上述位置；复制完成不代表播放已通过验证，仍需检查目标头显。TF工具的OTA_PACKAGE只复制升级包，不触发升级。</p>
+<footer class="article-sources"><h2>资料与完整参数</h2><ul><li><a href="/cn/docs/playback/videoplay-config.html">官方播放配置原文与全部画面模式</a></li><li><a href="/cn/docs/playback/configuration-example.html">官网下载包内JSON示例</a></li><li><a href="https://developer.dpvr.com/resources/doc_cn.html#videoplay-config">官方在线来源</a></li></ul></footer>

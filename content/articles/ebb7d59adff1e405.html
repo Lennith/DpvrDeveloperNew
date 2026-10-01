@@ -1,0 +1,26 @@
+<article role="main">
+          <section id="wifi-display-connection-changed">
+<span id="event-wifi-display-connection-changed"></span><h1>WIFI_DISPLAY_CONNECTION_CHANGED<a class="headerlink" href="#wifi-display-connection-changed" title="Permalink to this heading">#</a></h1>
+<p>Changes in WifiDisplay connection, currently only connection and disconnection.</p>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nc">WifiDisplayConnectionChanged</span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">connected</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kt">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nv">deviceInfo</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">WifiDisplayDeviceInfo? </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="permission">
+<h2>Permission<a class="headerlink" href="#permission" title="Permalink to this heading">#</a></h2>
+<p>APP_PERMISSION_NORMAL</p>
+</section>
+<section id="type-name">
+<h2>Type name<a class="headerlink" href="#type-name" title="Permalink to this heading">#</a></h2>
+<p>wifi_display_connection_changed</p>
+</section>
+<section id="property">
+<h2>Property<a class="headerlink" href="#property" title="Permalink to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Boolean</span> <span class="pre">connected</span></code>: Connect or disconnect, True indicates a new connection, False indicates a disconnection.</p>
+<p><code class="docutils literal notranslate"><span class="pre">WifiDisplayDeviceInfo</span> <span class="pre">deviceInfo</span></code>: Json serialization of the <a class="reference internal" href="/en/docs/dm/Types/WifiDisplayDeviceInfo.html#type-wifidisplaydeviceinfo"><span class="std std-ref">WifiDisplayDeviceInfo</span></a> list.</p>
+</section>
+</section>
+
+        </article>

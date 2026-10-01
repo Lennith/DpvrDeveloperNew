@@ -1,0 +1,39 @@
+<article role="main" id="furo-main-content">
+          <section id="pass-through-message">
+<h1>Pass-through message<a class="headerlink" href="#pass-through-message" title="Link to this heading">¶</a></h1>
+<p>The function of pass-through messages is to directly send a message to a specified application through the RDC communication link, or an application on the VR headset to send a message to the server, which is used by developers to implement custom functions.The length of a single message cannot exceed 1000 bytes.</p>
+<section id="server-side-sending">
+<h2>Server-side Sending<a class="headerlink" href="#server-side-sending" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">MessengerSendToClient</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">toPackage</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Client</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clientList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>string toPackage</cite>: The application package that clients will receive the message.</p>
+<p><cite>string content</cite>: The content of the message.</p>
+<p><cite>List&lt;Client&gt; clientList</cite>: List of clients to receive the message. If null, all connected clients receive the message.</p>
+</section>
+<section id="server-side-callback-for-client-messages">
+<h2>Server-side Callback for Client Messages<a class="headerlink" href="#server-side-callback-for-client-messages" title="Link to this heading">¶</a></h2>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">delegate</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnMessage</span><span class="p">(</span><span class="n">Client</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="n">DpvrRDCServer</span><span class="p">.</span><span class="n">ClientMessage</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Callback for client applications to forward messages.</p>
+<p><cite>Client client</cite>: The client where the state change occurred.</p>
+<p><cite>ClientMessage msg</cite>: Message forwarded from the client.</p>
+<p>Where the ClientMessage structure is defined as follows:</p>
+<div class="highlight-csharp notranslate"><div class="highlight"><pre><span></span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ClientMessage</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">fromPackage</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><cite>string fromPackage</cite>: Package name of the sending application for the forwarded message.</p>
+<p><cite>string content</cite>: Content of the forwarded message.</p>
+</section>
+<section id="usage-of-client-message-sending">
+<h2>Usage of Client Message Sending<a class="headerlink" href="#usage-of-client-message-sending" title="Link to this heading">¶</a></h2>
+<p>DpvrDeviceManagerService provides encapsulation after AIDL call <a class="reference external" href="/en/docs/dm/Apis/remotecontrolJobs/index.html">API</a> , facilitating quick integration for developers.</p>
+</section>
+</section>
+
+        </article>

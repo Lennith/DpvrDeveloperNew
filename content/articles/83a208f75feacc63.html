@@ -1,0 +1,126 @@
+<div class="container">
+        <header>
+            <h1>DPVR Video Encryptor User Manual</h1>
+        </header>
+
+        <section id="encryption-process">
+            <h2>1. Video Encryption Process</h2>
+            <div class="important-note">
+                <p>This process applies to the first encryption of new videos. All operations in this process are performed in the <code class="file-path">video_encryptor\video_encryption</code> folder.</p>
+            </div>
+            <ol>
+                <li>
+                    <span class="step-number">1</span><strong>Place Video Files</strong>:
+                    <p>Place the video files to be encrypted (must be MP4 format) into the <code class="file-path">input_video</code> folder.</p>
+                </li>
+                <li>
+                    <span class="step-number">2</span><strong>Fill in Device Serial Numbers</strong>:
+                    <p>Enter the serial numbers of the devices required for decryption and playback into the <code class="file-path">sn.txt</code> file. Each serial number should be on a new line.</p>
+                    <ul>
+                        <li><strong>Manual Addition</strong>: Directly edit the <code class="file-path">sn.txt</code> file.</li>
+                        <li><strong>Automatic Generation (only applicable to all-in-one VR devices)</strong>: Turn on each device and connect it to the computer in sequence, then run the <code class="file-path">get_sn_tool\sn_get.bat</code> file. This tool will automatically generate an <code class="file-path">sn.txt</code> file containing the serial numbers. Afterward, copy this generated <code class="file-path">sn.txt</code> and overwrite the one in <code class="file-path">video_encryption\sn.txt</code>.</li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="step-number">3</span><strong>Configure Decryption Information</strong>:
+                    <p>Edit the <code class="file-path">config.ini</code> file and fill in the following decryption parameters:</p>
+                    <ul>
+                        <li><code>encrypt_effective_date</code>: The expiration date for effective video decryption and playback</li>
+                        <ul>
+                            <li>Format: YYYY/MM/DD</li>
+                            <li>Description: Before this date, the video can be decrypted and played normally</li>
+                            <li><span class="default-value">If empty, defaults to 2099/1/1</span></li>
+                        </ul>
+                        <li><code>encrypt_key</code>: The credential for video decryption and playback</li>
+                        <ul>
+                            <li>Format: 16-character string (English letters and numbers only)</li>
+                            <li><span class="default-value">If empty, defaults to DPVR20222023HHHH</span></li>
+                        </ul>
+                        <li><code>vei_key</code>: The key required for updating the video authorization file</li>
+                        <ul>
+                            <li>Format: String (English letters and numbers only)</li>
+                            <li><span class="default-value">If empty, defaults to dpvr</span></li>
+                        </ul>
+                    </ul>
+                    <pre><code>Example:
+encrypt_effective_date=2025/6/30
+encrypt_key=YOUR16CHARSECRET
+vei_key=yourveikey</code></pre>
+                </li>
+                <li>
+                    <span class="step-number">4</span><strong>Execute Video Encryption</strong>:
+                    <p>Run the <code class="file-path">encrypt.bat</code> batch file to start the video encryption process.</p>
+                    <p>After encryption is complete, the following three file formats will be generated in the <code class="file-path">output_video</code> folder (file names will be the same as the original video):</p>
+                    <ul>
+                        <li>Encrypted video file: <code>.mp4</code></li>
+                        <li>Video verification file: <code>.dpve1</code></li>
+                        <li>Video authorization file: <code>.dpvei</code></li>
+                    </ul>
+                    <div class="important-note1">
+                        <p><strong>Note</strong>: Please ensure that the disk where the encryption operation is performed has sufficient free space, otherwise video encryption may fail.</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-number">5</span><strong>Import Encrypted Video</strong>:
+                    <p>Copy all encrypted files (encrypted video file, video verification file, video authorization file) to the internal storage of the device requiring decryption and playback. Wear the device to proceed with decryption and playback.</p>
+                    <div class="important-note1">
+                        <p><strong>Note</strong>: Please ensure that files with the same name (encrypted video file, video verification file, video authorization file) are placed in the same folder within the device's internal storage.</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <hr>
+
+        <section id="update-authorization-process">
+            <h2>2. Video Authorization File Update Process</h2>
+            <div class="important-note">
+                <p>This process is applicable when a video has already been encrypted, and you only need to add new playable device serial numbers or change the video's effective decryption and playback expiration date. All operations in this process are performed in the <code class="file-path">encrypted_file_update</code> folder.</p>
+            </div>
+            <ol>
+                <li>
+                    <span class="step-number">1</span><strong>Place Authorization File</strong>:
+                    <p>Place the video authorization file (<code>.dpvei</code>) to be updated into the <code class="file-path">input_dpvei</code> folder.</p>
+                </li>
+                <li>
+                    <span class="step-number">2</span><strong>Update Device Serial Numbers</strong>:
+                    <p>Enter the serial numbers of the devices required for decryption and playback into the <code class="file-path">sn.txt</code> file. Each serial number should be on a new line.</p>
+                     <ul>
+                        <li><strong>Manual Addition</strong>: Directly edit the <code class="file-path">sn.txt</code> file.</li>
+                        <li><strong>Automatic Generation (only applicable to all-in-one VR devices)</strong>: Turn on each device and connect it to the computer in sequence, then run the <code class="file-path">get_sn_tool\sn_get.bat</code> file. This tool will automatically generate an <code class="file-path">sn.txt</code> file containing the serial numbers. Afterward, copy this generated <code class="file-path">sn.txt</code> and overwrite the one in <code class="file-path">encrypted_file_update\sn.txt</code>.</li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="step-number">3</span><strong>Configure Update Information</strong>:
+                    <p>Edit the <code class="file-path">config.ini</code> file and fill in the following parameters:</p>
+                    <ul>
+                        <li><code>encrypt_effective_date</code>: The new effective decryption and playback expiration date for the video.</li>
+                        <ul>
+                            <li>Format: YYYY/MM/DD</li>
+                            <li>Description: Before this date, the video can be decrypted and played normally</li>
+                            <li><span class="default-value">If empty, defaults to 2099/1/1</span></li>
+                        </ul>
+                        <li><code>vei_key</code>: The key for updating the video authorization file</li>
+                        <ul>
+                            <li>Format: String (English letters and numbers only)</li>
+                            <li><strong>Important</strong>: This key must be consistent with the <code>vei_key</code> set during the initial encryption of this video.</li>
+                            <li><span class="default-value">If empty, defaults to dpvr</span></li>
+                        </ul>
+                    </ul>
+                     <pre><code>Example:
+encrypt_effective_date=2026/6/30
+vei_key=yourveikey</code></pre>
+                </li>
+                <li>
+                    <span class="step-number">4</span><strong>Execute Authorization Update</strong>:
+                    <p>Run the <code class="file-path">update_encrypt.bat</code> batch file to start updating the video authorization file.</p>
+                    <p>After the update is complete, a video authorization file (<code>.dpvei</code>) with the same name will be output to the <code class="file-path">output_dpvei</code> folder.</p>
+                </li>
+                <li>
+                    <span class="step-number">5</span><strong>Import Authorization File</strong>:
+                    <p>Copy and overwrite the updated video authorization file over the old authorization file on the device to complete the update.</p>
+                </li>
+            </ol>
+        </section>
+
+    </div>

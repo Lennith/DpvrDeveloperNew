@@ -1,0 +1,53 @@
+<article role="main" id="furo-main-content">
+          <section id="id1">
+<h1>配置文件设置<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
+<p>通过在一体机根目录下放置配置文件同样可以进行RDC一体机端的配置。</p>
+<p>在一体机设备根目录下放置 <code class="docutils literal notranslate"><span class="pre">persist_settings</span></code> 文件，可以用来进行Dpvr的预加载配置。</p>
+<p>对于RDC相关我们可以增加下面这些设置。</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"SettingKey"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"WifiConfig"</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">"password"</span><span class="p">:</span><span class="s2">"Dpvr@2022"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"ssid"</span><span class="p">:</span><span class="s2">"DPVR_Office"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"WEP"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"SettingConfig"</span><span class="p">:</span>
+<span class="w">    </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"Key"</span><span class="p">:</span><span class="s2">"LCServerIP"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"SettingType"</span><span class="p">:</span><span class="s2">"global"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"Value"</span><span class="p">:</span><span class="s2">"192.168.1.1"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"ValueType"</span><span class="p">:</span><span class="s2">"string"</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"Key"</span><span class="p">:</span><span class="s2">"LCServerPort"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"SettingType"</span><span class="p">:</span><span class="s2">"global"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"Value"</span><span class="p">:</span><span class="s2">"1000"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"ValueType"</span><span class="p">:</span><span class="s2">"int"</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"Key"</span><span class="p">:</span><span class="s2">"dp_auto_start_remote_control"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"SettingType"</span><span class="p">:</span><span class="s2">"int"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"Value"</span><span class="p">:</span><span class="s2">"1"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"ValueType"</span><span class="p">:</span><span class="s2">"global"</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>其中， <code class="docutils literal notranslate"><span class="pre">SettingConfig</span></code> 为预加载Settings，会在每次开机时自动加载。</p>
+<p><code class="docutils literal notranslate"><span class="pre">LCServerIP</span></code> : 为远程控制服务器的IP地址。</p>
+<p><code class="docutils literal notranslate"><span class="pre">LCServerPort</span></code> : 为远程控制服务器的端口号。</p>
+<p><code class="docutils literal notranslate"><span class="pre">dp_auto_start_remote_control</span></code> : 是否自动启动远程控制。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">Value</span></code> 设置为1时，表示开机自动开启RDC服务，为0表示不自动开启。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">WifiConfig</span></code> : 设置开机自动连接的WIFI，其中 <code class="docutils literal notranslate"><span class="pre">ssid</span></code> 为WIFI名称， <code class="docutils literal notranslate"><span class="pre">password</span></code> 为WIFI密码， <code class="docutils literal notranslate"><span class="pre">type</span></code> 为WIFI加密方式，目前支持 <code class="docutils literal notranslate"><span class="pre">WEP</span></code> 和 <code class="docutils literal notranslate"><span class="pre">WPA</span></code> 两种加密方式。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>AutoWifi连接逻辑是在开机后未连接Wifi时，始终尝试去连接该Wifi。</p>
+</div>
+</section>
+
+        </article>

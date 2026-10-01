@@ -1,0 +1,126 @@
+<div class="container">
+        <header>
+            <h1>DPVR Video Encryptor 使用说明</h1>
+        </header>
+
+        <section id="encryption-process">
+            <h2>1. 视频加密流程</h2>
+            <div class="important-note">
+                <p>本流程适用于新视频的首次加密。该流程操作均在 <code class="file-path">video_encryptor\video_encryption</code> 文件夹中进行。</p>
+            </div>
+            <ol>
+                <li>
+                    <span class="step-number">1</span><strong>放置视频文件</strong>：
+                    <p>将需要加密的视频文件（必须是 MP4 格式）放置到 <code class="file-path">input_video</code> 文件夹中。</p>
+                </li>
+                <li>
+                    <span class="step-number">2</span><strong>填写设备序列号</strong>：
+                    <p>将所需解密播放的设备序列号填写到 <code class="file-path">sn.txt</code> 文件中。每个序列号占一行。</p>
+                    <ul>
+                        <li><strong>手动添加</strong>：直接编辑 <code class="file-path">sn.txt</code> 文件。</li>
+                        <li><strong>自动生成（仅适用于VR一体机）</strong>：依次将设备开机并连接电脑，运行 <code class="file-path">get_sn_tool\sn_get.bat</code> 文件，该工具会自动生成包含序列号的 <code class="file-path">sn.txt</code> 文件。之后，将此生成的 <code class="file-path">sn.txt</code> 拷贝并覆盖 <code class="file-path">video_encryption\sn.txt</code>。</li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="step-number">3</span><strong>配置解密信息</strong>：
+                    <p>编辑 <code class="file-path">config.ini</code> 文件，填写以下解密参数：</p>
+                    <ul>
+                        <li><code>encrypt_effective_date</code>: 视频有效解密播放的截止日期</li>
+                        <ul>
+                            <li>格式：YYYY/MM/DD</li>
+                            <li>说明：在该日期之前，视频可正常解密播放</li>
+                            <li><span class="default-value">为空时，默认为 2099/1/1</span></li>
+                        </ul>
+                        <li><code>encrypt_key</code>: 视频解密播放的凭证</li>  
+                        <ul>
+                            <li>格式：16位字符串（仅包含英语字母与数字）</li>
+                            <li><span class="default-value">为空时，默认为 DPVR20222023HHHH</span></li>
+                        </ul>                    
+                        <li><code>vei_key</code>: 视频授权文件更新所需的密钥</li>
+                        <ul>
+                            <li>格式：字符串（仅包含英语字母与数字）</li>
+                            <li><span class="default-value">为空时，默认为 dpvr</span></li>
+                        </ul>
+                    </ul>
+                    <pre><code>填写示例：
+encrypt_effective_date=2025/6/30
+encrypt_key=YOUR16CHARSECRET
+vei_key=yourveikey</code></pre>
+                </li>
+                <li>
+                    <span class="step-number">4</span><strong>执行视频加密</strong>：
+                    <p>运行 <code class="file-path">encrypt.bat</code> 批处理文件开始视频加密过程。</p>
+                    <p>加密完成后，将在 <code class="file-path">output_video</code> 文件夹中生成以下三种格式文件（文件名与原视频同名）：</p>
+                    <ul>
+                        <li>已加密的视频文件: <code>.mp4</code></li>
+                        <li>视频校验文件: <code>.dpve1</code></li>
+                        <li>视频授权文件: <code>.dpvei</code></li>
+                    </ul>
+                    <div class="important-note1">
+                        <p><strong>注意</strong>：请确保执行加密操作的磁盘拥有足够的剩余空间，否则视频加密可能会失败。</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-number">5</span><strong>导入加密视频</strong>：
+                    <p>将加密后的所有文件（加密的视频文件、视频校验文件、视频授权文件）均拷贝至需要解密播放设备的内部存储，佩戴设备即可进行解密播放。</p>
+                    <div class="important-note1">
+                        <p><strong>注意</strong>：请确保同名文件（加密的视频文件、视频校验文件、视频授权文件）放置在设备内部存储的同一文件夹下。</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <hr>
+
+        <section id="update-authorization-process">
+            <h2>2. 视频授权文件更新流程</h2>
+            <div class="important-note">
+                <p>本流程适用于视频已加密，仅需要新增可播放设备的序列号，或更改视频有效解密播放的截止日期。该流程操作均在 <code class="file-path">encrypted_file_update</code> 文件夹中进行。</p>
+            </div>
+            <ol>
+                <li>
+                    <span class="step-number">1</span><strong>放置授权文件</strong>：
+                    <p>将需要更新的视频授权文件 (<code>.dpvei</code>) 放置到 <code class="file-path">input_dpvei</code> 文件夹中。</p>
+                </li>
+                <li>
+                    <span class="step-number">2</span><strong>更新设备序列号</strong>：
+                    <p>将所需解密播放的设备序列号填写到 <code class="file-path">sn.txt</code> 文件中。每个序列号占一行。</p>
+                     <ul>
+                        <li><strong>手动添加</strong>：直接编辑 <code class="file-path">sn.txt</code> 文件。</li>
+                        <li><strong>自动生成（仅适用于VR一体机）</strong>：依次将设备开机并连接电脑，运行 <code class="file-path">get_sn_tool\sn_get.bat</code> 文件，该工具会自动生成包含序列号的 <code class="file-path">sn.txt</code> 文件。之后，将此生成的 <code class="file-path">sn.txt</code> 拷贝并覆盖 <code class="file-path">encrypted_file_update\sn.txt</code>。</li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="step-number">3</span><strong>配置更新信息</strong>：
+                    <p>编辑 <code class="file-path">config.ini</code> 文件，填写以下参数：</p>
+                    <ul>
+                        <li><code>encrypt_effective_date</code>: 视频新的有效解密播放截止日期。</li>
+                        <ul>
+                            <li>格式：YYYY/MM/DD</li>
+                            <li>说明：在该日期之前，视频可正常解密播放</li>
+                            <li><span class="default-value">为空时，默认为 2099/1/1</span></li>
+                        </ul>
+                        <li><code>vei_key</code>: 更新视频授权文件的密钥</li>   
+                        <ul>
+                            <li>格式：字符串（仅包含英语字母与数字）</li>
+                            <li><strong>重要</strong>：此密钥必须与该视频初次加密时设置的 <code>vei_key</code> 一致</li>
+                            <li><span class="default-value">为空时，默认为 dpvr</span></li>
+                        </ul>
+                    </ul>
+                     <pre><code>填写示例：
+encrypt_effective_date=2026/6/30
+vei_key=yourveikey</code></pre>
+                </li>
+                <li>
+                    <span class="step-number">4</span><strong>执行授权更新</strong>：
+                    <p>运行 <code class="file-path">update_encrypt.bat</code> 批处理文件开始更新视频授权文件。</p>
+                    <p>更新完成后，将在 <code class="file-path">output_dpvei</code> 文件夹中输出同名的视频授权文件 (<code>.dpvei</code>)。</p>
+                </li>
+                <li>
+                    <span class="step-number">5</span><strong>导入授权文件</strong>：
+                    <p>将更新后的视频授权文件均拷贝并覆盖设备原有的旧授权文件，即可完成更新。</p>
+                </li>
+            </ol>
+        </section>
+
+    </div>
