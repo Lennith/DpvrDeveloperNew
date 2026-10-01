@@ -39,6 +39,23 @@
 
 `node --test tools/test_audit_status.cjs`：10项通过，包含CSS断言、搜索超时、图片断言、后续策略错误与旧BLOCKED文字等反向案例，同时验证FAIL优先及退出码0/1/2。另使用真实Chromium重跑首次file导航，确认仍为ERR_BLOCKED_BY_ADMINISTRATOR，后续断言未执行，分类BLOCKED、审计退出码2。此复核没有扩大离线覆盖，也未重新宣称Windows双击通过。
 
-此次只修改审计脚本、回归测试和报告，页面产物未变；上述2,048次HTTP访问和16项交互保留为此前验收事实，并非本次重新全量运行。此前三个ZIP未重打包，其中源码与证据包不包含此分类修复；当前Git源码及本报告为修复后的依据。
+此次后续又补充逐结果哈希绑定，并重新运行完整浏览器验收，详情见下节。静态页面字节未改动；源码和证据包随最终提交重新打包，包含分类修复。
 
 页面生成文件的最终哈希须与证据tested-static-sha256.json逐一对应。源码包包含维护文档，不会因更新报告而修改已测试静态站点。完整打包指纹及Git远端最终提交以DELIVERY.json和交付消息为准。
+
+## 测试结果与最终ZIP的机器绑定
+
+`browser-pages.json` 每条结果记录 `pageSha256`（测试目录页面字节）、`responseSha256`（实际HTTP响应字节）和 `treeSha256`（包含CSS、JS、图片在内的整站文件树指纹）。`browser-tasks.json` 每项任务记录根目录与子目录的整站指纹。脚本测试前校验两个HTTP服务的全部文件响应，测试后再次核对磁盘文件树。
+
+使用 `DPVR_TASKS_ONLY` 或 `DPVR_PAGE_FILTER` 合并旧结果时，缺少绑定或指纹不符即退出失败，要求全量重跑；不会默默保留旧PASS。本次旧记录不具备绑定，故全部2,048条页面结果及17项任务重新生成，没有事后给旧结果补哈希。
+
+最终证据包含 `tested-static-sha256.json`（静态ZIP所有559成员，包含包内SHA清单）、`tested-sub-sha256.json`、`evidence-binding.json`。独立检查命令：
+
+```bash
+python3 tools/verify_evidence_binding.py DPVR-resources-static-20261001.zip 解压后的证据目录
+node --test tools/test_audit_manifest.cjs tools/test_audit_status.cjs
+```
+
+独立校验要求ZIP内清单与成员完全一致、测试清单与ZIP逐字节一致、512页×4种浏览组合齐全且无重复、每条结果的页面/响应/整站指纹匹配、任务指纹及汇总匹配；任何缺失或不匹配退出1。根/子路径HTML有明确base属性差异，分别绑定各自清单；共享assets必须逐文件相同。已用篡改清单与篡改结果反向验证拒绝行为，证据见 `binding-negative-tests.json`。
+
+这证明测试对象与交付字节一致，不证明GO整本PDF、外链、file://后续功能或真机通过。
