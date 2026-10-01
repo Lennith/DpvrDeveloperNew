@@ -68,7 +68,7 @@ def doclist(ps,l):return '<ul class="reading-list">'+''.join(f'<li><a href="{E(p
 def stephtml(steps,l):
  s='<div class="steps">'
  for i,x in enumerate(steps):
-  href=mapdoc(x.get('docMatch',''),l);title=x['title'].lower()
+  href=mapdoc(x.get('docMatch') or x.get('source',''),l);title=x['title'].lower()
   if href.endswith('/copy-tool-guide.html'):href+='#section-'+('1' if any(k in title for k in ['json','配置','task','任务']) else '2')
   if href.endswith('/videoplay-config.html'):href+='#section-'+('2' if any(k in title for k in ['放置','交付','place','deploy']) else '0')
   link=f'<a class="text-link" href="{E(href)}">{T("阅读：","Read: ",l)}{E(x["title"])} →</a>' if href else ''
@@ -190,6 +190,14 @@ for p in selected:
  l=p['language'];path=p['path'];content=(R/p['content']).read_text();tree=H.fromstring(content)
  for i,h in enumerate(tree.xpath('.//h2|.//h3')):
   if not h.get('id'):h.set('id','section-'+str(i))
+ # The source occasionally assigns the same ID to nested spans/tables.
+ # Keep the first target (the browser's original target) and remove later IDs.
+ seen_ids=set()
+ for node in tree.iter():
+  identity=node.get('id')
+  if identity:
+   if identity in seen_ids:node.attrib.pop('id')
+   else:seen_ids.add(identity)
  content=H.tostring(tree,encoding='unicode');notes=[] # importer places sourced editorial notes in the article
  if '/Apis/' in path and not path.endswith('/index.html'):
   category=path.split('/Apis/',1)[1].split('/')[0];method=path.rsplit('/',1)[1][:-5]

@@ -137,7 +137,7 @@ svg { vertical-align: middle; }
 .fact-card > :last-child { margin-bottom: 0; }
 
 /* Reader: product-scoped navigation, clear text measure, independent TOC. */
-.reader-layout { max-width: 1520px; margin-inline: auto; display: grid; grid-template-columns: 248px minmax(0, 1fr) 208px; min-height: calc(100vh - 142px); background: var(--paper); }
+.reader-layout { max-width: 1200px; margin-inline: auto; display: grid; grid-template-columns: 248px minmax(0, 1fr) 208px; min-height: calc(100vh - 142px); background: var(--paper); }
 .product-nav { position: sticky; top: var(--utility-height); height: calc(100vh - var(--utility-height)); overflow-y: auto; scrollbar-width: thin; padding: 28px 18px 40px; background: var(--canvas); border-right: 1px solid var(--line); }
 .product-nav > button { display: none; }
 .product-nav h2 { color: var(--ink); font-size: 14px; font-weight: 700; line-height: 1.5; margin: 0 10px 22px; }
@@ -589,3 +589,10 @@ html[data-theme="dark"] .search-result mark { background: #724232; }
 .product-context dt { color:var(--muted); }
 .product-context dd { margin:0; }
 @media(max-width:600px) { .product-context { grid-template-columns:80px 1fr; gap:10px; } }
+/* Source guides use their own numbered list markup. Preserve text, align numbers. */
+.article-body .manual-steps { list-style:none; padding-left:0; }
+.article-body .manual-steps > li { display:flex; align-items:baseline; gap:12px; margin:14px 0; }
+.article-body .manual-steps .step-num { min-width:20px; color:var(--accent); }
+.article-body .step-header { display:flex; align-items:baseline; gap:12px; margin-top:32px; border-bottom:1px solid var(--line); }
+.article-body .step-header .step-number-large { color:var(--accent); font-size:13px; }
+.article-body .step-header .step-title { flex:1; margin:0; border:0; padding:10px 0; }

@@ -19,8 +19,10 @@ def canon(u):
  p=urlsplit(u);return urlunsplit((p.scheme,p.netloc,re.sub('/+','/',p.path),p.query,p.fragment))
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--site',type=Path,default=R/'public');ap.add_argument('--evidence',type=Path);ap.add_argument('--output',type=Path,required=True);a=ap.parse_args();a.output.mkdir(parents=True,exist_ok=True)
- data=json.loads((R/'content/pages.json').read_text());pages=data['pages'];trees={'/'+str(f.relative_to(a.site)):parse(f.read_text()) for f in a.site.rglob('*.html')};issues=[];externals={};rows=[];sources=[]
+ data=json.loads((R/'content/pages.json').read_text());pages=data['pages'];trees={'/'+str(f.relative_to(a.site)):parse(f.read_text()) for f in a.site.rglob('*.html')};issues=[];externals={};rows=[];sources=[];media=[]
  for path,tree in trees.items():
+  for identity,count in Counter(tree.xpath('//@id')).items():
+   if count>1:issues.append({'page':path,'target':identity,'reason':'duplicate_id','count':count})
   for el in tree.xpath('//*[@href or @src or @poster]'):
    for attr in ['href','src','poster']:
     v=el.get(attr)
@@ -101,4 +103,5 @@ def main():
  idx=(a.site/'assets/search-index.js').read_text();index=json.loads(idx[len('window.DPVR_SEARCH='):-1]);indexed={x['url'] for x in index};missing=[p['path'] for p in pages if p['path'] not in indexed]
  result={'htmlPages':len(trees),'sourceArticles':len(rows),'articleGeneratedFailures':sum(bool(x['generatedDifferences']) for x in rows),'translationFailures':sum(not x['translationMatches'] for x in rows),'localIssues':issues,'searchEntries':len(index),'searchMissing':missing,'byProductLanguage':dict(Counter(p['product']+'/'+p['language'] for p in pages)),'sourceStatus':dict(Counter(x['status'] for x in sources)),'articles':rows}
  (a.output/'static-audit.json').write_text(json.dumps(result,ensure_ascii=False,indent=2));(a.output/'external-links.json').write_text(json.dumps([{'url':u,'pages':sorted(ps)} for u,ps in sorted(externals.items())],ensure_ascii=False,indent=2));print(json.dumps({k:v for k,v in result.items() if k not in ['articles','localIssues']},ensure_ascii=False));print('Local issues:',len(issues),issues[:5])
+ if issues or result['articleGeneratedFailures'] or result['translationFailures'] or missing or any(x['status']!='PASS' for x in sources) or any(x['status']!='PASS' for x in media):raise SystemExit(1)
 if __name__=='__main__':main()
